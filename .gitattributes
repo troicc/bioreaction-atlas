@@ -1,0 +1,4 @@
+# Matplotlib writes harmless spaces inside multiline SVG path attributes.
+*.svg -whitespace
+# Spreadsheet interchange files intentionally retain CRLF endings.
+*.csv whitespace=cr-at-eol

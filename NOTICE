@@ -1,0 +1,16 @@
+BioReaction Atlas
+Copyright 2026 BioReaction Atlas contributors.
+
+The Apache License, Version 2.0 applies to original project software.
+It does not replace licenses or other terms applicable to third-party reaction
+records, publications, model weights, or dependencies. No ownership of upstream
+reaction databases or representation methods is claimed.
+
+RXNFP: rxn4chemistry/rxnfp, Schwaller and colleagues.
+DRFP: reymond-group/drfp, Probst and colleagues.
+RDKit: RDKit contributors.
+EnzymeEngineeringDB V6: fhalab/EnzymeEngineeringDB.
+Schneider50k: distributed with the pinned RXNFP repository.
+
+See docs/THIRD_PARTY.md for source locations and pinned versions.
+Source-rich local artifacts are excluded from the initial Git tracking set.

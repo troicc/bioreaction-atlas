@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bioreaction-atlas"
+version = "0.2.0"
+description = "Evidence-linked curation and reaction retrieval for new-to-nature biocatalysis"
+requires-python = ">=3.11"
+dependencies = ["rdkit>=2024.3", "openpyxl>=3.1"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+research = ["numpy>=1.26", "scipy>=1.11", "drfp>=0.3.7", "scikit-learn>=1.5", "matplotlib>=3.8", "plotly>=6"]
+rxnfp = ["torch>=2.6", "transformers>=4.45,<5"]
+
+[project.scripts]
+bioatlas = "bioreaction_atlas.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["integration: tests using locally downloaded official model weights"]

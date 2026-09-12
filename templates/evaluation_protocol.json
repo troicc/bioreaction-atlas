@@ -1,0 +1,11 @@
+{
+  "benchmark_version": "1.0",
+  "cutoff_date": null,
+  "candidate_pool_protocol": "",
+  "freeze_note": "",
+  "allow_pretrained_exploration": false,
+  "seed_entry_ids": [],
+  "candidates": [],
+  "events": [],
+  "condition_annotations": {}
+}

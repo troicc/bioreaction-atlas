@@ -1,0 +1,5505 @@
+{
+  "configuration": {
+    "analysis_version": "1.0",
+    "ks": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "score_decimals": 6,
+    "ranking": "descending rounded score; stable ascending entry ID for deterministic overlap",
+    "expected_overlap": "sum(p_a * p_b) / k; independent uniform permutations of boundary ties",
+    "spearman": "average ranks on all eligible candidates; constant ranks are undefined",
+    "case_selection": "lowest mean expected overlap@10; ID tie-break; exclude previously represented sources",
+    "purpose": "descriptive representation agreement; no labeled accuracy or historical coverage"
+  },
+  "provenance": {
+    "morgan": {
+      "parameters": {
+        "backend": "morgan",
+        "structure_view": "reactants_only_no_agents",
+        "rdkit_version": "2026.03.6",
+        "radius": 2,
+        "dimension": 4096,
+        "chirality": true,
+        "metric": "cosine"
+      },
+      "corpus_sha256": "b1237448021a5d7e57feabbe90506234e9994731042bcff4575fb676a4851ff1",
+      "vectors_sha256": "cecfeb9475f2f73b3dba3eb1f1086d8c62bada23b4573b5be66939eee5f0b505",
+      "index_sha256": "2814d44ee52ffd75d6fe9d57b3e193e6abd3cb25f38ff5d680e65ad4d0aff617",
+      "available_domains": {
+        "enzyme_reference": 639,
+        "patent_reference": 1988
+      },
+      "excluded_source_rows": 18,
+      "outside_common_pool_ids": []
+    },
+    "substrate": {
+      "parameters": {
+        "backend": "substrate",
+        "structure_view": "reactants_only_no_agents",
+        "rdkit_version": "2026.03.6",
+        "radius": 2,
+        "dimension": 4096,
+        "chirality": true,
+        "metric": "cosine"
+      },
+      "corpus_sha256": "b1237448021a5d7e57feabbe90506234e9994731042bcff4575fb676a4851ff1",
+      "vectors_sha256": "4845c9e5465c368696e02490e3d93ee85385a5e142853a57e5e6079f8b2923c3",
+      "index_sha256": "c2d21781b27b9c1c9de036ea14e21ebc5fe227c9b7ec1145eea1232edcacb47f",
+      "available_domains": {
+        "enzyme_reference": 640,
+        "patent_reference": 1988
+      },
+      "excluded_source_rows": 0,
+      "outside_common_pool_ids": [
+        "R_37affc23d64883ed5126"
+      ]
+    },
+    "drfp": {
+      "parameters": {
+        "backend": "drfp",
+        "structure_view": "reactants_only_no_agents",
+        "rdkit_version": "2026.03.6",
+        "dimension": 2048,
+        "radius": 3,
+        "min_radius": 0,
+        "rings": true,
+        "metric": "tanimoto",
+        "drfp_version": "0.3.7"
+      },
+      "corpus_sha256": "b1237448021a5d7e57feabbe90506234e9994731042bcff4575fb676a4851ff1",
+      "vectors_sha256": "2c21a2f8c96b9b8afc00207b7d847031a9364e1c9d3f9d9155353b58631d5815",
+      "index_sha256": "e3f14aff5a4f0cbe39a75bc42d4d7d638d36e93e108ccc9d895e928c0ff60af6",
+      "available_domains": {
+        "enzyme_reference": 639,
+        "patent_reference": 1988
+      },
+      "excluded_source_rows": 18,
+      "outside_common_pool_ids": []
+    },
+    "rxnfp": {
+      "parameters": {
+        "backend": "rxnfp",
+        "structure_view": "reactants_only_no_agents",
+        "rdkit_version": "2026.03.6",
+        "dimension": 256,
+        "metric": "cosine",
+        "weights_sha256": {
+          "config.json": "a64d1b3f68ea08d078e2ec87953e9c51ede6f135e5d7c97821d6e5680a1429a9",
+          "vocab.txt": "399868a653e85549ce150af4a1f6cd2776240c6a3d951ced2120565f00f027fd",
+          "pytorch_model.bin": "5bb7f9f5831ec16a4b90545f95394853caf19ff9a8272291c86e0b231e0ff2ba"
+        },
+        "torch_version": "2.11.0",
+        "transformers_version": "4.57.6",
+        "pooling": "last_hidden_state_CLS",
+        "device": "cpu",
+        "truncation": false,
+        "max_tokens": 512
+      },
+      "corpus_sha256": "b1237448021a5d7e57feabbe90506234e9994731042bcff4575fb676a4851ff1",
+      "vectors_sha256": "6868988803221ff0c125607357e27b813b31084281aa298d26b84babaa8dc9ec",
+      "index_sha256": "285c05b5a2444c9f192df9545a34ca15bb3e34faed6b90991484bdf2e0e3e11e",
+      "available_domains": {
+        "enzyme_reference": 640,
+        "patent_reference": 1988
+      },
+      "excluded_source_rows": 0,
+      "outside_common_pool_ids": [
+        "R_37affc23d64883ed5126"
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "matplotlib": "3.11.1"
+  },
+  "code_sha256": {
+    "src/bioreaction_atlas/consistency.py": "40392418ef5131d677a6c95e57a293a24e64adc379393a53ad761a73b74dc4e1",
+    "scripts/analyze_encoder_consistency.py": "f7318695b0758f51c1caeb8eae323967dd664966077c1baf8379d8b9946a7c69"
+  },
+  "analyses": {
+    "enzyme_to_patent": {
+      "candidate_domain": "patent_reference",
+      "exclude_shared_source": false,
+      "self_excluded": true,
+      "query_count": 639,
+      "candidate_pool_size": 1988,
+      "query_source_count": 36,
+      "eligible_candidate_range": [
+        1988,
+        1988
+      ],
+      "ks": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "score_decimals": 6,
+      "query_exclusions": [],
+      "pairs": [
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "substrate",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.21695333234037503,
+              "median": 0.206203029107369,
+              "q10": 0.036976423458490906,
+              "q90": 0.4201991714799195,
+              "source_macro_mean": 0.16368623602018703,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.0810641627543036,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.06840281732114945,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.08771355578867315,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.24317460317460324,
+              "source_macro_mean": 0.07241533022957997,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.36932707355242567,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29928646514485624,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.10672926447574335,
+              "median": 0.1,
+              "q10": 0.0,
+              "q90": 0.3,
+              "source_macro_mean": 0.07759566360644632,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.11065008022754501,
+              "median": 0.05384615384615384,
+              "q10": 0.0,
+              "q90": 0.33666666666666745,
+              "source_macro_mean": 0.08088672111613465,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.433489827856025,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3246613756674161,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.14068857589984352,
+              "median": 0.1,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.10496924793491808,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.14030154552455024,
+              "median": 0.1,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.1046265386941819,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.26291079812206575,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29934053084046636,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.010954616588419406,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.008989954006293875,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.18654147104851332,
+              "median": 0.14,
+              "q10": 0.02,
+              "q90": 0.44,
+              "source_macro_mean": 0.14748339173072492,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.1863442730109397,
+              "median": 0.14,
+              "q10": 0.02,
+              "q90": 0.44,
+              "source_macro_mean": 0.14757041662328543,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.24726134585289514,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.26909880069999514,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006775067750677507,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.1317487231076536,
+              "median": 0.09374129755799383,
+              "q10": -0.03509905912835952,
+              "q90": 0.36887976408457224,
+              "source_macro_mean": 0.08260937262886053,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.04726134585289515,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.04408775615231909,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.047220727455469236,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.04416609399027929,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.36932707355242567,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29928646514485624,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.081377151799687,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0834090825503937,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.07245696400625978,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.3,
+              "source_macro_mean": 0.07662598592388545,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.07536275088153023,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.3,
+              "source_macro_mean": 0.07907251476460289,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.433489827856025,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3246613756674161,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.1643192488262911,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.18923097672367434,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.10539906103286387,
+              "median": 0.05,
+              "q10": 0.0,
+              "q90": 0.3,
+              "source_macro_mean": 0.10465916041334128,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.10642572042806785,
+              "median": 0.05,
+              "q10": 0.0,
+              "q90": 0.3,
+              "source_macro_mean": 0.10534506743213475,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.26291079812206575,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29934053084046636,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3328974174756082,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.15758998435054775,
+              "median": 0.12,
+              "q10": 0.0,
+              "q90": 0.38,
+              "source_macro_mean": 0.14531595193785649,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.15746749824684098,
+              "median": 0.10666666666666666,
+              "q10": 0.0,
+              "q90": 0.38,
+              "source_macro_mean": 0.14506683821465444,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.24726134585289514,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.26909880069999514,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.431924882629108,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4939832387106659,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.04509775245701576,
+              "median": 0.04577139148193795,
+              "q10": -0.0575506589586703,
+              "q90": 0.141212404649584,
+              "source_macro_mean": 0.038342319847364664,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.008137715179968702,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.005519943019943021,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.007981220657276994,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.005413105413105414,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.36932707355242567,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29928646514485624,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.033489827856025035,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.022374250048022414,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.034128847157016175,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.02279436667907654,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.433489827856025,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3246613756674161,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.042410015649452265,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.25,
+              "source_macro_mean": 0.031302176186426486,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.04234480959833072,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.25,
+              "source_macro_mean": 0.03131797571611491,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.26291079812206575,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.29934053084046636,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.0622848200312989,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.0631729452326169,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.062192488262910794,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.06307783681888104,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.24726134585289514,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.26909880069999514,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006459948320413437,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.05342098140511578,
+              "median": 0.049091117527099576,
+              "q10": -0.021410060788074434,
+              "q90": 0.13785051814480653,
+              "source_macro_mean": 0.0420146962295346,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.033802816901408454,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.03177126471006041,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.03348982785602504,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.2,
+              "source_macro_mean": 0.03166838405162419,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.081377151799687,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0834090825503937,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.04006259780907668,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.034487812254571856,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.039919144496609285,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.03447858540690215,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.1643192488262911,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.18923097672367434,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.05211267605633802,
+              "median": 0.05,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.043207587117521346,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.05242566510172144,
+              "median": 0.05,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.04359255600272811,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.010954616588419406,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.008989954006293875,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3328974174756082,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.07971830985915493,
+              "median": 0.06,
+              "q10": 0.02,
+              "q90": 0.16,
+              "source_macro_mean": 0.06605908241158136,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.07966890230270512,
+              "median": 0.06,
+              "q10": 0.019200000000000016,
+              "q90": 0.16,
+              "source_macro_mean": 0.06595322567350784,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006775067750677507,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.431924882629108,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4939832387106659,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.054955704855871354,
+              "median": 0.053917061732704594,
+              "q10": -0.016989222476788676,
+              "q90": 0.11809410086716236,
+              "source_macro_mean": 0.05872053063323843,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.002816901408450705,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0033746368917937546,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.002816901408450705,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0033746368917937546,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.007042253521126761,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.007988542639277932,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.007042253521126761,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.007988542639277932,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.013302034428794992,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.05,
+              "source_macro_mean": 0.013277827439205338,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.013302034428794992,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.05,
+              "source_macro_mean": 0.013277827439205338,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.010954616588419406,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.008989954006293875,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.0361189358372457,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.08,
+              "source_macro_mean": 0.03910136284927172,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.0361189358372457,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.08,
+              "source_macro_mean": 0.03910136284927172,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006775067750677507,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006459948320413437,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "drfp",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.04238444559292958,
+              "median": 0.03644980282224256,
+              "q10": -0.052379955326175925,
+              "q90": 0.14260486073977752,
+              "source_macro_mean": 0.044845830260948585,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.004694835680751174,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.002788245402624488,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.004694835680751174,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.002788245402624488,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.081377151799687,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0834090825503937,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.002515090543259557,
+              "median": 0.0025150905432595573,
+              "q10": 0.0025150905432595573,
+              "q90": 0.0025150905432595573,
+              "source_macro_mean": 0.0025150905432595578,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.012676056338028171,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.009473297747399056,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.012676056338028171,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.1,
+              "source_macro_mean": 0.009513715148927567,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.1643192488262911,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.18923097672367434,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.005030181086519114,
+              "median": 0.005030181086519115,
+              "q10": 0.005030181086519115,
+              "q90": 0.005030181086519115,
+              "source_macro_mean": 0.0050301810865191155,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.01729264475743349,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.05,
+              "source_macro_mean": 0.021313480263845552,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.017279603547209182,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.05,
+              "source_macro_mean": 0.021318926886939236,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3328974174756082,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.010060362173038228,
+              "median": 0.01006036217303823,
+              "q10": 0.01006036217303823,
+              "q90": 0.01006036217303823,
+              "source_macro_mean": 0.010060362173038231,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.03342723004694836,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.08,
+              "source_macro_mean": 0.03496004020489184,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.03341124524927342,
+              "median": 0.02,
+              "q10": 0.0,
+              "q90": 0.08,
+              "source_macro_mean": 0.034838543835533864,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.431924882629108,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4939832387106659,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0006459948320413437,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.025150905432595582,
+              "median": 0.025150905432595575,
+              "q10": 0.025150905432595575,
+              "q90": 0.025150905432595575,
+              "source_macro_mean": 0.02515090543259558,
+              "defined_queries": 639
+            }
+          }
+        }
+      ]
+    },
+    "enzyme_to_enzyme": {
+      "candidate_domain": "enzyme_reference",
+      "exclude_shared_source": false,
+      "self_excluded": true,
+      "query_count": 639,
+      "candidate_pool_size": 639,
+      "query_source_count": 36,
+      "eligible_candidate_range": [
+        638,
+        638
+      ],
+      "ks": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "score_decimals": 6,
+      "query_exclusions": [],
+      "pairs": [
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "substrate",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.440797358195423,
+              "median": 0.4228375474541661,
+              "q10": 0.2077684894092418,
+              "q90": 0.7537157062857553,
+              "source_macro_mean": 0.34558623558337254,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.49358372456964,
+              "median": 0.4,
+              "q10": 0.2,
+              "q90": 0.8,
+              "source_macro_mean": 0.516551823704587,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.4907155142718522,
+              "median": 0.48,
+              "q10": 0.2,
+              "q90": 0.8,
+              "source_macro_mean": 0.5115210748788741,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5320813771517997,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.46248069274543746,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.17996870109546165,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.13313972814569766,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.5546165884194053,
+              "median": 0.6,
+              "q10": 0.2,
+              "q90": 0.9,
+              "source_macro_mean": 0.5382973022837789,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.5539507486514529,
+              "median": 0.5538461538461539,
+              "q10": 0.2,
+              "q90": 0.9,
+              "source_macro_mean": 0.5376748022639082,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.42566510172143973,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.355175252434282,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.3082942097026604,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.24311945831423432,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.5724569640062598,
+              "median": 0.55,
+              "q10": 0.3,
+              "q90": 0.85,
+              "source_macro_mean": 0.5210331058367496,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.5715930922177095,
+              "median": 0.55,
+              "q10": 0.3,
+              "q90": 0.85,
+              "source_macro_mean": 0.5211665189193427,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.5477308294209703,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5395266272940843,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2475960512677335,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.5789671361502348,
+              "median": 0.58,
+              "q10": 0.34,
+              "q90": 0.8,
+              "source_macro_mean": 0.5239453998030076,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.5799454316969777,
+              "median": 0.5822222222222222,
+              "q10": 0.3393333333333334,
+              "q90": 0.8,
+              "source_macro_mean": 0.5250148743219599,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5539906103286385,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5580594441585633,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.26604068857589985,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2778434608910206,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.5458959430059156,
+              "median": 0.6405702845081682,
+              "q10": 0.11058827982985998,
+              "q90": 0.7655682985922881,
+              "source_macro_mean": 0.4927815605035282,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.5665101721439749,
+              "median": 0.6,
+              "q10": 0.2,
+              "q90": 1.0,
+              "source_macro_mean": 0.582515574211127,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.5537375626460134,
+              "median": 0.6,
+              "q10": 0.2,
+              "q90": 0.8666666666666666,
+              "source_macro_mean": 0.572154026029405,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5320813771517997,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.46248069274543746,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.3568075117370892,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.30920740759775,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.6250391236306729,
+              "median": 0.7,
+              "q10": 0.2,
+              "q90": 0.9,
+              "source_macro_mean": 0.6103746734486303,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.6244737878188582,
+              "median": 0.7,
+              "q10": 0.2,
+              "q90": 0.9018181818181822,
+              "source_macro_mean": 0.6101981255055967,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.42566510172143973,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.355175252434282,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2688777614020925,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.6305164319248827,
+              "median": 0.65,
+              "q10": 0.35,
+              "q90": 0.9,
+              "source_macro_mean": 0.614870018256908,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.6284887761890721,
+              "median": 0.6461538461538462,
+              "q10": 0.3773333333333334,
+              "q90": 0.9,
+              "source_macro_mean": 0.6111660432373409,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.5477308294209703,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5395266272940843,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.3474178403755869,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4266936307069129,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.7071048513302034,
+              "median": 0.72,
+              "q10": 0.5,
+              "q90": 0.9,
+              "source_macro_mean": 0.6782196329678735,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.706982811070165,
+              "median": 0.72,
+              "q10": 0.5,
+              "q90": 0.9,
+              "source_macro_mean": 0.6782814400290289,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5539906103286385,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5580594441585633,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.39906103286384975,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4367174683468004,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.4088530496466585,
+              "median": 0.5226683630229293,
+              "q10": -0.012169426997620622,
+              "q90": 0.6851033804334654,
+              "source_macro_mean": 0.4030851353581626,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.4829420970266041,
+              "median": 0.4,
+              "q10": 0.2,
+              "q90": 0.8,
+              "source_macro_mean": 0.5076722556357135,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.4871709406920675,
+              "median": 0.5,
+              "q10": 0.16666666666666669,
+              "q90": 0.8,
+              "source_macro_mean": 0.5115801241298586,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5320813771517997,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.46248069274543746,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.554773082942097,
+              "median": 0.6,
+              "q10": 0.2,
+              "q90": 0.9,
+              "source_macro_mean": 0.5541257852143201,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.5558236573025305,
+              "median": 0.6,
+              "q10": 0.2,
+              "q90": 0.9,
+              "source_macro_mean": 0.5537529840718957,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.42566510172143973,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.355175252434282,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.5802034428794992,
+              "median": 0.6,
+              "q10": 0.3,
+              "q90": 0.85,
+              "source_macro_mean": 0.5407383376777684,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.5795930755812875,
+              "median": 0.6,
+              "q10": 0.3,
+              "q90": 0.85,
+              "source_macro_mean": 0.540141060348005,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.5477308294209703,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5395266272940843,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.003472222222222222,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.5661658841940531,
+              "median": 0.58,
+              "q10": 0.28,
+              "q90": 0.84,
+              "source_macro_mean": 0.5036750142491806,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.5660134265550302,
+              "median": 0.58,
+              "q10": 0.28,
+              "q90": 0.84,
+              "source_macro_mean": 0.5039081585808804,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5539906103286385,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5580594441585633,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.001851851851851852,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.43908546663742515,
+              "median": 0.46847887420465684,
+              "q10": 0.16724985423547578,
+              "q90": 0.6793891687482846,
+              "source_macro_mean": 0.3696419714204441,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.39280125195618154,
+              "median": 0.4,
+              "q10": 0.0,
+              "q90": 0.8,
+              "source_macro_mean": 0.4430636277873782,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.3910276473656755,
+              "median": 0.4,
+              "q10": 0.1,
+              "q90": 0.8,
+              "source_macro_mean": 0.4402572589309159,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.17996870109546165,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.13313972814569766,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.3568075117370892,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.30920740759775,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.46259780907668235,
+              "median": 0.5,
+              "q10": 0.2,
+              "q90": 0.8,
+              "source_macro_mean": 0.48902433826256125,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.46206953138584606,
+              "median": 0.45,
+              "q10": 0.2,
+              "q90": 0.8,
+              "source_macro_mean": 0.4878713519033252,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.3082942097026604,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.24311945831423432,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2688777614020925,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.5034428794992175,
+              "median": 0.5,
+              "q10": 0.25,
+              "q90": 0.7600000000000022,
+              "source_macro_mean": 0.49190427953189975,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.5029407929055816,
+              "median": 0.5,
+              "q10": 0.25,
+              "q90": 0.775,
+              "source_macro_mean": 0.49142899376286586,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2475960512677335,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.3474178403755869,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4266936307069129,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.5484194053208138,
+              "median": 0.56,
+              "q10": 0.3,
+              "q90": 0.7640000000000009,
+              "source_macro_mean": 0.5093714690841876,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.5482178254713466,
+              "median": 0.56,
+              "q10": 0.3,
+              "q90": 0.7640000000000009,
+              "source_macro_mean": 0.5091304875214484,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.26604068857589985,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2778434608910206,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.39906103286384975,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4367174683468004,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.24297567214263058,
+              "median": 0.2869965139487489,
+              "q10": -0.02343456523816385,
+              "q90": 0.4726972122111861,
+              "source_macro_mean": 0.21271663227032483,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.40375586854460094,
+              "median": 0.4,
+              "q10": 0.0,
+              "q90": 0.8,
+              "source_macro_mean": 0.4348113987853565,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.40446009389671367,
+              "median": 0.4,
+              "q10": 0.0,
+              "q90": 0.8,
+              "source_macro_mean": 0.4354675527428133,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.17996870109546165,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.13313972814569766,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.4281690140845071,
+              "median": 0.4,
+              "q10": 0.1,
+              "q90": 0.7,
+              "source_macro_mean": 0.4316567538948069,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.42818205529473136,
+              "median": 0.4,
+              "q10": 0.1,
+              "q90": 0.7,
+              "source_macro_mean": 0.43105589438432274,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.3082942097026604,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.24311945831423432,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.45892018779342725,
+              "median": 0.45,
+              "q10": 0.15,
+              "q90": 0.75,
+              "source_macro_mean": 0.4223805032732269,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.45925469483568077,
+              "median": 0.45,
+              "q10": 0.15,
+              "q90": 0.75,
+              "source_macro_mean": 0.4231642946209915,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2475960512677335,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.003472222222222222,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.43624413145539903,
+              "median": 0.42,
+              "q10": 0.18,
+              "q90": 0.7,
+              "source_macro_mean": 0.368356511315472,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.4362115284298383,
+              "median": 0.43,
+              "q10": 0.18800000000000006,
+              "q90": 0.7,
+              "source_macro_mean": 0.36832295946043003,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.26604068857589985,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2778434608910206,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.001851851851851852,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "drfp",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.4564981209036847,
+              "median": 0.5519212681988918,
+              "q10": 0.043171841129964646,
+              "q90": 0.6980090104283565,
+              "source_macro_mean": 0.42788616931609375,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.4694835680751174,
+              "median": 0.4,
+              "q10": 0.0,
+              "q90": 0.8,
+              "source_macro_mean": 0.5076470886639649,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.46431216931216934,
+              "median": 0.4,
+              "q10": 0.0,
+              "q90": 0.8,
+              "source_macro_mean": 0.5037458912218605,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.3568075117370892,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.30920740759775,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.007836990595611285,
+              "median": 0.007836990595611285,
+              "q10": 0.007836990595611285,
+              "q90": 0.007836990595611285,
+              "source_macro_mean": 0.007836990595611283,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.513302034428795,
+              "median": 0.6,
+              "q10": 0.1,
+              "q90": 0.8,
+              "source_macro_mean": 0.5155160015060896,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.5134836798569193,
+              "median": 0.5666666666666667,
+              "q10": 0.1400000000000002,
+              "q90": 0.8,
+              "source_macro_mean": 0.5155816645448915,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.27543035993740217,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2688777614020925,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.01567398119122257,
+              "median": 0.01567398119122257,
+              "q10": 0.01567398119122257,
+              "q90": 0.01567398119122257,
+              "source_macro_mean": 0.015673981191222566,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.5527386541471049,
+              "median": 0.55,
+              "q10": 0.25,
+              "q90": 0.9,
+              "source_macro_mean": 0.5156694973529998,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.5523147527138137,
+              "median": 0.55,
+              "q10": 0.27000000000000013,
+              "q90": 0.9,
+              "source_macro_mean": 0.5145740239954678,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.3474178403755869,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4266936307069129,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.003472222222222222,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.03134796238244514,
+              "median": 0.03134796238244514,
+              "q10": 0.03134796238244514,
+              "q90": 0.03134796238244514,
+              "source_macro_mean": 0.03134796238244513,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.5550547730829422,
+              "median": 0.56,
+              "q10": 0.28,
+              "q90": 0.8,
+              "source_macro_mean": 0.4928685303576106,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.5548452691457386,
+              "median": 0.56,
+              "q10": 0.28,
+              "q90": 0.8016000000000004,
+              "source_macro_mean": 0.4928184918931336,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.39906103286384975,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.4367174683468004,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.001564945226917058,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.001851851851851852,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.07836990595611286,
+              "median": 0.07836990595611286,
+              "q10": 0.07836990595611286,
+              "q90": 0.07836990595611286,
+              "source_macro_mean": 0.07836990595611286,
+              "defined_queries": 639
+            }
+          }
+        }
+      ]
+    },
+    "enzyme_cross_source": {
+      "candidate_domain": "enzyme_reference",
+      "exclude_shared_source": true,
+      "self_excluded": true,
+      "query_count": 639,
+      "candidate_pool_size": 639,
+      "query_source_count": 36,
+      "eligible_candidate_range": [
+        579,
+        638
+      ],
+      "ks": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "score_decimals": 6,
+      "query_exclusions": [],
+      "pairs": [
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "substrate",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.3792375177585739,
+              "median": 0.3679007005492096,
+              "q10": 0.11475338784758318,
+              "q90": 0.7008142511490975,
+              "source_macro_mean": 0.30421528702946127,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.2791862284820032,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.2537345911610473,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.2772150185060983,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.2523401222777111,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5602503912363067,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5271435018510867,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.19405320813771518,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.1596264476408554,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.3057902973395931,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.28719056951720856,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.30440472469444546,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.28680900129838904,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.5884194053208138,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5289833224915507,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.2535211267605634,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2257849710170543,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.39397496087636935,
+              "median": 0.4,
+              "q10": 0.09000000000000022,
+              "q90": 0.7,
+              "source_macro_mean": 0.37308686756560555,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.39329745825961215,
+              "median": 0.4,
+              "q10": 0.07722222222222223,
+              "q90": 0.7,
+              "source_macro_mean": 0.37449194439778544,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.594679186228482,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5484345085803705,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.19874804381846636,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.16303990221686135,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.4345539906103286,
+              "median": 0.44,
+              "q10": 0.18,
+              "q90": 0.68,
+              "source_macro_mean": 0.41018244061237025,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.4354757994177257,
+              "median": 0.4533333333333333,
+              "q10": 0.18,
+              "q90": 0.68,
+              "source_macro_mean": 0.4109208778137775,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5743348982785602,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5790038501814194,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.325508607198748,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3619351192936568,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.4860585102366245,
+              "median": 0.5717118981202962,
+              "q10": 0.032934887259712865,
+              "q90": 0.747174476894773,
+              "source_macro_mean": 0.4541586852828682,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.28982785602503913,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.29950547355707813,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.2800417318727178,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.28802065932394727,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5602503912363067,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5271435018510867,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.4225352112676056,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.405630196227651,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.3785602503912363,
+              "median": 0.4,
+              "q10": 0.08000000000000043,
+              "q90": 0.8,
+              "source_macro_mean": 0.36219229151387805,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.3771434226726213,
+              "median": 0.4,
+              "q10": 0.040000000000000216,
+              "q90": 0.75,
+              "source_macro_mean": 0.36107964707820955,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.5884194053208138,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5289833224915507,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.35665706989531154,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.5051643192488263,
+              "median": 0.5,
+              "q10": 0.2,
+              "q90": 0.85,
+              "source_macro_mean": 0.49823483020587794,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.5043850143914169,
+              "median": 0.5055555555555555,
+              "q10": 0.19,
+              "q90": 0.875,
+              "source_macro_mean": 0.496723770446322,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.594679186228482,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5484345085803705,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.4272300469483568,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.44690295128340796,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.596056338028169,
+              "median": 0.64,
+              "q10": 0.28,
+              "q90": 0.82,
+              "source_macro_mean": 0.5838260217079664,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.5961296325369713,
+              "median": 0.64,
+              "q10": 0.28526666666666667,
+              "q90": 0.8333333333333333,
+              "source_macro_mean": 0.5839182695745133,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5743348982785602,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5790038501814194,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.39593114241001565,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3711123857841483,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "morgan",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.3379191933912939,
+              "median": 0.4621647194605553,
+              "q10": -0.11569498811984319,
+              "q90": 0.6637406634344857,
+              "source_macro_mean": 0.35918358507982484,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.20156494522691706,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.1955740414921008,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.20477556698213975,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5999999999999999,
+              "source_macro_mean": 0.19931246270184386,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.5602503912363067,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5271435018510867,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.2923317683881064,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.7,
+              "source_macro_mean": 0.2687275221484888,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.2929733800078088,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.7,
+              "source_macro_mean": 0.2675861009273818,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.5884194053208138,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5289833224915507,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.3501564945226917,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.75,
+              "source_macro_mean": 0.3212557643884273,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.34886932795237163,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.75,
+              "source_macro_mean": 0.3204700950264242,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.594679186228482,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5484345085803705,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.42093896713615025,
+              "median": 0.46,
+              "q10": 0.1,
+              "q90": 0.66,
+              "source_macro_mean": 0.3937412846362352,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.4201509659702148,
+              "median": 0.46,
+              "q10": 0.09920000000000002,
+              "q90": 0.66,
+              "source_macro_mean": 0.3936404734328376,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.5743348982785602,
+              "median": 1.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.5790038501814194,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "drfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.37863061055733144,
+              "median": 0.39522825371915216,
+              "q10": 0.11967841859105474,
+              "q90": 0.6137521686617811,
+              "source_macro_mean": 0.32944768784614104,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.2006259780907668,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.19696033741824673,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.19867352261718457,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5028571428571434,
+              "source_macro_mean": 0.19729779522403657,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.19405320813771518,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.1596264476408554,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.4225352112676056,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.405630196227651,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.24616588419405322,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5,
+              "source_macro_mean": 0.24913725813445126,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.24601851851851853,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5,
+              "source_macro_mean": 0.24940195717225,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.2535211267605634,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2257849710170543,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.35665706989531154,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.340453834115806,
+              "median": 0.3,
+              "q10": 0.05,
+              "q90": 0.7,
+              "source_macro_mean": 0.3467418301497506,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.34088043694264347,
+              "median": 0.3,
+              "q10": 0.05,
+              "q90": 0.7,
+              "source_macro_mean": 0.34620574962361095,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.19874804381846636,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.16303990221686135,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.4272300469483568,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.44690295128340796,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.3953990610328638,
+              "median": 0.42,
+              "q10": 0.14,
+              "q90": 0.6,
+              "source_macro_mean": 0.38910581341663825,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.39566348709541194,
+              "median": 0.42,
+              "q10": 0.14,
+              "q90": 0.6,
+              "source_macro_mean": 0.3892797125544316,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.325508607198748,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3619351192936568,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.39593114241001565,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3711123857841483,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "substrate",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.16453995521840575,
+              "median": 0.22166598392880488,
+              "q10": -0.141780566973618,
+              "q90": 0.4009302946548415,
+              "source_macro_mean": 0.16234923203626772,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.11236306729264475,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.10835123373501433,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.11335419926969223,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.10620909704494735,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.19405320813771518,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.1596264476408554,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.16572769953051644,
+              "median": 0.1,
+              "q10": 0.0,
+              "q90": 0.4200000000000046,
+              "source_macro_mean": 0.14982195297520906,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.1664319248826291,
+              "median": 0.1,
+              "q10": 0.0,
+              "q90": 0.4600000000000023,
+              "source_macro_mean": 0.15114308958314437,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.2535211267605634,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.2257849710170543,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.22871674491392807,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5,
+              "source_macro_mean": 0.2148468472980896,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.22869718309859152,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.5,
+              "source_macro_mean": 0.21486698527760606,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.19874804381846636,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.16303990221686135,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.28860719874804386,
+              "median": 0.28,
+              "q10": 0.06,
+              "q90": 0.52,
+              "source_macro_mean": 0.24905872891354322,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.2887558685446009,
+              "median": 0.28,
+              "q10": 0.06,
+              "q90": 0.52,
+              "source_macro_mean": 0.2491885609256704,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.325508607198748,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3619351192936568,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        },
+        {
+          "encoder_a": "drfp",
+          "encoder_b": "rxnfp",
+          "queries": 639,
+          "metrics": {
+            "spearman": {
+              "mean": 0.3951284125618007,
+              "median": 0.48833749661734355,
+              "q10": -0.059693359511588266,
+              "q90": 0.661859243300358,
+              "source_macro_mean": 0.38821715342000795,
+              "defined_queries": 639
+            },
+            "overlap_at_5": {
+              "mean": 0.16306729264475744,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.16195708452890603,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_5": {
+              "mean": 0.16464639689991803,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.4,
+              "source_macro_mean": 0.1601196093023443,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_5": {
+              "mean": 0.4225352112676056,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.405630196227651,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_5": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_5": {
+              "mean": 0.008195309663516486,
+              "median": 0.008130081300813009,
+              "q10": 0.00794912559618442,
+              "q90": 0.008547008547008548,
+              "source_macro_mean": 0.00805347241072346,
+              "defined_queries": 639
+            },
+            "overlap_at_10": {
+              "mean": 0.2482003129890454,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6,
+              "source_macro_mean": 0.23556150082967264,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_10": {
+              "mean": 0.2485133020344288,
+              "median": 0.2,
+              "q10": 0.0,
+              "q90": 0.6520000000000005,
+              "source_macro_mean": 0.23634419307111776,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_10": {
+              "mean": 0.3286384976525822,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.35665706989531154,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_10": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_10": {
+              "mean": 0.016390619327032972,
+              "median": 0.016260162601626018,
+              "q10": 0.01589825119236884,
+              "q90": 0.017094017094017096,
+              "source_macro_mean": 0.01610694482144692,
+              "defined_queries": 639
+            },
+            "overlap_at_20": {
+              "mean": 0.3480438184663536,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.75,
+              "source_macro_mean": 0.3241986630618702,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_20": {
+              "mean": 0.3476446642819882,
+              "median": 0.3,
+              "q10": 0.0,
+              "q90": 0.75,
+              "source_macro_mean": 0.32382732471384923,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_20": {
+              "mean": 0.4272300469483568,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.44690295128340796,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_20": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_20": {
+              "mean": 0.032781238654065945,
+              "median": 0.032520325203252036,
+              "q10": 0.03179650238473768,
+              "q90": 0.03418803418803419,
+              "source_macro_mean": 0.03221388964289384,
+              "defined_queries": 639
+            },
+            "overlap_at_50": {
+              "mean": 0.4061032863849765,
+              "median": 0.42,
+              "q10": 0.08,
+              "q90": 0.64,
+              "source_macro_mean": 0.3734819475193516,
+              "defined_queries": 639
+            },
+            "expected_overlap_at_50": {
+              "mean": 0.40643304270064834,
+              "median": 0.42,
+              "q10": 0.08,
+              "q90": 0.6568333333333334,
+              "source_macro_mean": 0.3735501622375687,
+              "defined_queries": 639
+            },
+            "boundary_tie_a_at_50": {
+              "mean": 0.39593114241001565,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 1.0,
+              "source_macro_mean": 0.3711123857841483,
+              "defined_queries": 639
+            },
+            "boundary_tie_b_at_50": {
+              "mean": 0.0,
+              "median": 0.0,
+              "q10": 0.0,
+              "q90": 0.0,
+              "source_macro_mean": 0.0,
+              "defined_queries": 639
+            },
+            "random_overlap_at_50": {
+              "mean": 0.08195309663516488,
+              "median": 0.08130081300813008,
+              "q10": 0.0794912559618442,
+              "q90": 0.08547008547008547,
+              "source_macro_mean": 0.08053472410723457,
+              "defined_queries": 639
+            }
+          }
+        }
+      ]
+    }
+  },
+  "case_selection": [
+    {
+      "query_id": "R_02177955a1d7dfa9c6b0",
+      "query_sources": [
+        "10.1021/acscentsci.3c00516"
+      ],
+      "mean_expected_overlap": 0.0,
+      "selection_k": 10
+    },
+    {
+      "query_id": "R_02efe45ea2436a2da26f",
+      "query_sources": [
+        "10.1002/anie.202002861"
+      ],
+      "mean_expected_overlap": 0.0,
+      "selection_k": 10
+    },
+    {
+      "query_id": "R_042205093d23820bf7e9",
+      "query_sources": [
+        "10.1021/jacs.9b09864"
+      ],
+      "mean_expected_overlap": 0.0,
+      "selection_k": 10
+    }
+  ],
+  "rounding_sensitivity": {
+    "5": [
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "substrate",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.21695304862752152,
+            "median": 0.2062081703837154,
+            "q10": 0.03697854711234814,
+            "q90": 0.4202018088597075,
+            "source_macro_mean": 0.16368610764772684,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.0810641627543036,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.06840281732114945,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.08771355578867315,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.24317460317460324,
+            "source_macro_mean": 0.07241533022957997,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.37089201877934275,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.30035484121323236,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.10672926447574335,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07759566360644632,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.11060794708682031,
+            "median": 0.05384615384615384,
+            "q10": 0.0,
+            "q90": 0.33666666666666745,
+            "source_macro_mean": 0.0808493279537415,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007253086419753087,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.14068857589984352,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.4,
+            "source_macro_mean": 0.10496924793491808,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.14030154552455024,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.4,
+            "source_macro_mean": 0.1046265386941819,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.014084507042253521,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010610324376664244,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.18654147104851332,
+            "median": 0.14,
+            "q10": 0.02,
+            "q90": 0.44,
+            "source_macro_mean": 0.14748339173072492,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.1863442730109397,
+            "median": 0.14,
+            "q10": 0.02,
+            "q90": 0.44,
+            "source_macro_mean": 0.14757041662328543,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24882629107981222,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.270950652551847,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.011617762506990148,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "drfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.1317485697609317,
+            "median": 0.09374129755799383,
+            "q10": -0.03509920448290044,
+            "q90": 0.36887575081052204,
+            "source_macro_mean": 0.08260927393388755,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.04726134585289515,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.04408775615231909,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.047220727455469236,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.04416609399027929,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.37089201877934275,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.30035484121323236,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.07245696400625978,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07662598592388545,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.07536275088153023,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07907251476460289,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.10539906103286387,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.10465916041334128,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.10642572042806785,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.10534506743213475,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.15758998435054775,
+            "median": 0.12,
+            "q10": 0.0,
+            "q90": 0.38,
+            "source_macro_mean": 0.14531595193785649,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.15746749824684098,
+            "median": 0.10666666666666666,
+            "q10": 0.0,
+            "q90": 0.38,
+            "source_macro_mean": 0.14506683821465444,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24882629107981222,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.270950652551847,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.04509781851599728,
+            "median": 0.04576910966873023,
+            "q10": -0.057554250488233906,
+            "q90": 0.14121054172077901,
+            "source_macro_mean": 0.03834250308828491,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.00782472613458529,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.005306267806267806,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.007746478873239436,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.005252849002849003,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.37089201877934275,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.30035484121323236,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.033489827856025035,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.022374250048022414,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.034128847157016175,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.02279436667907654,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0020576131687242796,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.042410015649452265,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.25,
+            "source_macro_mean": 0.031302176186426486,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.04234480959833072,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.25,
+            "source_macro_mean": 0.03131797571611491,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.001851851851851852,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.0622848200312989,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.0631729452326169,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.062192488262910794,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.06307783681888104,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24882629107981222,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.270950652551847,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.009389671361502348,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010053660337267824,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "substrate",
+        "encoder_b": "drfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.05342080144284753,
+            "median": 0.0490940923732169,
+            "q10": -0.021410044060939448,
+            "q90": 0.13785131055775696,
+            "source_macro_mean": 0.04201474546253451,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.033802816901408454,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.03177126471006041,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.03348982785602504,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.03166838405162419,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.04006259780907668,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.034487812254571856,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.039919144496609285,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.03447858540690215,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007253086419753087,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.05211267605633802,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.043207587117521346,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.05242566510172144,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.04359255600272811,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.014084507042253521,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010610324376664244,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.07971830985915493,
+            "median": 0.06,
+            "q10": 0.02,
+            "q90": 0.16,
+            "source_macro_mean": 0.06605908241158136,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.07966890230270512,
+            "median": 0.06,
+            "q10": 0.019200000000000016,
+            "q90": 0.16,
+            "source_macro_mean": 0.06595322567350784,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.011617762506990148,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "substrate",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.05495579421761498,
+            "median": 0.05391966695966451,
+            "q10": -0.016988028802803777,
+            "q90": 0.1180901674200614,
+            "source_macro_mean": 0.058721092196584536,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.002816901408450705,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0033746368917937546,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.002816901408450705,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0033746368917937546,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.007042253521126761,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007988542639277932,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.007042253521126761,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007988542639277932,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007253086419753087,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0020576131687242796,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.013302034428794992,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.013277827439205338,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.013302034428794992,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.013277827439205338,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.014084507042253521,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010610324376664244,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.001851851851851852,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.0361189358372457,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03910136284927172,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.0361189358372457,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03910136284927172,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.011617762506990148,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.009389671361502348,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010053660337267824,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "drfp",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.042384396117274854,
+            "median": 0.03644835620414779,
+            "q10": -0.05238030984408359,
+            "q90": 0.1426016792879395,
+            "source_macro_mean": 0.04484579443410566,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.002788245402624488,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.002788245402624488,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.012676056338028171,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.009473297747399056,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.012676056338028171,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.009513715148927567,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0020576131687242796,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.01729264475743349,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.021313480263845552,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.017279603547209182,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.021318926886939236,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.003129890453834116,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.001851851851851852,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.03342723004694836,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03496004020489184,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.03341124524927342,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.034838543835533864,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.009389671361502348,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.010053660337267824,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      }
+    ],
+    "7": [
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "substrate",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.2169534409879049,
+            "median": 0.20620316840257427,
+            "q10": 0.036978088955062875,
+            "q90": 0.42019730996718463,
+            "source_macro_mean": 0.16368636957249788,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.0810641627543036,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.06840281732114945,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.08771355578867315,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.24317460317460324,
+            "source_macro_mean": 0.07241533022957997,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.36932707355242567,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29928646514485624,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.10672926447574335,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07759566360644632,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.11065008022754501,
+            "median": 0.05384615384615384,
+            "q10": 0.0,
+            "q90": 0.33666666666666745,
+            "source_macro_mean": 0.08088672111613465,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.14068857589984352,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.4,
+            "source_macro_mean": 0.10496924793491808,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.14030154552455024,
+            "median": 0.1,
+            "q10": 0.0,
+            "q90": 0.4,
+            "source_macro_mean": 0.1046265386941819,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.008989954006293875,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.18654147104851332,
+            "median": 0.14,
+            "q10": 0.02,
+            "q90": 0.44,
+            "source_macro_mean": 0.14748339173072492,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.18633384004276024,
+            "median": 0.14,
+            "q10": 0.02,
+            "q90": 0.44,
+            "source_macro_mean": 0.14756067003459147,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24569640062597808,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.2676368123959016,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.001564945226917058,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0006775067750677507,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "drfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.13174884063865572,
+            "median": 0.09374129755799383,
+            "q10": -0.03509905912835952,
+            "q90": 0.36887976408457224,
+            "source_macro_mean": 0.08260892600562014,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.04726134585289515,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.04408775615231909,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.047220727455469236,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.04416609399027929,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.36932707355242567,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29928646514485624,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.07245696400625978,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07662598592388545,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.07536275088153023,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.07907251476460289,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.10539906103286387,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.10465916041334128,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.10642572042806785,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.3,
+            "source_macro_mean": 0.10534506743213475,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.15758998435054775,
+            "median": 0.12,
+            "q10": 0.0,
+            "q90": 0.38,
+            "source_macro_mean": 0.14531595193785649,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.15746749824684098,
+            "median": 0.10666666666666666,
+            "q10": 0.0,
+            "q90": 0.38,
+            "source_macro_mean": 0.14506683821465444,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24569640062597808,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.2676368123959016,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "morgan",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.04509780753908507,
+            "median": 0.04576850855731092,
+            "q10": -0.05755209339353663,
+            "q90": 0.14121218491147092,
+            "source_macro_mean": 0.03834262960416687,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.008137715179968702,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.005519943019943021,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.007981220657276994,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.005413105413105414,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.36932707355242567,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29928646514485624,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.033489827856025035,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.022374250048022414,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.034128847157016175,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.02279436667907654,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.433489827856025,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3246613756674161,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.042410015649452265,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.25,
+            "source_macro_mean": 0.031302176186426486,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.04234480959833072,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.25,
+            "source_macro_mean": 0.03131797571611491,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.26291079812206575,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.29934053084046636,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.0622848200312989,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.0631729452326169,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.062192488262910794,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.06307783681888104,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.24569640062597808,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.2676368123959016,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "substrate",
+        "encoder_b": "drfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.053420947256810035,
+            "median": 0.04909301630581525,
+            "q10": -0.021411074601638783,
+            "q90": 0.1378506524284522,
+            "source_macro_mean": 0.04201452680607081,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.033802816901408454,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.03177126471006041,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.03348982785602504,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.2,
+            "source_macro_mean": 0.03166838405162419,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.04006259780907668,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.034487812254571856,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.039919144496609285,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.03447858540690215,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.05211267605633802,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.043207587117521346,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.05242566510172144,
+            "median": 0.05,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.04359255600272811,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.008989954006293875,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.07971830985915493,
+            "median": 0.06,
+            "q10": 0.02,
+            "q90": 0.16,
+            "source_macro_mean": 0.06605908241158136,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.07966890230270512,
+            "median": 0.06,
+            "q10": 0.019200000000000016,
+            "q90": 0.16,
+            "source_macro_mean": 0.06595322567350784,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.001564945226917058,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0006775067750677507,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "substrate",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.05495584587324679,
+            "median": 0.0539153547375587,
+            "q10": -0.01698712904223243,
+            "q90": 0.11809974772751845,
+            "source_macro_mean": 0.058720785971541116,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.002816901408450705,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0033746368917937546,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.002816901408450705,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0033746368917937546,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.007042253521126761,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007988542639277932,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.007042253521126761,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.007988542639277932,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.013302034428794992,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.013277827439205338,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.013302034428794992,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.013277827439205338,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.010954616588419406,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.008989954006293875,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.0361189358372457,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03910136284927172,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.0361189358372457,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03910136284927172,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.001564945226917058,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0006775067750677507,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      },
+      {
+        "encoder_a": "drfp",
+        "encoder_b": "rxnfp",
+        "queries": 639,
+        "metrics": {
+          "spearman": {
+            "mean": 0.042384403307825724,
+            "median": 0.03645190541125,
+            "q10": -0.05237859364395953,
+            "q90": 0.14260576381151296,
+            "source_macro_mean": 0.044845856661477834,
+            "defined_queries": 639
+          },
+          "overlap_at_5": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.002788245402624488,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_5": {
+            "mean": 0.004694835680751174,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.002788245402624488,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_5": {
+            "mean": 0.081377151799687,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0834090825503937,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_5": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_5": {
+            "mean": 0.002515090543259557,
+            "median": 0.0025150905432595573,
+            "q10": 0.0025150905432595573,
+            "q90": 0.0025150905432595573,
+            "source_macro_mean": 0.0025150905432595578,
+            "defined_queries": 639
+          },
+          "overlap_at_10": {
+            "mean": 0.012676056338028171,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.009473297747399056,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_10": {
+            "mean": 0.012676056338028171,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.1,
+            "source_macro_mean": 0.009513715148927567,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_10": {
+            "mean": 0.1643192488262911,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.18923097672367434,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_10": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_10": {
+            "mean": 0.005030181086519114,
+            "median": 0.005030181086519115,
+            "q10": 0.005030181086519115,
+            "q90": 0.005030181086519115,
+            "source_macro_mean": 0.0050301810865191155,
+            "defined_queries": 639
+          },
+          "overlap_at_20": {
+            "mean": 0.01729264475743349,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.021313480263845552,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_20": {
+            "mean": 0.017279603547209182,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.05,
+            "source_macro_mean": 0.021318926886939236,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_20": {
+            "mean": 0.3286384976525822,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.3328974174756082,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_20": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_20": {
+            "mean": 0.010060362173038228,
+            "median": 0.01006036217303823,
+            "q10": 0.01006036217303823,
+            "q90": 0.01006036217303823,
+            "source_macro_mean": 0.010060362173038231,
+            "defined_queries": 639
+          },
+          "overlap_at_50": {
+            "mean": 0.03342723004694836,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.03496004020489184,
+            "defined_queries": 639
+          },
+          "expected_overlap_at_50": {
+            "mean": 0.03341124524927342,
+            "median": 0.02,
+            "q10": 0.0,
+            "q90": 0.08,
+            "source_macro_mean": 0.034838543835533864,
+            "defined_queries": 639
+          },
+          "boundary_tie_a_at_50": {
+            "mean": 0.431924882629108,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 1.0,
+            "source_macro_mean": 0.4939832387106659,
+            "defined_queries": 639
+          },
+          "boundary_tie_b_at_50": {
+            "mean": 0.0,
+            "median": 0.0,
+            "q10": 0.0,
+            "q90": 0.0,
+            "source_macro_mean": 0.0,
+            "defined_queries": 639
+          },
+          "random_overlap_at_50": {
+            "mean": 0.025150905432595582,
+            "median": 0.025150905432595575,
+            "q10": 0.025150905432595575,
+            "q90": 0.025150905432595575,
+            "source_macro_mean": 0.02515090543259558,
+            "defined_queries": 639
+          }
+        }
+      }
+    ]
+  },
+  "local_artifacts_sha256": {
+    "cases/README.md": "a967cbe8dc41885151c5e9fd4c924c88d3136bdf03113e3f9d2331c58e2a89fc",
+    "cases/case_1_drfp.svg": "9515a941f8a73fdadb66be11b46d65fea0f55f7f441bfe4fa235dabe3657d6fd",
+    "cases/case_1_morgan.svg": "920e7449e23e4aefc6e7455e4092aa9bf2c5492f072dd7752053edba9a0e9617",
+    "cases/case_1_query.svg": "457120b70acff46e07b503cc25b02bb359055320853e8000393b5053860bf24e",
+    "cases/case_1_rxnfp.svg": "acc48bc775774ea697ba08416054bad5b3930cad7a431c21fdf316c1a0458e83",
+    "cases/case_1_substrate.svg": "029fb778e7bea70d25ca322edb38506caec5eaec31854e7f98481b73871a43bb",
+    "cases/case_2_drfp.svg": "d578ac34b41b4be8473f8a8e3b0eddad378fb49472f23da4f0f9cc99af09f21c",
+    "cases/case_2_morgan.svg": "ed9d77c734ded7705aae546e8dafe36cc17fe227b1cd459a45886162e9ef8f3d",
+    "cases/case_2_query.svg": "854f350a39f9f171a59524f37416826623831c608217dae6343b086971935a74",
+    "cases/case_2_rxnfp.svg": "d3cfe39ea21c350cd05e1a5fe95d87eae6264213978722e69b0f55aa404abb69",
+    "cases/case_2_substrate.svg": "d7c1f867ed77141a9d6e7bd9f9fa0badbe9e49d4602f13ca3ab5b0c9ad7a3247",
+    "cases/case_3_drfp.svg": "569f02f337430d1680e32c60231f933dc12c35a950b61bb5960d94d982096d15",
+    "cases/case_3_morgan.svg": "3541747e11e844ad9f93f7c8f93b10bcac67099d1a7b16ffc26869e3a058f68b",
+    "cases/case_3_query.svg": "f1eae96792681db767f8b011cd158120dab849cf237e7ad8e0801ff167be70cf",
+    "cases/case_3_rxnfp.svg": "ee407e7206cd20078b72918b44d80601a2f76d836825933227f750f27a303b85",
+    "cases/case_3_substrate.svg": "4068e13a9270d5a42faf0e3ec02fa085f27dc6300bebbe725aa4c185eba56000",
+    "cases/cases.json": "3f895cc195130083d8d557f8673ccb61e3bb8e7d22556eec9eb12092cda6ea6c",
+    "enzyme_cross_source_full.json": "de0ae59a9f7eebb60ac050a8d04294e9de449d53727f8cf2030a271e1effd342",
+    "enzyme_cross_source_per_query.csv": "047e07bf62597492a10f1c644e9a88d18ba9a6e7e1f81bed4aeca6f6393ccca0",
+    "enzyme_cross_source_pool.json": "d7578d14e0803fa83d74c524d7cc86c7ee0dd9352158b2efab17f6475de1829f",
+    "enzyme_cross_source_scores.npz": "857d546df0f6ec2debedc5ea664e98c91678f64df7ab90fb7f2aa575e21d8fa5",
+    "enzyme_to_enzyme_full.json": "2baab706de82f98836935dc442959e3a244dd5ebf5afbf9dc4c52fcc9fa5a9e5",
+    "enzyme_to_enzyme_per_query.csv": "a0a8340e1c8ca2ae982632eac5c8e0cf12d4173425505a3104be43878cbdf875",
+    "enzyme_to_enzyme_pool.json": "d7578d14e0803fa83d74c524d7cc86c7ee0dd9352158b2efab17f6475de1829f",
+    "enzyme_to_enzyme_scores.npz": "857d546df0f6ec2debedc5ea664e98c91678f64df7ab90fb7f2aa575e21d8fa5",
+    "enzyme_to_patent_full.json": "d282c4b752fe92e01165a250a2e5bdba9eb2a697aac05fe5d22726af14ac2c66",
+    "enzyme_to_patent_per_query.csv": "d83b1f6b49d4331d67e6207b6b09779b472ab3908844d96a199f1ea45dea77f9",
+    "enzyme_to_patent_pool.json": "7c8663524e08fec14761e51eb606d4f3c757fd13a7e68a949df70dc138f36db4",
+    "enzyme_to_patent_scores.npz": "a8192d26501fb26a22a5c0186771a472cff2b4ca5ad52023c5ccfaffce14fc69"
+  }
+}

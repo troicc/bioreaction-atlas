@@ -1,0 +1,32 @@
+{
+  "protocol_version": "coverage-0.2",
+  "status": "draft",
+  "protocol_document": "research/coverage_protocol_v02.md",
+  "cohort_freeze_date": null,
+  "cohort_selection_rule": null,
+  "corpus_manifest": [],
+  "time_rule": "precedent_earliest_public_date_strictly_before_event_earliest_public_date",
+  "matching_level": "transformation_and_reaction_center",
+  "pilot_budget_minutes_per_event": 90,
+  "candidate_inspection": "union_of_four_encoder_top20_plus_logged_text_and_reference_searches",
+  "ks": [5, 10, 20, 50],
+  "events": [],
+  "event_field_guide": {
+    "event_id": "Unique discovery-event identifier; not a mutant or routine substrate identifier",
+    "paper_id": "DOI or stable primary publication identifier for dependence grouping",
+    "inclusion_reason": "Why this is an eligible independent catalytic transformation",
+    "event_earliest_public_date": "Verified YYYY-MM-DD or null until resolved",
+    "event_date_evidence": "Public version history and exact evidence; not received/accepted date",
+    "event_experiment_locator": "Original scheme/table/SI page and compound identifiers",
+    "reaction_smiles": "Source-checked structural query or null",
+    "strata": "Separate arrays for transformation, activation and platform; allow unknown and overlap",
+    "literature_precedent": "confirmed_earlier or unresolved",
+    "corpus_coverage": "confirmed_present, confirmed_absent_under_protocol, or unresolved",
+    "structure_eligibility": "usable or unusable",
+    "search_outcome": "verified_hit, no_verified_hit_within_budget, or not_completed",
+    "precedents": "Objects containing source, experiment locator, date evidence, nonenzymatic catalyst evidence, structures, corpus record IDs, match rationale and per-encoder ranks",
+    "search_log": "Timestamped queries, engine/corpus version, inspected candidates, actual minutes and incomplete steps",
+    "review": "Reviewer identities, review dates, disagreements and adjudication"
+  },
+  "interpretation": "Blank intake protocol. Not directly accepted by bioatlas evaluate, which implements a different single-cutoff seed-ranking design. No coverage estimate can be inferred from this empty template."
+}

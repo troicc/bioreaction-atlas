@@ -1,0 +1,25 @@
+{
+  "status": "source_file_audit_only_not_validated_benchmark",
+  "commit": "bae30c9b45cb8a4eab1d6facd9314994f086cf9b",
+  "sha256": "abe6bd9f0c1dcc3487b6a2a595d427b70c6714b9a2bfd1c195e50b702ffe9245",
+  "rows": 1342,
+  "canonical_reactions_nonempty": 1341,
+  "canonical_reactions_unique": 640,
+  "doi_unique": 36,
+  "variant_aa_nonempty": 1259,
+  "selectivity_nonmissing": 697,
+  "failed_substrates_nonmissing": 69,
+  "failed_substrates_unique_nonmissing": 3,
+  "warnings_nonempty": 249,
+  "errors_nonempty": 16,
+  "license_status": "README says MIT; LICENSE empty when checked; data redistribution not verified",
+  "interpretation": "Rows, ee signs, and failure-field cells are not independent experimental outcomes. No validated switch benchmark or model result has been produced.",
+  "cofactor_row_counts": {
+    "heme": 1194,
+    "PLP": 117,
+    "Fe(II)": 31
+  },
+  "date_field_min": "20161125",
+  "date_field_max": "20240927",
+  "coverage_note": "These counts apply only to the pinned V6 CSV, not the complete current website or the NAR publication dataset. Repeated mutant/substrate records are not independent reaction classes."
+}

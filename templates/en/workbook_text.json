@@ -1,0 +1,34 @@
+{
+  "instructions": [
+    ["Topic", "Collection instructions"],
+    ["Schema version", "0.1.0; English edition. Compatible with the Chinese workbook; do not rename input sheets or headers."],
+    ["Start here", "Fill the amber-headed fields in Reaction contexts. Include the protein scaffold for enzymatic records. Initially, detailed conditions can stay together in Conditions as reported."],
+    ["One context", "One reaction mode, catalytic system and set of conditions. Create a new Context ID for changes in metal, light, solvent or procedure. Substrate and variant changes usually create a new assay."],
+    ["One measurement", "One row per metric in Measurements. Yield, ee and TTN from the same experiment share an Assay ID but have different Measurement IDs."],
+    ["Discovery events", "Group one reported reaction capability under one Discovery event ID. Fifty substrates or one hundred variants are not fifty or one hundred discoveries."],
+    ["What to collect first", "Prioritize a representative reaction, initial activity, the best evolved variant and informative negative controls. You do not need the entire substrate or mutant library in the first pass."],
+    ["Structures can wait", "Record compound labels and the exact main-text or SI location. Leave Reaction SMILES blank and choose Structure pending if needed. Manual atom mapping is not required."],
+    ["Numbers and bounds", "Enter the plain number 85 with unit % for 85 percent. Do not type Excel 85%. For <1%, enter 1, qualifier <, unit %. Preserve the original expression as well."],
+    ["Selectivity ratios", "For 95:5 dr, select metric dr and put 95:5 in Result as reported. Leave Numeric value blank. This avoids interpreting a ratio as a decimal or time."],
+    ["Zero versus missing", "Enter zero only when reported. Keep n.d. in Result as reported and select Not detected. Use Not reported for missing reporting. An experiment absent from the literature is not a failed experiment."],
+    ["Metal substitution", "Separate Native metal and cofactor, Actual metal and cofactor, and Metal installation method. Do not infer the active oxidation state or catalytic cycle from the added salt."],
+    ["Dates and evidence", "Check preprints as well as journal publication. If only the year is known, leave the date blank and record the year in Notes. Every measurement needs a precise source location."],
+    ["Review status", "Use Needs review for a first-pass collection. Select Reviewed only after checking the source, conditions and structure. Unreviewed structures do not enter default retrieval."],
+    ["Examples", "All examples are fictional format demonstrations. They are not literature or experimental evidence. The importer reads only Reaction contexts and Measurements."],
+    ["Adding rows", "There are 200 prepared rows with dropdowns. Copy the last row formatting to extend the table. The importer reads all nonempty rows. Keep one header row and avoid merged cells."],
+    ["Working together", "Choose a curator prefix, such as WK_ or EM_, for all your IDs. Assign papers before starting. Workbooks can be merged; conflicting rows are never silently overwritten."],
+    ["First batch", "Start with about five primary papers, one or two contexts per paper and three to six key assays. Add multiple measurement rows when an assay has several metrics."]
+  ],
+  "examples": [
+    ["Scenario (all fictional)", "Field", "Example entry", "How to connect records"],
+    ["Context", "Context ID / Discovery event ID", "WK_DEMO_C01 / WK_DEMO_DISCOVERY", "Several conditions from the same discovery share one Discovery event ID."],
+    ["Source", "DOI or public URL / Source location", "Fictional source / fictional SI p.10", "Replace with a real source and exact location when collecting literature."],
+    ["Status", "Review status", "Example", "Example records are always excluded from retrieval."],
+    ["Yield", "Measurement ID / Assay ID / Context ID", "WK_DEMO_M01 / WK_DEMO_A01 / WK_DEMO_C01", "Metric yield; numeric value 35; qualifier =; unit %; Detected."],
+    ["ee, same experiment", "Measurement ID / Assay ID / Context ID", "WK_DEMO_M02 / WK_DEMO_A01 / WK_DEMO_C01", "Metric ee; numeric value 80; qualifier =; unit %; Detected."],
+    ["Undetected control", "Measurement ID / Assay ID / Context ID", "WK_DEMO_M03 / WK_DEMO_A02 / WK_DEMO_C02", "Use a separate control context; leave numeric value blank; original result n.d.; Not detected."],
+    ["Reported upper bound", "Metric / Numeric value / Qualifier / Unit", "yield / 1 / < / %", "Keep <1% in Result as reported. Do not change it to zero or exact 1%."],
+    ["Structures pending", "Reactant and product labels / Structure status", "1a + 2b -> 3ab / Structure pending", "Leave Reaction SMILES blank and provide an exact structure source location."],
+    ["Abiotic precedent", "Catalysis type / Protein scaffold", "Nonenzymatic / blank", "Record actual metal, ligands, solvent and evidence. A precedent does not prove enzyme compatibility."]
+  ]
+}

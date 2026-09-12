@@ -1,0 +1,15 @@
+{
+  "analysis_version": "1.0",
+  "ks": [
+    5,
+    10,
+    20,
+    50
+  ],
+  "score_decimals": 6,
+  "ranking": "descending rounded score; stable ascending entry ID for deterministic overlap",
+  "expected_overlap": "sum(p_a * p_b) / k; independent uniform permutations of boundary ties",
+  "spearman": "average ranks on all eligible candidates; constant ranks are undefined",
+  "case_selection": "lowest mean expected overlap@10; ID tie-break; exclude previously represented sources",
+  "purpose": "descriptive representation agreement; no labeled accuracy or historical coverage"
+}

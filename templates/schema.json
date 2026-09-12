@@ -1,0 +1,462 @@
+{
+  "schema_version": "0.1.0",
+  "tables": {
+    "contexts": {
+      "sheet": "反应条件",
+      "fields": [
+        {
+          "key": "context_id",
+          "label": "体系编号",
+          "description": "自定且唯一，如 MU2025_ENE_C01。改变反应模式、金属或条件时新增体系。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "discovery_id",
+          "label": "发现事件编号",
+          "description": "同一项反应能力发现共用编号；不要按突变体或底物计数。如 MU2025_ENE。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source",
+          "label": "DOI或公开链接",
+          "description": "优先原论文 DOI；预印本可用永久链接。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source_locator",
+          "label": "条件出处",
+          "description": "主文/SI页码、图表编号、实验条目；例如 SI p.12 General procedure A。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "reaction_name",
+          "label": "反应名称",
+          "description": "使用作者名称；例如 abiotic ene reaction。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "catalysis_mode",
+          "label": "催化体系类型",
+          "description": "按该条实验实际使用的催化体系填写。",
+          "required": true,
+          "choices": [
+            "酶催化",
+            "非酶催化",
+            "无催化剂对照"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "scaffold",
+          "label": "蛋白骨架",
+          "description": "实际骨架名；非酶记录可空，酶未明示填 未报告。变体放实验表。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "metal_cofactor",
+          "label": "实际金属及辅因子",
+          "description": "以实验为准。如 Cu(II)；仅知加铜盐时保留盐名，不推测活性价态。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "conditions_raw",
+          "label": "原文条件摘录",
+          "description": "可先整体记录缓冲液、pH、温度、时间、浓度、添加剂及用量；标清单位。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "record_status",
+          "label": "核对状态",
+          "description": "待核对可先录入；已核对表示结构、来源、条件已逐项核实。示例不进入检索。",
+          "required": true,
+          "choices": [
+            "待核对",
+            "已核对",
+            "示例"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "paper_title",
+          "label": "论文标题",
+          "description": "按原文录入。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "lab",
+          "label": "研究组",
+          "description": "便于覆盖统计，可填 PI 姓名/单位。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "first_public_date",
+          "label": "最早公开日期",
+          "description": "YYYY-MM-DD，取预印本/期刊中最早已查证的公开日期。只有年份时留空，备注年份。",
+          "required": false,
+          "choices": null,
+          "kind": "date"
+        },
+        {
+          "key": "date_evidence",
+          "label": "日期核查来源",
+          "description": "支持最早日期的链接；未排查预印本时不要当成严格历史划分依据。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "bond_classes",
+          "label": "成键类别",
+          "description": "多个类别用分号分隔；C-C/C-N/C-O/C-S/C-Si/其他。不能代替反应机理。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "native_metal_cofactor",
+          "label": "天然金属及辅因子",
+          "description": "天然 Fe 与实验 Cu 分开。未知留空。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "metal_installation",
+          "label": "金属引入方式",
+          "description": "加盐置换/引入配合物/重构等，原文怎么说就怎么写。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "enzyme_form",
+          "label": "酶形式",
+          "description": "纯化酶/裂解液/全细胞等。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "buffer_ph",
+          "label": "缓冲液与pH",
+          "description": "缓冲液名称、浓度、pH；未报告留空。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "solvent",
+          "label": "溶剂及比例",
+          "description": "水/共溶剂，注明 v/v 等。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "temperature_c",
+          "label": "温度(°C)",
+          "description": "单一数值；室温/范围保留在原文条件，不猜数值。",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "time_h",
+          "label": "时间(h)",
+          "description": "换算为小时；原始值保留在条件摘录。",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "partners_light",
+          "label": "添加剂及光电条件",
+          "description": "配体、电子供体、氧化剂/还原剂、光波长/功率、气氛及用量。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "loading",
+          "label": "底物及催化剂用量",
+          "description": "底物浓度、酶/金属用量、当量，必须带单位。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "mechanism",
+          "label": "活化方式或中间体",
+          "description": "可留空；有内容时必须说明证据类型与出处。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "mechanism_evidence",
+          "label": "机理证据类型",
+          "description": "把实验证据、作者提议、项目推测分开。",
+          "required": false,
+          "choices": [
+            "实验支持",
+            "作者提出",
+            "项目假设",
+            "未说明"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "mechanism_locator",
+          "label": "机理出处",
+          "description": "机理研究具体图表、页码或链接；项目假设说明理由。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "notes",
+          "label": "备注",
+          "description": "别名、年份、不确定项、来源版本或范围说明。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        }
+      ]
+    },
+    "experiments": {
+      "sheet": "实验结果",
+      "fields": [
+        {
+          "key": "measurement_id",
+          "label": "测量编号",
+          "description": "每行唯一，如 MU2025_ENE_A01_YIELD。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "assay_id",
+          "label": "实验编号",
+          "description": "同一实验多个指标共用；换底物、变体、重复实验时新增编号。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "context_id",
+          "label": "体系编号",
+          "description": "必须对应反应条件表的一条体系。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source_locator",
+          "label": "结果出处",
+          "description": "SI页码/表格/行号/化合物编号，需能定位这个数值。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "compound_ids",
+          "label": "底物至产物编号",
+          "description": "如 1a + 2b → 3ab；未检出时标记目标产物编号，不当作已生成。",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "stage",
+          "label": "实验阶段",
+          "description": "起始骨架、筛选或优化后的结果要分开。",
+          "required": true,
+          "choices": [
+            "初始活性",
+            "筛选中间体",
+            "进化后结果",
+            "底物拓展",
+            "对照",
+            "未说明"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "outcome",
+          "label": "产物检出状态",
+          "description": "未检出只针对本实验和该产物；没报道实验不是阴性。",
+          "required": true,
+          "choices": [
+            "检出",
+            "未检出",
+            "未报告",
+            "不明确"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "metric",
+          "label": "指标",
+          "description": "一行一个指标；产率和 ee 写两行并共用实验编号。",
+          "required": true,
+          "choices": [
+            "yield",
+            "conversion",
+            "ee",
+            "dr",
+            "TTN",
+            "relative_activity",
+            "product_detected",
+            "other"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "value",
+          "label": "数值",
+          "description": "百分数填 85 表示 85%；<1 填数值1、比较符<。未知留空，0必须来自报告。",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "qualifier",
+          "label": "比较符",
+          "description": "数值存在时必填。约数选 ~；不要把 <1 当成精确 1。",
+          "required": false,
+          "choices": [
+            "=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "~"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "unit",
+          "label": "单位",
+          "description": "数值存在时必填。yield/conversion/ee 用 %；TTN用 turnovers。",
+          "required": false,
+          "choices": [
+            "%",
+            "turnovers",
+            "ratio",
+            "boolean",
+            "other"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "raw_result",
+          "label": "原文结果",
+          "description": "保留原始表示，如 >99% ee、95:5 dr、n.d.。数值为空时必填。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "variant",
+          "label": "酶变体",
+          "description": "原文名称及突变；未报告可写 未报告。非酶或无酶对照可空。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "reaction_smiles",
+          "label": "反应SMILES",
+          "description": "反应物>试剂>产物 或 反应物>>产物；保留立体信息，不要求原子映射。可后补。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "structure_status",
+          "label": "结构状态",
+          "description": "只有已核对结构才参与默认检索。未知产物不得补猜测结构。",
+          "required": false,
+          "choices": [
+            "待补结构",
+            "待核对",
+            "已核对"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "product_role",
+          "label": "产物角色",
+          "description": "未检出或对照的 SMILES 可描述测试目标，需标为测试目标。",
+          "required": false,
+          "choices": [
+            "观察产物",
+            "测试目标",
+            "未说明"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "measurement_method",
+          "label": "测定方法",
+          "description": "分离产率/GC/HPLC/NMR；ee的手性方法；标准和误差来源。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "replicates",
+          "label": "重复次数",
+          "description": "原文明确才填。独立重复原始数值可使用不同实验编号。",
+          "required": false,
+          "choices": null,
+          "kind": "integer"
+        },
+        {
+          "key": "uncertainty_raw",
+          "label": "误差及说明",
+          "description": "如 mean ± SD, n=3；不把 SD 当 SEM。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "sequence_accession",
+          "label": "序列或数据库编号",
+          "description": "UniProt/PDB/GenBank 等；可先留空。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "notes",
+          "label": "备注",
+          "description": "产物命名、检测限、控制类型、结构补充来源等。",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        }
+      ]
+    }
+  }
+}

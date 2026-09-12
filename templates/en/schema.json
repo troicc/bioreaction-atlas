@@ -1,0 +1,463 @@
+{
+  "schema_version": "0.1.0",
+  "language": "en",
+  "tables": {
+    "contexts": {
+      "sheet": "Reaction contexts",
+      "fields": [
+        {
+          "key": "context_id",
+          "label": "Context ID",
+          "description": "Unique ID, e.g. WK_MU2025_C01. Create a new context when the reaction mode, metal or conditions change.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "discovery_id",
+          "label": "Discovery event ID",
+          "description": "Group one reported reaction capability. Substrates and variants are not separate discoveries; cross-paper events will be reconciled later.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source",
+          "label": "DOI or public URL",
+          "description": "Original article DOI or permanent preprint URL. Prefer the primary experimental source.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source_locator",
+          "label": "Source location",
+          "description": "Main text or SI page, figure/table and entry. Locate the specific conditions or measurement, not only the paper.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "reaction_name",
+          "label": "Reaction name",
+          "description": "Use the reaction name reported by the authors.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "catalysis_mode",
+          "label": "Catalysis type",
+          "description": "Classify the catalyst actually used in this experiment.",
+          "required": true,
+          "choices": [
+            "Enzymatic",
+            "Nonenzymatic",
+            "No-catalyst control"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "scaffold",
+          "label": "Protein scaffold",
+          "description": "Required for enzymatic records; enter Not reported if unknown. Put the variant in Measurements.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "metal_cofactor",
+          "label": "Actual metal and cofactor",
+          "description": "Record the experimental metal/cofactor or added salt. Do not infer the active oxidation state from the salt alone.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "conditions_raw",
+          "label": "Conditions as reported",
+          "description": "Keep the reported buffer, pH, temperature, time, concentrations, additives and amounts, with units. Details can be separated later.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "record_status",
+          "label": "Review status",
+          "description": "Use Needs review during collection. Reviewed requires checking structures, conditions and sources. Example is always excluded from retrieval.",
+          "required": true,
+          "choices": [
+            "Needs review",
+            "Reviewed",
+            "Example"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "paper_title",
+          "label": "Paper title",
+          "description": "Title as published.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "lab",
+          "label": "Research group",
+          "description": "PI name and/or institution for coverage tracking.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "first_public_date",
+          "label": "Earliest public date",
+          "description": "YYYY-MM-DD after checking preprints and journal versions. If only a year is known, leave blank and put the year in Notes.",
+          "required": false,
+          "choices": null,
+          "kind": "date"
+        },
+        {
+          "key": "date_evidence",
+          "label": "Date evidence URL",
+          "description": "Source supporting the earliest verified public date. A journal date alone does not establish that no earlier preprint exists.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "bond_classes",
+          "label": "Bond formation classes",
+          "description": "Separate multiple labels with semicolons: C-C; C-N; C-O; C-S; C-Si; other. These labels do not establish mechanism.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "native_metal_cofactor",
+          "label": "Native metal and cofactor",
+          "description": "Record native Fe separately from experimental Cu, for example. Leave unknown values blank.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "metal_installation",
+          "label": "Metal installation method",
+          "description": "Describe salt addition, metal substitution, complex incorporation or reconstitution as reported.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "enzyme_form",
+          "label": "Enzyme preparation",
+          "description": "Purified enzyme, lysate, whole cells, etc.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "buffer_ph",
+          "label": "Buffer and pH",
+          "description": "Buffer identity, concentration and pH. Leave unreported information blank.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "solvent",
+          "label": "Solvent and composition",
+          "description": "Water/cosolvent composition with units, e.g. volume fraction.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "temperature_c",
+          "label": "Temperature (C)",
+          "description": "Single numerical value in degrees Celsius. Preserve room temperature or a range in the original conditions; do not guess.",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "time_h",
+          "label": "Duration (h)",
+          "description": "Numerical hours. Keep the original time and unit in Conditions as reported.",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "partners_light",
+          "label": "Additives and light/redox setup",
+          "description": "Ligands, electron donors, oxidants/reductants, wavelength/power, atmosphere and quantities.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "loading",
+          "label": "Substrate and catalyst loading",
+          "description": "Substrate concentration, enzyme/metal loading and equivalents, with units.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "mechanism",
+          "label": "Activation or intermediate",
+          "description": "Optional. If populated, provide evidence type and a specific source location.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "mechanism_evidence",
+          "label": "Mechanistic evidence type",
+          "description": "Keep experimental support, the authors proposal and a project hypothesis distinct.",
+          "required": false,
+          "choices": [
+            "Experimental support",
+            "Author proposal",
+            "Project hypothesis",
+            "Unspecified"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "mechanism_locator",
+          "label": "Mechanistic evidence location",
+          "description": "Page, figure, table or link supporting the mechanism; explain the reasoning for a project hypothesis.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "notes",
+          "label": "Notes",
+          "description": "Uncertainties, alternative names, provenance, scope or additional details.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        }
+      ]
+    },
+    "experiments": {
+      "sheet": "Measurements",
+      "fields": [
+        {
+          "key": "measurement_id",
+          "label": "Measurement ID",
+          "description": "Unique per row, e.g. WK_MU2025_A01_YIELD.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "assay_id",
+          "label": "Assay ID",
+          "description": "Share across metrics from the same experiment. Change for a different substrate, variant or independent replicate.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "context_id",
+          "label": "Context ID",
+          "description": "Unique ID, e.g. WK_MU2025_C01. Create a new context when the reaction mode, metal or conditions change.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "source_locator",
+          "label": "Source location",
+          "description": "Main text or SI page, figure/table and entry. Locate the specific conditions or measurement, not only the paper.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "compound_ids",
+          "label": "Reactant and product labels",
+          "description": "Paper labels, e.g. 1a + 2b -> 3ab. In an undetected experiment, identify the tested target without claiming it formed.",
+          "required": true,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "stage",
+          "label": "Experimental stage",
+          "description": "Distinguish initial activity, variants during screening, evolved outcomes, substrate scope and controls.",
+          "required": true,
+          "choices": [
+            "Initial activity",
+            "Screening intermediate",
+            "Evolved outcome",
+            "Substrate scope",
+            "Control",
+            "Unspecified"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "outcome",
+          "label": "Product detection status",
+          "description": "Not detected applies only to the measured product in that experiment. An unreported experiment is not a negative result.",
+          "required": true,
+          "choices": [
+            "Detected",
+            "Not detected",
+            "Not reported",
+            "Unclear"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "metric",
+          "label": "Metric",
+          "description": "One metric per row. Yield and ee use separate rows with the same Assay ID.",
+          "required": true,
+          "choices": [
+            "yield",
+            "conversion",
+            "ee",
+            "dr",
+            "TTN",
+            "relative_activity",
+            "product_detected",
+            "other"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "value",
+          "label": "Numeric value",
+          "description": "For 85 percent enter the plain number 85, not Excel 85%. For <1 enter 1 and qualifier <. Unknown stays blank; zero must be reported.",
+          "required": false,
+          "choices": null,
+          "kind": "number"
+        },
+        {
+          "key": "qualifier",
+          "label": "Qualifier",
+          "description": "Required when Numeric value is populated. Use ~ for an approximate value. Do not treat a bound as an exact measurement.",
+          "required": false,
+          "choices": [
+            "=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "~"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "description": "Required for a numeric value. Use % for yield/conversion/ee and turnovers for TTN.",
+          "required": false,
+          "choices": [
+            "%",
+            "turnovers",
+            "ratio",
+            "boolean",
+            "other"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "raw_result",
+          "label": "Result as reported",
+          "description": "Preserve the original expression, e.g. >99% ee, 95:5 dr or n.d. Required when Numeric value is blank.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "variant",
+          "label": "Enzyme variant",
+          "description": "Reported variant name/mutations. Use Not reported if unspecified; may be blank for nonenzymatic controls.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "reaction_smiles",
+          "label": "Reaction SMILES",
+          "description": "reactants>agents>products or reactants>>products. Preserve stereochemistry. Atom mapping is not required; structures can be added later.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "structure_status",
+          "label": "Structure status",
+          "description": "Only Reviewed structures enter default retrieval. Never invent an unreported product.",
+          "required": false,
+          "choices": [
+            "Structure pending",
+            "Needs review",
+            "Reviewed"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "product_role",
+          "label": "Product role",
+          "description": "Use Tested target when the structure describes an intended product in an undetected reaction or control.",
+          "required": false,
+          "choices": [
+            "Observed product",
+            "Tested target",
+            "Unspecified"
+          ],
+          "kind": "text"
+        },
+        {
+          "key": "measurement_method",
+          "label": "Measurement method",
+          "description": "Isolated yield, GC, HPLC, NMR, chiral method, standards, etc.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "replicates",
+          "label": "Replicate count",
+          "description": "Positive integer only when reported. Individual replicate values may use separate Assay IDs.",
+          "required": false,
+          "choices": null,
+          "kind": "integer"
+        },
+        {
+          "key": "uncertainty_raw",
+          "label": "Uncertainty as reported",
+          "description": "For example mean +/- SD, n=3. Keep SD and SEM distinct.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "sequence_accession",
+          "label": "Sequence or database accession",
+          "description": "UniProt, PDB, GenBank, etc. Can be added later.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        },
+        {
+          "key": "notes",
+          "label": "Notes",
+          "description": "Uncertainties, alternative names, provenance, scope or additional details.",
+          "required": false,
+          "choices": null,
+          "kind": "text"
+        }
+      ]
+    }
+  }
+}

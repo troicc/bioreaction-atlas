@@ -1,0 +1,22 @@
+.venv/
+node_modules
+__pycache__/
+.pytest_cache/
+*.egg-info/
+data/local/
+outputs/*/previews/
+.DS_Store
+
+# Source-rich historical outputs stay local; publish aggregate diagnostics only.
+outputs/*
+!outputs/encoder_consistency/
+outputs/encoder_consistency/*
+!outputs/encoder_consistency/*.md
+!outputs/encoder_consistency/*.json
+!outputs/encoder_consistency/*.csv
+!outputs/encoder_consistency/*.png
+!outputs/encoder_consistency/*.svg
+tmp/
+.env
+.env.*
+!.env.example

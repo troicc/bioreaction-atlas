@@ -1,0 +1,315 @@
+{
+  "audited_on": "2026-09-10",
+  "source_file": "data/local/public/schneider50k.tsv",
+  "source_sha256": "d85dc26729fdda73ca4b9ed5573a9a6be5ecff578317a47011e999bcec70156e",
+  "source_rows": 50000,
+  "source_distinct_class_labels": 50,
+  "source_rows_per_class_min": 1000,
+  "source_rows_per_class_max": 1000,
+  "indexed_patent_source_rows": 2000,
+  "indexed_unique_patent_structures": 1988,
+  "indexed_distinct_class_labels": 50,
+  "classes": [
+    {
+      "label": "1.2.1",
+      "name": "Aldehyde reductive amination",
+      "full_rows": 1000,
+      "sample_rows": 46
+    },
+    {
+      "label": "1.2.4",
+      "name": "Eschweiler-Clarke methylation",
+      "full_rows": 1000,
+      "sample_rows": 38
+    },
+    {
+      "label": "1.2.5",
+      "name": "Ketone reductive amination",
+      "full_rows": 1000,
+      "sample_rows": 36
+    },
+    {
+      "label": "1.3.6",
+      "name": "Bromo N-arylation",
+      "full_rows": 1000,
+      "sample_rows": 41
+    },
+    {
+      "label": "1.3.7",
+      "name": "Chloro N-arylation",
+      "full_rows": 1000,
+      "sample_rows": 39
+    },
+    {
+      "label": "1.3.8",
+      "name": "Fluoro N-arylation",
+      "full_rows": 1000,
+      "sample_rows": 37
+    },
+    {
+      "label": "1.6.2",
+      "name": "Bromo N-alkylation",
+      "full_rows": 1000,
+      "sample_rows": 37
+    },
+    {
+      "label": "1.6.4",
+      "name": "Chloro N-alkylation",
+      "full_rows": 1000,
+      "sample_rows": 48
+    },
+    {
+      "label": "1.6.8",
+      "name": "Iodo N-alkylation",
+      "full_rows": 1000,
+      "sample_rows": 34
+    },
+    {
+      "label": "1.7.4",
+      "name": "Hydroxy to methoxy",
+      "full_rows": 1000,
+      "sample_rows": 39
+    },
+    {
+      "label": "1.7.6",
+      "name": "Methyl esterification",
+      "full_rows": 1000,
+      "sample_rows": 33
+    },
+    {
+      "label": "1.7.7",
+      "name": "Mitsunobu aryl ether synthesis",
+      "full_rows": 1000,
+      "sample_rows": 43
+    },
+    {
+      "label": "1.7.9",
+      "name": "Williamson ether synthesis",
+      "full_rows": 1000,
+      "sample_rows": 59
+    },
+    {
+      "label": "1.8.5",
+      "name": "Thioether synthesis",
+      "full_rows": 1000,
+      "sample_rows": 55
+    },
+    {
+      "label": "10.1.1",
+      "name": "Bromination",
+      "full_rows": 1000,
+      "sample_rows": 36
+    },
+    {
+      "label": "10.1.2",
+      "name": "Chlorination",
+      "full_rows": 1000,
+      "sample_rows": 45
+    },
+    {
+      "label": "10.1.5",
+      "name": "Wohl-Ziegler bromination",
+      "full_rows": 1000,
+      "sample_rows": 33
+    },
+    {
+      "label": "10.2.1",
+      "name": "Nitration",
+      "full_rows": 1000,
+      "sample_rows": 24
+    },
+    {
+      "label": "10.4.2",
+      "name": "Methylation",
+      "full_rows": 1000,
+      "sample_rows": 43
+    },
+    {
+      "label": "2.1.1",
+      "name": "Amide Schotten-Baumann",
+      "full_rows": 1000,
+      "sample_rows": 47
+    },
+    {
+      "label": "2.1.2",
+      "name": "Carboxylic acid + amine reaction",
+      "full_rows": 1000,
+      "sample_rows": 51
+    },
+    {
+      "label": "2.1.7",
+      "name": "N-acetylation",
+      "full_rows": 1000,
+      "sample_rows": 33
+    },
+    {
+      "label": "2.2.3",
+      "name": "Sulfonamide Schotten-Baumann",
+      "full_rows": 1000,
+      "sample_rows": 50
+    },
+    {
+      "label": "2.3.1",
+      "name": "Isocyanate + amine reaction",
+      "full_rows": 1000,
+      "sample_rows": 38
+    },
+    {
+      "label": "2.6.1",
+      "name": "Ester Schotten-Baumann",
+      "full_rows": 1000,
+      "sample_rows": 32
+    },
+    {
+      "label": "2.6.3",
+      "name": "Fischer-Speier esterification",
+      "full_rows": 1000,
+      "sample_rows": 35
+    },
+    {
+      "label": "2.7.2",
+      "name": "Sulfonic ester Schotten-Baumann",
+      "full_rows": 1000,
+      "sample_rows": 34
+    },
+    {
+      "label": "3.1.1",
+      "name": "Bromo Suzuki coupling",
+      "full_rows": 1000,
+      "sample_rows": 42
+    },
+    {
+      "label": "3.1.5",
+      "name": "Bromo Suzuki-type coupling",
+      "full_rows": 1000,
+      "sample_rows": 38
+    },
+    {
+      "label": "3.1.6",
+      "name": "Chloro Suzuki-type coupling",
+      "full_rows": 1000,
+      "sample_rows": 51
+    },
+    {
+      "label": "3.3.1",
+      "name": "Sonogashira coupling",
+      "full_rows": 1000,
+      "sample_rows": 40
+    },
+    {
+      "label": "3.4.1",
+      "name": "Stille reaction",
+      "full_rows": 1000,
+      "sample_rows": 34
+    },
+    {
+      "label": "5.1.1",
+      "name": "N-Boc protection",
+      "full_rows": 1000,
+      "sample_rows": 41
+    },
+    {
+      "label": "6.1.1",
+      "name": "N-Boc deprotection",
+      "full_rows": 1000,
+      "sample_rows": 36
+    },
+    {
+      "label": "6.1.3",
+      "name": "N-Cbz deprotection",
+      "full_rows": 1000,
+      "sample_rows": 33
+    },
+    {
+      "label": "6.1.5",
+      "name": "N-Bn deprotection",
+      "full_rows": 1000,
+      "sample_rows": 38
+    },
+    {
+      "label": "6.2.1",
+      "name": "CO2H-Et deprotection",
+      "full_rows": 1000,
+      "sample_rows": 42
+    },
+    {
+      "label": "6.2.2",
+      "name": "CO2H-Me deprotection",
+      "full_rows": 1000,
+      "sample_rows": 41
+    },
+    {
+      "label": "6.2.3",
+      "name": "CO2H-tBu deprotection",
+      "full_rows": 1000,
+      "sample_rows": 31
+    },
+    {
+      "label": "6.3.1",
+      "name": "O-Bn deprotection",
+      "full_rows": 1000,
+      "sample_rows": 44
+    },
+    {
+      "label": "6.3.7",
+      "name": "Methoxy to hydroxy",
+      "full_rows": 1000,
+      "sample_rows": 38
+    },
+    {
+      "label": "7.1.1",
+      "name": "Nitro to amino",
+      "full_rows": 1000,
+      "sample_rows": 42
+    },
+    {
+      "label": "7.2.1",
+      "name": "Amide to amine reduction",
+      "full_rows": 1000,
+      "sample_rows": 41
+    },
+    {
+      "label": "7.3.1",
+      "name": "Nitrile reduction",
+      "full_rows": 1000,
+      "sample_rows": 45
+    },
+    {
+      "label": "7.9.2",
+      "name": "Carboxylic acid to alcohol reduction",
+      "full_rows": 1000,
+      "sample_rows": 37
+    },
+    {
+      "label": "8.1.4",
+      "name": "Alcohol to aldehyde oxidation",
+      "full_rows": 1000,
+      "sample_rows": 45
+    },
+    {
+      "label": "8.1.5",
+      "name": "Alcohol to ketone oxidation",
+      "full_rows": 1000,
+      "sample_rows": 43
+    },
+    {
+      "label": "8.2.1",
+      "name": "Sulfanyl to sulfinyl",
+      "full_rows": 1000,
+      "sample_rows": 27
+    },
+    {
+      "label": "9.1.6",
+      "name": "Hydroxy to chloro",
+      "full_rows": 1000,
+      "sample_rows": 40
+    },
+    {
+      "label": "9.3.1",
+      "name": "Carboxylic acid to acid chloride",
+      "full_rows": 1000,
+      "sample_rows": 45
+    }
+  ],
+  "interpretation": "Counts describe a selected classification benchmark and our local sample. All 50 benchmark labels being present does not establish coverage of organic chemistry, catalytic mechanisms, journal methods, or transferable enzyme reactions. Reference imports are not manually checked nonenzymatic precedents."
+}

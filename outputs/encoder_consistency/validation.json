@@ -1,0 +1,19 @@
+{
+  "checked_on": "2026-09-12",
+  "test_command": ".venv/bin/python -m pytest -q",
+  "test_result": {
+    "passed": 50,
+    "failed": 0,
+    "skipped": 0
+  },
+  "visual_review": "All nine PNG figures inspected as a contact sheet; primary heatmaps also inspected individually. No clipping or overlapping labels observed.",
+  "integrity": "Verified analysis code hashes and every recorded local artifact hash; verified new Markdown local links and intake JSON parsing.",
+  "source_data_modified": false,
+  "files_sha256": {
+    "src/bioreaction_atlas/consistency.py": "40392418ef5131d677a6c95e57a293a24e64adc379393a53ad761a73b74dc4e1",
+    "scripts/analyze_encoder_consistency.py": "f7318695b0758f51c1caeb8eae323967dd664966077c1baf8379d8b9946a7c69",
+    "scripts/write_consistency_report.py": "b86f5be1f2cd75f5f4d9c9236fb029c52f01beb80afe01ba6917d0565a8e6eba",
+    "tests/test_consistency.py": "979900ac068a1e65e3b779ec4011666fad9c6b16d3fb19ee6c0a6015c740d217"
+  },
+  "scope": "Completed encoder agreement study; five-paper intake remains unadjudicated; discovery-event coverage is not measured."
+}
