@@ -6,6 +6,7 @@ mechanism, and a verified earliest public date from a publication year.
 """
 from .activation import FAMILIES, acceptor_consumed, catalytic_context, family_screen
 from .chemistry import canonical_reaction
+from .intermediates import normalize_reactants
 from .corpus import CORPUS_VERSION, sha
 
 REQUIRED = ('reaction_smiles', 'family', 'source_doi')
@@ -20,7 +21,8 @@ REJECTED_DOCUMENT_TYPES = {'retracted article', 'review', 'conference paper'}
 CONDITION_COLUMNS = ('catalyst', 'reagents', 'solvent', 'temperature_c', 'time_h', 'loading')
 
 
-def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECTED_DOCUMENT_TYPES):
+def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECTED_DOCUMENT_TYPES,
+                  normalize=False):
     """Return (records, skipped). Every rejected row is reported, never dropped silently.
 
     With `screen`, rows that carry neither the family's diagnostic reactant group nor a
@@ -38,6 +40,14 @@ def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECT
             skipped.append({'row': n, 'reason': f'unknown family {family}'})
             continue
         raw = row['reaction_smiles'].strip()
+        # An abiotic route can form the acceptor in situ from the same precursor the
+        # enzyme uses, exactly as the enzyme does. Such a reaction carries no acceptor
+        # in its reactants and the screen would reject it, so normalise first.
+        intermediate_rule = None
+        if normalize:
+            normalized, intermediate_rule = normalize_reactants(raw, family)
+            if intermediate_rule:
+                raw = normalized
         try:
             canonical = canonical_reaction(raw)
         except ValueError as exc:
@@ -67,6 +77,7 @@ def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECT
         # intact, a conjugate addition consumes it, and which counts is for the
         # reviewer to decide.
         context['acceptor_consumed'] = acceptor_consumed(raw, family)
+        context['intermediate_rule'] = intermediate_rule
         if screen and verdict is False:
             skipped.append({'row': n, 'reason': f'off-family: {reason}'})
             continue
@@ -79,6 +90,7 @@ def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECT
         records.append({
             'record_id': record_id,
             'reaction_smiles': raw,
+            'reaction_smiles_as_reported': row['reaction_smiles'].strip() if intermediate_rule else None,
             'domain': 'nonenzymatic',
             'source': row['source_doi'].strip(),
             'source_locator': (row.get('source_locator') or '').strip()

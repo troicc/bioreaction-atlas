@@ -238,6 +238,39 @@ What matters for bias is **when** the inclusion rule is fixed, not how narrow it
 Choosing classes by eye after reading the first page of hits is post-hoc; writing the
 rule down and applying it is not.
 
+## The route a substructure query cannot see
+
+A query for the acceptor finds only reactions where the acceptor is written as a
+reactant. But an abiotic route can form it **in situ from the same precursor the
+enzyme uses** — cysteine or serine eliminating to a dehydroalanine that is consumed
+without ever appearing — and those reactions carry no acceptor in their reactants.
+A pool built from an acceptor query misses that whole route by construction, which is
+the same blind spot the enzyme side had before normalisation.
+
+`import_methodology.py --normalize` rewrites such a precursor into the intermediate
+before the family screen runs, so the reaction is admitted rather than rejected. The
+stored SMILES is the normalised one and `reaction_smiles_as_reported` keeps what the
+source actually said, so nothing is lost.
+
+To find them, query the **transformation** rather than the acceptor: draw the
+precursor on the left with its β-heteroatom, and the β-substituted product on the
+right using the editor's any-atom **A** for the incoming nucleophile.
+
+```
+left :  X–CH2–CH(N)–C(=O)      X = OH, SH, OMs, OTs, halide
+right:  A–CH2–CH(N)–C(=O)      A = any atom
+```
+
+This also picks up direct substitution at the β-carbon, which is chemically the right
+call: it reaches the same product, and a cysteine synthase gets there through the
+aminoacrylate regardless of how a chemist did it. The transformation is the precedent;
+the route is a separate fact to record.
+
+Reagent handles for the deliberate in-situ route, if the structural query returns too
+much: 2,5-dibromohexanediamide, the standard reagent for converting cysteine to
+dehydroalanine in peptides; O-mesyl or O-tosyl serine; selenocysteine oxidative
+elimination.
+
 ## What makes a result
 
 Once two or three families are in, the question becomes testable: **given an enzyme seed, does retrieval surface reactions from the chemically corresponding family above routine patent background?** That is a measurable, falsifiable claim about candidate prioritization, it uses the family labels as the ground truth you currently lack, and it needs the same-publication exclusion control from the [encoder report](../outputs/encoder_consistency/REPORT.md) so a scaffold series cannot inflate it.

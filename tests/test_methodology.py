@@ -405,3 +405,35 @@ def test_the_property_is_recorded_on_every_imported_record():
                 family='aminoacrylate_addition')]
     records, _ = build_records(rows)
     assert records[0]['context']['acceptor_consumed'] is True
+
+
+IN_SITU = 'N[C@@H](CS)C(=O)O.SCc1ccccc1>>NC(CSCc1ccccc1)C(=O)O'
+
+
+def test_an_in_situ_route_is_rejected_without_normalisation():
+    """The abiotic route can form the acceptor in situ from the enzyme's own precursor.
+
+    Such a reaction carries no acceptor in its reactants, so the family screen rejects
+    it and the pool silently misses that whole route.
+    """
+    records, skipped = build_records([row(reaction_smiles=IN_SITU, family='aminoacrylate_addition')])
+    assert not records and skipped[0]['reason'].startswith('off-family')
+
+
+def test_normalisation_admits_it_and_preserves_what_was_reported():
+    records, skipped = build_records(
+        [row(reaction_smiles=IN_SITU, family='aminoacrylate_addition')], normalize=True)
+    assert len(records) == 1 and not skipped
+    record = records[0]
+    assert record['reaction_smiles'].startswith('C=C(N)C(=O)O')
+    assert record['reaction_smiles_as_reported'] == IN_SITU
+    assert 'beta-elimination' in record['context']['intermediate_rule']
+
+
+def test_a_reaction_already_at_the_acceptor_level_is_not_rewritten():
+    already = 'C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1'
+    records, _ = build_records(
+        [row(reaction_smiles=already, family='aminoacrylate_addition')], normalize=True)
+    assert records[0]['reaction_smiles'] == already
+    assert records[0]['reaction_smiles_as_reported'] is None
+    assert records[0]['context']['intermediate_rule'] is None

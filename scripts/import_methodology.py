@@ -30,6 +30,9 @@ def main():
     parser.add_argument('--out', required=True)
     parser.add_argument('--prefix', default='METH', help='record ID prefix, e.g. CARB for carbene')
     parser.add_argument('--report', help='write the skipped-row report here')
+    parser.add_argument('--normalize', action='store_true',
+                        help='rewrite a precursor into the intermediate before screening, so an '
+                             'abiotic route that forms the acceptor in situ is not rejected')
     parser.add_argument('--no-screen', action='store_true',
                         help='keep rows that fail the family membership screen')
     args = parser.parse_args()
@@ -42,7 +45,8 @@ def main():
     if unknown:
         print(f'Note: ignoring unrecognized columns: {", ".join(sorted(unknown))}')
 
-    records, skipped = build_records(rows, args.prefix, screen=not args.no_screen)
+    records, skipped = build_records(rows, args.prefix, screen=not args.no_screen,
+                                     normalize=args.normalize)
     if not records:
         raise SystemExit('No importable rows; see the skipped report')
 
@@ -61,6 +65,10 @@ def main():
     if rejected_type:
         print(f'{len(rejected_type)} rows rejected as non-primary evidence '
               '(retracted, review or conference abstract).')
+    in_situ = sum(1 for r in records if r['context'].get('intermediate_rule'))
+    if in_situ:
+        print(f'{in_situ} records formed the acceptor in situ and were normalised; their reported '
+              'SMILES is preserved in reaction_smiles_as_reported.')
     off_family = [s for s in skipped if s['reason'].startswith('off-family')]
     if off_family:
         print(f'\n{len(off_family)} rows rejected as off-family. These are typically the '
