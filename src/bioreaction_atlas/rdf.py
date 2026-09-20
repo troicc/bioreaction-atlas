@@ -20,7 +20,7 @@ def _reaction_smiles(block):
     reaction = rdChemReactions.ReactionFromRxnBlock(block, sanitize=False, removeHs=False)
     if reaction is None:
         raise ValueError('RXN block could not be parsed')
-    sides = []
+    sides, relaxed = [], False
     for getter, count in ((reaction.GetReactantTemplate, reaction.GetNumReactantTemplates()),
                           (reaction.GetAgentTemplate, reaction.GetNumAgentTemplates()),
                           (reaction.GetProductTemplate, reaction.GetNumProductTemplates())):
@@ -29,8 +29,17 @@ def _reaction_smiles(block):
             mol = getter(i)
             try:
                 Chem.SanitizeMol(mol)
-            except Exception as exc:  # noqa: BLE001 - a bad component must not kill the file
-                raise ValueError(f'component {i} failed sanitization: {exc}') from exc
+            except Exception:  # noqa: BLE001
+                # Four-coordinate boron is drawn without a formal charge in many
+                # exports. Borate esters and ate complexes are ordinary chemistry and
+                # are exactly the nucleophile in a conjugate addition, so retry with
+                # the valence check relaxed rather than discarding the reaction.
+                try:
+                    Chem.SanitizeMol(mol, Chem.SanitizeFlags.SANITIZE_ALL
+                                     ^ Chem.SanitizeFlags.SANITIZE_PROPERTIES)
+                    relaxed = True
+                except Exception as exc:  # noqa: BLE001 - a bad component must not kill the file
+                    raise ValueError(f'component {i} failed sanitization: {exc}') from exc
             # Atom maps are Reaxys bookkeeping, not chemistry; the encoders strip them anyway.
             for atom in mol.GetAtoms():
                 atom.SetAtomMapNum(0)
@@ -40,7 +49,7 @@ def _reaction_smiles(block):
         sides.append('.'.join(parts))
     if not sides[0] or not sides[2]:
         raise ValueError('reaction has an empty reactant or product side')
-    return '>'.join(sides)
+    return '>'.join(sides), relaxed
 
 
 def _fields(text):
@@ -72,11 +81,13 @@ def read_rdf(text):
         # Keep the $RXN header: RDKit requires it to recognise the block.
         block, tail = (body[:cut], body[cut:]) if cut != -1 else (body, '')
         try:
-            smiles = _reaction_smiles(block)
+            smiles, relaxed = _reaction_smiles(block)
         except ValueError as exc:
             failures.append({'record': n, 'reason': str(exc)})
             continue
         row = {'reaction_smiles': smiles, **_fields(tail)}
+        if relaxed:
+            row.setdefault('sanitization', 'valence check relaxed')
         # The internal registry number on the $RFMT line is the join key back to a
         # PDF export of the same query.
         registry = REGISTRY.search(chunk[:chunk.index('$RXN')])

@@ -351,3 +351,21 @@ def test_an_unscreened_family_reports_its_label_as_unknown():
     context = records[0]['context']
     assert context['in_family'] is None
     assert context['family_screen'].startswith('unscreened:')
+
+
+def test_a_nitroalkene_is_not_a_dehydroamino_acid():
+    """Nitro nitrogen also has three connections, but a nitroalkene is a different
+    and far stronger acceptor, and its nitrogen is not an amino group."""
+    from bioreaction_atlas.activation import family_screen
+    nitroacrylate = ('CCOC(=O)C(=Cc1ccccc1)[N+](=O)[O-].Sc1ccccc1'
+                     '>>CCOC(=O)C(C(Sc1ccccc1)c1ccccc1)[N+](=O)[O-]')
+    assert family_screen(nitroacrylate, 'aminoacrylate_addition')[0] is False
+
+
+def test_amide_and_carbamate_protected_nitrogens_still_qualify():
+    from bioreaction_atlas.activation import family_screen
+    for protected in (
+            'C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1',
+            'C=C(NC(=O)OCc1ccccc1)C(=O)OC.CC1C(=O)Nc2ccccc21'
+            '>>CC1(CC(NC(=O)OCc1ccccc1)C(=O)OC)C(=O)Nc2ccccc21'):
+        assert family_screen(protected, 'aminoacrylate_addition')[0] is True

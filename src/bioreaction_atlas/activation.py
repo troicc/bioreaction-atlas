@@ -77,7 +77,11 @@ SCREENS = {
         # because dehydrobutyrine and its relatives are the same activation mode; the
         # nitrogen and carbonyl must sit on the same alkene carbon, which excludes
         # beta-enaminones and ordinary Michael acceptors.
-        'reactant_smarts': {'dehydroamino acid acceptor': '[CX3]=[CX3]([NX3])[CX3]=[OX1]'},
+        'reactant_smarts': {'dehydroamino acid acceptor':
+                            # The nitrogen must be an amine, amide or carbamate. A nitro group
+                            # also has three connections, but a nitroalkene is a different and
+                            # far stronger acceptor, and its nitrogen is not an amino group.
+                            '[CX3]=[CX3]([NX3;!$([NX3](=[OX1]));!$([NX4])])[CX3]=[OX1]'},
         'catalyst_metals': set(),
         'catalyst_text': ('proline', 'cinchona', 'phase-transfer', 'thiourea', 'squaramide',
                           'organocatalyst', 'photocatalyst', 'nickel', 'copper'),
