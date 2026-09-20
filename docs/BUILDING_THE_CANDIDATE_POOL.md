@@ -65,7 +65,31 @@ Stop at roughly 300 reactions from **at least 30 different papers**. Source dive
 
 Only after the loop works is it worth the extra effort: draw the diazo group `C=[N+]=[N-]` as a reactant substructure to reach carbene chemistry beyond dirhodium; add sulfoxonium ylides and N-sulfonyl triazoles as diazo-free carbene precursors; intersect with product-side transformations (alkene to cyclopropane, X–H to X–CHR). Carbene chemistry is classified inconsistently across sources, so the reactant substructure reaches more of it than any reaction-type label. Do this to extend a working pool, never to build the first one.
 
+## Exporting from Reaxys
+
+**Export from the Reactions tab, not Documents.** A result set has separate Documents, Substances and Reactions views. The Documents view's dialog is titled *Export citations* and produces a bibliography; ticking "Include reactions" there attaches reaction information to citation records rather than giving you a reaction table. Switch to Reactions first.
+
+**Choose `RD File`.** Of the offered formats, RD File (.rdf) is the reaction interchange format: it carries the reaction structures, the condition fields and the citation together. PDF/Word/Literature-Management outputs are for reading. Excel and tab-delimited outputs flatten or drop the structures. XML works but is more awkward to parse.
+
+**Exports are rate-limited** — the dialog states the daily attempt count. Spend the first one on 20-30 reactions to confirm the fields are there before exporting the real batch.
+
+Then convert. The reader makes no assumption about field names, because those differ by database and subscription:
+
+```bash
+PYTHONPATH=src .venv/bin/python scripts/rdf_to_csv.py export.rdf --list-fields
+```
+
+That prints every data field the file actually carries, with how many records have it and an example value, plus a suggested mapping. Check the suggestion, then write the CSV:
+
+```bash
+PYTHONPATH=src .venv/bin/python scripts/rdf_to_csv.py export.rdf \
+  --family metal_carbene --out carbene.csv --map source_doi="CIT.DOI"
+```
+
+`--map` overrides anything the guess got wrong. If no DOI field is mapped the converter warns, because the importer requires a literature identifier and would otherwise skip every row.
+
 ## Export settings that matter
+
 
 Whatever the interface, the export must retain:
 
