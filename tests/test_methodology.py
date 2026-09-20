@@ -437,3 +437,25 @@ def test_a_reaction_already_at_the_acceptor_level_is_not_rewritten():
     assert records[0]['reaction_smiles'] == already
     assert records[0]['reaction_smiles_as_reported'] is None
     assert records[0]['context']['intermediate_rule'] is None
+
+
+def test_a_metal_platform_family_spans_unrelated_reaction_types():
+    """Copper does coupling, cycloaddition, carbene transfer and oxidation.
+
+    No reactant substructure partitions that, so the family is defined by the metal.
+    """
+    from bioreaction_atlas.activation import family_screen
+    for reaction, catalyst in (
+            ('Brc1ccccc1.NCc1ccccc1>>c1ccc(NCc2ccccc2)cc1', 'copper(I) iodide|1,10-phenanthroline'),
+            ('C#Cc1ccccc1.[N-]=[N+]=Nc1ccccc1>>c1ccc(-c2cn(-c3ccccc3)nn2)cc1',
+             'copper(II) sulfate|sodium ascorbate'),
+            ('CCOC(=O)C=[N+]=[N-].C=Cc1ccccc1>>CCOC(=O)C1CC1c1ccccc1', 'copper(I) triflate')):
+        verdict, reason = family_screen(reaction, 'metal_substituted_cu', catalyst)
+        assert verdict is True and 'Cu' in reason
+
+
+def test_another_metal_does_not_enter_a_metal_platform_family():
+    from bioreaction_atlas.activation import family_screen
+    suzuki = 'Brc1ccccc1.OB(O)c1ccccc1>>c1ccc(-c2ccccc2)cc1'
+    assert family_screen(suzuki, 'metal_substituted_cu', 'palladium diacetate')[0] is False
+    assert family_screen(suzuki, 'metal_substituted_ni', 'nickel dichloride')[0] is True

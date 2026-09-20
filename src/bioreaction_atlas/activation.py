@@ -21,6 +21,10 @@ FAMILIES = {
     'metal_nitrene': 'Metal nitrene transfer (haem nitrene analogue)',
     'hat_oxidation': 'HAT / high-valent metal-oxo C-H oxidation (non-haem Fe analogue)',
     'metal_substituted': 'Homogeneous catalysis for an installed metal (Cu, Ni, Co, Ir)',
+    'metal_substituted_cu': 'Copper catalysis, for a scaffold loaded with copper',
+    'metal_substituted_ni': 'Nickel catalysis, for a scaffold loaded with nickel',
+    'metal_substituted_co': 'Cobalt catalysis, for a scaffold loaded with cobalt',
+    'metal_substituted_ir': 'Iridium catalysis, for a scaffold loaded with iridium',
     'enamine_iminium': 'Enamine / iminium organocatalysis (PLP transaminase/aldolase analogue)',
     'aminoacrylate_addition': 'Conjugate addition to a dehydroalanine acceptor (PLP beta-substitution analogue, TrpB)',
     'nhc_umpolung': 'NHC acyl-anion umpolung (ThDP / Breslow analogue)',
@@ -65,6 +69,13 @@ SCREENS = {
         'reactant_smarts': {},
         'catalyst_metals': {'Cu', 'Ni', 'Co', 'Ir', 'Pd', 'Ru', 'Rh'},
     },
+    # A metal platform is defined by its metal, not by a structural motif: copper spans
+    # coupling, cycloaddition, carbene and nitrene transfer, oxidation and radical
+    # chemistry, and no reactant substructure partitions that.
+    'metal_substituted_cu': {'reactant_smarts': {}, 'catalyst_metals': {'Cu'}},
+    'metal_substituted_ni': {'reactant_smarts': {}, 'catalyst_metals': {'Ni'}},
+    'metal_substituted_co': {'reactant_smarts': {}, 'catalyst_metals': {'Co'}},
+    'metal_substituted_ir': {'reactant_smarts': {}, 'catalyst_metals': {'Ir'}},
     'photoredox_radical': {
         'reactant_smarts': {},
         'catalyst_metals': {'Ir', 'Ru'},
