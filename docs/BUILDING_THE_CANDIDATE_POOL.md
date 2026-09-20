@@ -116,6 +116,18 @@ Whatever the interface, the export must retain:
 
 Export caps and text-and-data-mining terms differ by subscription. Systematic bulk download is restricted under most commercial database licences, so confirm the permitted scope with your librarian before exporting at scale, and record what was permitted alongside the corpus. This matters for what can later be redistributed: derived aggregate results are usually shareable when the underlying records are not.
 
+### If you already exported as PDF
+
+A PDF export renders structures as images, so it cannot supply reaction SMILES and cannot build a pool. It does carry a good citation layer — one row per literature condition, with the yield, the full condition sentence and a complete journal citation. Recover it rather than discarding the export:
+
+```bash
+PYTHONPATH=src .venv/bin/python scripts/reaxys_pdf_citations.py export.pdf
+```
+
+Then re-export the same query as RD File for the structures, and join the two on `reaxys_reaction_id`. The PDF's per-reference conditions and citations are often more complete than the corresponding RD File fields, and they are what the coverage protocol needs for `source_locator` and date evidence.
+
+Note that one reaction carries several literature conditions. A 1,000-reaction export is therefore closer to 1,800 condition rows from several hundred papers — count papers, not rows, against the stop rule.
+
 ## Export columns
 
 Export to CSV with these headers. `templates/methodology_export.csv` is the template, with one clearly-marked example row to delete.

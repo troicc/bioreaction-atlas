@@ -13,6 +13,7 @@ dependencies = ["rdkit>=2024.3", "openpyxl>=3.1"]
 test = ["pytest>=8"]
 research = ["numpy>=1.26", "scipy>=1.11", "drfp>=0.3.7", "scikit-learn>=1.5", "matplotlib>=3.8", "plotly>=6"]
 rxnfp = ["torch>=2.6", "transformers>=4.45,<5"]
+pdf = ["pypdf>=4"]
 
 [project.scripts]
 bioatlas = "bioreaction_atlas.cli:main"
