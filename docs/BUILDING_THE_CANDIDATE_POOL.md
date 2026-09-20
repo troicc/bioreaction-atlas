@@ -209,6 +209,35 @@ Every rejected row is reported with a reason; nothing is dropped silently. Repea
 
 Encoding every family into one space clusters by substrate scaffold, not activation mode — the failure the map opens with. Amide formation, Pd-catalysed C–N coupling and carbene N–H insertion all form a C–N bond and are not interchangeable. Use `activation_family` for colouring and filtering the map; never let it produce the coordinates.
 
+## Two pools, two purposes
+
+Filtering a pool down to only the chemistry you were looking for is circular if that
+same pool is then used to measure retrieval. The carbene pool showed it directly: once
+the import screen had removed everything off-family, every encoder scored 100% at
+top-10 and the number carried no information.
+
+The fix is not to widen the filter until it feels fair. It is to build two artefacts.
+
+**A discovery pool** is what you browse for candidates. Narrow is correct here — you
+want good candidates, and selecting the reaction classes that match the activation
+family is the point, not a bias.
+
+**An evaluation pool** is what a retrieval measurement runs against, and it **must**
+contain the mixture. Sample it without class filtering, so the dominant off-target
+chemistry of that substrate class comes along: hydrogenations and substitutions for a
+dehydroamino acid, diazo transfer for a diazo compound. Import it with `--no-screen`.
+Every row is still labelled — `context.in_family` records the verdict and
+`context.family_screen` its reason — so the label is assigned by a structural rule
+stated in advance, never by which rows looked right.
+
+The measurement then asks something falsifiable: does retrieval rank the in-family
+reactions above the off-family ones drawn from the same substrate class? That is a
+harder and more honest question than whether a pre-purified pool returns pure results.
+
+What matters for bias is **when** the inclusion rule is fixed, not how narrow it is.
+Choosing classes by eye after reading the first page of hits is post-hoc; writing the
+rule down and applying it is not.
+
 ## What makes a result
 
 Once two or three families are in, the question becomes testable: **given an enzyme seed, does retrieval surface reactions from the chemically corresponding family above routine patent background?** That is a measurable, falsifiable claim about candidate prioritization, it uses the family labels as the ground truth you currently lack, and it needs the same-publication exclusion control from the [encoder report](../outputs/encoder_consistency/REPORT.md) so a scaffold series cannot inflate it.

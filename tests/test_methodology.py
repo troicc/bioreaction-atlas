@@ -321,3 +321,33 @@ def test_the_heavy_atom_veto_applies_only_where_configured():
     assert 'require_heavy_atom_gain' not in SCREENS['metal_carbene']
     carbene = 'CCOC(=O)C=[N+]=[N-].c1ccc2[nH]ccc2c1>>CCOC(=O)Cc1c[nH]c2ccccc12'
     assert family_screen(carbene, 'metal_carbene')[0] is True
+
+
+def test_family_membership_is_labelled_even_when_nothing_is_rejected():
+    """An evaluation pool needs the mixture, with every row labelled.
+
+    A pool filtered to 100% in-family makes a later retrieval measurement
+    degenerate: there is nothing for ranking to discriminate.
+    """
+    hydrogenation = row(
+        reaction_smiles='C=C(NC(C)=O)C(=O)OC>>COC(=O)C(C)NC(C)=O',
+        family='aminoacrylate_addition')
+    addition = row(
+        reaction_smiles='C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1',
+        family='aminoacrylate_addition', source_doi='10.0000/b')
+
+    kept, skipped = build_records([hydrogenation, addition], screen=False)
+    assert len(kept) == 2 and not skipped
+    assert [r['context']['in_family'] for r in kept] == [False, True]
+    assert all(r['context']['family_screen'] for r in kept)
+
+    screened, rejected = build_records([hydrogenation, addition], screen=True)
+    assert [r['context']['in_family'] for r in screened] == [True]
+    assert len(rejected) == 1
+
+
+def test_an_unscreened_family_reports_its_label_as_unknown():
+    records, _ = build_records([row(family='background_patent')], screen=False)
+    context = records[0]['context']
+    assert context['in_family'] is None
+    assert context['family_screen'].startswith('unscreened:')

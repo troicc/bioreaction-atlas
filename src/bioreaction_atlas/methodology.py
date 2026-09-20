@@ -57,12 +57,15 @@ def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECT
             skipped.append({'row': n, 'reason': f'document type not primary evidence: {document_type}'})
             continue
 
-        if screen:
-            verdict, reason = family_screen(raw, family, context.get('catalyst'))
-            if verdict is False:
-                skipped.append({'row': n, 'reason': f'off-family: {reason}'})
-                continue
-            context['family_screen'] = reason if verdict else 'unscreened: ' + reason
+        # The label is always recorded. Screening only decides whether an off-family
+        # row is dropped: an evaluation pool needs the mixture, and a pool filtered to
+        # 100% in-family makes any later retrieval measurement degenerate.
+        verdict, reason = family_screen(raw, family, context.get('catalyst'))
+        context['family_screen'] = reason if verdict else ('unscreened: ' + reason if verdict is None else reason)
+        context['in_family'] = verdict
+        if screen and verdict is False:
+            skipped.append({'row': n, 'reason': f'off-family: {reason}'})
+            continue
 
         record_id = f"{prefix}_{sha((family + '|' + canonical + '|' + row['source_doi'].strip()).encode())[:16]}"
         if record_id in seen:
