@@ -16,6 +16,10 @@ outputs/encoder_consistency/*
 !outputs/encoder_consistency/*.csv
 !outputs/encoder_consistency/*.png
 !outputs/encoder_consistency/*.svg
+!outputs/candidate_pool/
+outputs/candidate_pool/*
+!outputs/candidate_pool/*.md
+!outputs/candidate_pool/*.json
 
 # Blank collection workbooks are shareable deliverables: they contain no
 # third-party records, and scripts/build_template.mjs needs a non-public package.

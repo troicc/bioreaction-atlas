@@ -106,7 +106,7 @@ SI_H_INSERTION = 'CCOC(=O)C=[N+]=[N-].[SiH](CC)(CC)CC>>CCOC(=O)C[Si](CC)(CC)CC'
 
 def test_diagnostic_reactant_group_admits_a_reaction():
     from bioreaction_atlas.activation import family_screen
-    assert family_screen(SI_H_INSERTION, 'metal_carbene') == (True, 'reactant carries a diazo group')
+    assert family_screen(SI_H_INSERTION, 'metal_carbene') == (True, 'reactant carries a substituted diazo group')
 
 
 def test_substrate_prep_steps_are_rejected():
@@ -152,7 +152,7 @@ def test_importer_drops_off_family_rows_with_a_stated_reason():
     records, skipped = build_records(rows)
     assert len(records) == 1 and len(skipped) == 1
     assert skipped[0]['reason'].startswith('off-family')
-    assert records[0]['context']['family_screen'] == 'reactant carries a diazo group'
+    assert records[0]['context']['family_screen'] == 'reactant carries a substituted diazo group'
 
 
 def test_screening_can_be_disabled():
@@ -178,7 +178,7 @@ def test_diazo_transfer_is_rejected_because_the_diazo_is_a_product():
 def test_carbene_use_is_admitted_when_the_diazo_is_a_reactant():
     from bioreaction_atlas.activation import family_screen
     verdict, reason = family_screen(CARBENE_USE, 'metal_carbene', 'dirhodium tetraacetate')
-    assert verdict is True and reason == 'reactant carries a diazo group'
+    assert verdict is True and reason == 'reactant carries a substituted diazo group'
 
 
 def test_a_sulfonyl_azide_is_not_mistaken_for_a_diazo_group():
@@ -207,3 +207,21 @@ def test_articles_and_patents_are_kept_with_their_type_recorded():
 def test_document_type_rejection_can_be_turned_off():
     rows = [row(document_type='Review')]
     assert len(build_records(rows, reject_document_types=set())[0]) == 1
+
+
+def test_diazomethane_methylation_is_not_carbene_transfer():
+    """The only "diazo" chemistry a med-chem patent corpus holds is ester methylation."""
+    from bioreaction_atlas.activation import family_screen
+    for esterification in (
+            'C#CC(C)(C)C(=O)O.C=[N+]=[N-]>>C#CC(C)(C)C(=O)OC',
+            'C[Si](C)(C)C=[N+]=[N-].O=C(O)c1ccccc1>>COC(=O)c1ccccc1'):
+        assert family_screen(esterification, 'metal_carbene')[0] is False
+
+
+def test_substituted_diazo_reagents_are_still_admitted():
+    from bioreaction_atlas.activation import family_screen
+    for carbene in (
+            'CCOC(=O)C=[N+]=[N-].c1ccc2[nH]ccc2c1>>CCOC(=O)Cc1c[nH]c2ccccc12',
+            'COC(=O)C(=[N+]=[N-])c1ccccc1.Nc1ccccc1>>COC(=O)C(Nc1ccccc1)c1ccccc1',
+            'C[C@H]1Cc2ccccc2N1.[N-]=[N+]=C1CCOC1=O>>C[C@H]1Cc2ccccc2N1[C@H]1CCOC1=O'):
+        assert family_screen(carbene, 'metal_carbene')[0] is True

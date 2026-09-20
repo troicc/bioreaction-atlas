@@ -1,0 +1,33 @@
+{
+  "family": "metal_carbene",
+  "seeds": 278,
+  "top_k": 10,
+  "pools": {
+    "patent": {
+      "morgan": {
+        "candidates": 1988,
+        "pool_family_share": 0.0,
+        "mean_family_share_at_k": 0.0,
+        "seeds_with_no_family_hit": 278
+      },
+      "substrate": {
+        "candidates": 1988,
+        "pool_family_share": 0.0,
+        "mean_family_share_at_k": 0.0,
+        "seeds_with_no_family_hit": 278
+      },
+      "drfp": {
+        "candidates": 1988,
+        "pool_family_share": 0.0,
+        "mean_family_share_at_k": 0.0,
+        "seeds_with_no_family_hit": 278
+      },
+      "rxnfp": {
+        "candidates": 1988,
+        "pool_family_share": 0.0,
+        "mean_family_share_at_k": 0.0,
+        "seeds_with_no_family_hit": 278
+      }
+    }
+  }
+}

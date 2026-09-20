@@ -41,7 +41,11 @@ FAMILIES = {
 # rather than given a loose one that would silently drop real chemistry.
 SCREENS = {
     'metal_carbene': {
-        'reactant_smarts': {'diazo': '[#6X3]=[N+]=[N-]'},
+        # The diazo carbon must carry a carbon substituent. Diazomethane and
+        # TMS-diazomethane are methylating reagents for carboxylic acids, not
+        # carbene-transfer substrates, and they are the only "diazo" chemistry a
+        # medicinal-chemistry patent corpus contains.
+        'reactant_smarts': {'substituted diazo': '[#6X3;$([#6](=[N+]=[N-])[#6])]=[N+]=[N-]'},
         # Pd is deliberately absent: Suzuki/Sonogashira/Buchwald steps are the most
         # common substrate-preparation contaminant in a methodology paper, and Pd is
         # not the haem-carbene analogue this family is mining for.

@@ -8,7 +8,7 @@
 
 BioReaction Atlas studies corpus coverage and the dependence of reaction retrieval on representation choice. The current result is a completed encoder-agreement analysis; discovery-event precedent coverage is the next measurement.
 
-[English technical report](outputs/encoder_consistency/REPORT.md) · [Coverage protocol](research/coverage_protocol_v02.md) · [Reproduce](docs/REPRODUCIBILITY.md) · [中文使用说明](README.zh-CN.md)
+[Encoder agreement report](outputs/encoder_consistency/REPORT.md) · [Candidate-pool report](outputs/candidate_pool/REPORT.md) · [Coverage protocol](research/coverage_protocol_v02.md) · [Reproduce](docs/REPRODUCIBILITY.md) · [中文使用说明](README.zh-CN.md)
 
 ![Encoder agreement](outputs/encoder_consistency/enzyme_to_patent_heatmaps.png)
 
@@ -27,6 +27,8 @@ BioReaction Atlas studies corpus coverage and the dependence of reaction retriev
 | Within the enzyme corpus, self and shared publication sources excluded | 16.64%–37.71% |
 
 **3. Structural review of maximum-disagreement cases surfaced provenance defects in the imported public records.** One record's encoded transformation (N–H functionalization) disagrees with its associated publication's subject (intramolecular C(sp3)–H amination); another omits its sulfur-containing substrate from the stored product. Both are flagged, not silently corrected, and require original-SI adjudication before use as discovery labels.
+
+**4. The cross-domain measurement was made in a pool with no correct answer.** For the haem-carbene chemistry that dominates the enzyme seeds, a full scan of all 50,000 Schneider50k rows finds **2 records (0.004%)** carrying a substituted diazo reactant, and neither is a carbene transfer. Across 278 carbene enzyme seeds, **all four representations retrieve zero in-family candidates at top-10**. A literature-derived pool for the same activation family holds 997 carbene reactions of 999 structures from 1,075 papers, where RXNFP's nearest neighbours are aryl diazoacetate N–H insertions at 0.886 cosine — the same transformation the seed performs. Finding 1 measures representation disagreement; it does not establish that a representation failed, because nothing in that pool could have been right. See the [candidate-pool report](outputs/candidate_pool/REPORT.md).
 
 ### What these results do not show
 
@@ -76,7 +78,7 @@ Outputs cover three retrieval settings, overlap at k = 5/10/20/50, full-pool ran
 - Representations: substrate Morgan, signed Morgan difference, official DRFP and official RXNFP bert_ft. Existing configurations and metrics are reused; no new encoder is claimed.
 - Boundaries: imported records have not passed original-experiment or earliest-date review. Unique structures are not independent discoveries. Agreement is not accuracy.
 
-The suite contains 121 tests. 120 run in CI on Python 3.11 and 3.12 from the checkout alone; the remaining one verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
+The suite contains 123 tests. 122 run in CI on Python 3.11 and 3.12 from the checkout alone; the remaining one verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
 
 ## Collection and historical ranking tools
 
