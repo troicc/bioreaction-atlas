@@ -233,10 +233,27 @@ TRPB = ('CC1C(=O)Nc2ccccc21.N[C@@H](CO)C(=O)O'
         '>>CC1(C[C@H](N)C(=O)O)C(=O)Nc2ccccc21')
 
 
-def test_dehydroalanine_acceptors_define_the_plp_analogue_family():
+def test_dehydroamino_acid_acceptors_define_the_plp_analogue_family():
     from bioreaction_atlas.activation import family_screen
     verdict, reason = family_screen(DEHYDROALANINE, 'aminoacrylate_addition')
-    assert verdict is True and 'dehydroalanine' in reason
+    assert verdict is True and 'dehydroamino acid' in reason
+
+
+def test_beta_substituted_dehydroamino_acids_are_the_same_activation_mode():
+    from bioreaction_atlas.activation import family_screen
+    for acceptor in (
+            'CC=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>CC(SCc1ccccc1)C(NC(C)=O)C(=O)OC',
+            'c1ccccc1C=C(NC(C)=O)C(=O)O.OO>>c1ccccc1C(O)C(NC(C)=O)C(=O)O'):
+        assert family_screen(acceptor, 'aminoacrylate_addition')[0] is True
+
+
+def test_the_nitrogen_and_carbonyl_must_share_an_alkene_carbon():
+    """A beta-enaminone has them on different carbons and is not this family."""
+    from bioreaction_atlas.activation import family_screen
+    enaminone = 'CC(=O)C=C(C)N.CI>>CC(=O)C=C(C)NC'
+    acrylamide = 'C=CC(N)=O.SCc1ccccc1>>NC(=O)CCSCc1ccccc1'
+    assert family_screen(enaminone, 'aminoacrylate_addition')[0] is False
+    assert family_screen(acrylamide, 'aminoacrylate_addition')[0] is False
 
 
 def test_a_plain_michael_acceptor_is_not_a_dehydroalanine():

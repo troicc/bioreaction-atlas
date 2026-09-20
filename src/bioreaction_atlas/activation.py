@@ -71,10 +71,13 @@ SCREENS = {
         'catalyst_text': ('4czipn', 'acridinium', 'eosin', 'rose bengal', 'photocatalyst'),
     },
     'aminoacrylate_addition': {
-        # A dehydroalanine acceptor: an exocyclic methylene on a carbon bearing both
-        # nitrogen and a carbonyl. This is the abiotic counterpart of the aminoacrylate
-        # a PLP beta-substituting enzyme forms from serine.
-        'reactant_smarts': {'dehydroalanine acceptor': '[CH2]=[CX3]([NX3])[CX3]=[OX1]'},
+        # A dehydroamino acid acceptor: an alkene whose substituted carbon bears both a
+        # nitrogen and a carbonyl. This is the abiotic counterpart of the aminoacrylate a
+        # PLP beta-substituting enzyme forms from serine. Beta substitution is allowed,
+        # because dehydrobutyrine and its relatives are the same activation mode; the
+        # nitrogen and carbonyl must sit on the same alkene carbon, which excludes
+        # beta-enaminones and ordinary Michael acceptors.
+        'reactant_smarts': {'dehydroamino acid acceptor': '[CX3]=[CX3]([NX3])[CX3]=[OX1]'},
         'catalyst_metals': set(),
         'catalyst_text': ('proline', 'cinchona', 'phase-transfer', 'thiourea', 'squaramide',
                           'organocatalyst', 'photocatalyst', 'nickel', 'copper'),

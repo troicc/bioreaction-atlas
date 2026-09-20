@@ -55,6 +55,14 @@ In Reaxys, search Reactions with the query builder:
 
 Each is one string. If a handle returns too little, add its obvious siblings one at a time — `Rh2(esp)2` and `Cu(MeCN)4PF6` for carbene, `Ru(bpy)3Cl2` for photoredox — rather than building a compound query up front.
 
+### Drawing a structure query
+
+The arrow assigns the role. Fragments **left** of the arrow are reactants, fragments **right** are products, and an empty product side means any product. Drawing a structure with no arrow leaves the role unset, which is how a diazo query returns diazo-transfer reactions that *make* the reagent instead of using it.
+
+Several fragments on the same side are ANDed: all must be present. Resist that for a first pool. The diagnostic group is one reactant; the partner it reacts with is exactly the variety you want. Constraining a dehydroamino acid query to one carbon nucleophile collapses the family to a single substrate class.
+
+Check that the search runs as a **substructure** query, not exact match, or N-acyl, ester and β-substituted variants are all missed. Page 1 of any export prints the query log — it states what was actually run, for example `Search as: Substructure: on all atoms`.
+
 ### When to stop
 
 Stop at roughly 300 reactions from **at least 30 different papers**. Source diversity is the binding constraint, not row count: fifty substrate analogues from one paper are one piece of independent chemistry, and they will distort retrieval exactly the way the same-publication control in the [encoder report](../outputs/encoder_consistency/REPORT.md) showed.
