@@ -54,6 +54,19 @@ CANONICAL = {
             '[CX3:3]=[CX3:2]([NX3:1])[CX3:5](=[OX1:6])[OX2H0,NX3:7]'
             '>>[C:3]=[C:2]([N:1])[C:5](=[O:6])[OX2H]'
         ),
+        # The adduct carries the same protection as the acceptor it came from. A
+        # difference fingerprint cancels a group present on both sides, but a model that
+        # embeds the whole reaction string does not, so the product must be reduced too.
+        (
+            'remove N-protection from the saturated adduct',
+            '[CX4:3][CX4H1:2]([NX3H1:1][$([CX3]=[OX1]),$([SX4](=O)=O)])[CX3:5](=[OX1:6])[OX2,NX3:7]'
+            '>>[C:3][C:2]([NH2:1])[C:5](=[O:6])[*:7]'
+        ),
+        (
+            'convert the saturated adduct ester or amide to the free acid',
+            '[CX4:3][CX4H1:2]([NX3:1])[CX3:5](=[OX1:6])[OX2H0,NX3:7]'
+            '>>[C:3][C:2]([N:1])[C:5](=[O:6])[OX2H]'
+        ),
     ],
 }
 

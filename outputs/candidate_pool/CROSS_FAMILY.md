@@ -113,3 +113,46 @@ What survives is stronger than what was lost. The three substructure representat
 Canonicalisation merges protected variants, so the pool shrinks from 1,341 unique structures to 1,302–1,312 depending on encoder, and the carbene share shifts slightly. Carbene figures move by a few points in both directions as a result. The PLP changes are far larger than that drift, but the two settings are not measured over an identical candidate set and the small carbene differences should not be read as effects.
 
 中文摘要：此前假设 RXNFP 未被修复是**保护基造成的假象**。该假设预测：把两侧都归约到同一未保护核心后 RXNFP 应当恢复。两条对称规则（脱 N-酰基/氨基甲酸酯/磺酰基、酯转游离酸）应用于种子与全部池记录后，三种子结构表示升至 **3.58–4.30 倍**（DRFP 达 100%），而 **RXNFP 由 0.77 降至 0.53**，31 条种子中 21 条零命中。**假设被证伪**，RXNFP 的分离原因转为开放问题。存活下来的结论更强：把两条路线表达到共享反应核心，足以让结构检索跨越它原本完全无法跨越的鸿沟。
+
+---
+
+# Why RXNFP does not recover: the family is not a region in its space
+
+Added 2026-09-20, after two refuted explanations.
+
+The first explanation — a protecting-group mismatch on the acceptor — was refuted above. A second followed from how the representations differ: a difference fingerprint cancels a group present on both sides of a reaction, while a model that embeds the whole reaction string does not, so protection surviving on the **product** would hurt RXNFP alone. Two further rules reduce the saturated adduct to the free amino acid as well.
+
+| Representation | Raw | Reactant normalised | Acceptor canonical | **Both sides fully canonical** |
+|---|---:|---:|---:|---:|
+| Morgan difference | ×0.37 | ×3.28 | ×3.87 | **×4.82 (98.1%)** |
+| Substrate Morgan | ×0.57 | ×1.68 | ×3.58 | ×3.95 |
+| DRFP | ×1.69 | ×3.83 | ×4.30 | **×4.92 (100.0%)** |
+| RXNFP | ×0.33 | ×0.77 | ×0.53 | **×0.78** |
+| PLP seeds with no own-family hit | 20/12/2/19 | 1/1/0/8 | 1/0/0/21 | **0/0/0/8** |
+
+The second explanation is refuted too. RXNFP returns to 0.78×, where reactant-only normalisation already left it, and stays below the pool's composition. The three structural representations meanwhile reach 3.95×–4.92× with no seed left without a same-family candidate.
+
+## The measurement that explains it
+
+Stop hypothesising about the query and look at the space. For a normalised PLP seed, RXNFP's mean similarity to the **carbene** family is 0.629 and to its **own** family 0.391. Its top six neighbours are one dehydroamino acid reaction followed by five cyclopropanations.
+
+Measuring each family's cohesion — mean similarity within a family against mean similarity across families, in each encoder's own metric — shows why:
+
+| Representation | carbene within/across/**separation** | dehydroamino acid within/across/**separation** |
+|---|---|---|
+| Morgan difference | 0.123 / 0.009 / **+0.114** | 0.148 / 0.009 / **+0.139** |
+| Substrate Morgan | 0.554 / 0.434 / **+0.120** | 0.503 / 0.434 / **+0.069** |
+| DRFP | 0.087 / 0.017 / **+0.070** | 0.102 / 0.017 / **+0.085** |
+| RXNFP | 0.700 / 0.347 / **+0.352** | 0.363 / 0.347 / **+0.015** |
+
+**In RXNFP's space the dehydroamino acid family is not a region at all.** Its members are 0.363 similar to each other and 0.347 similar to everything else — a separation of 0.015, against 0.352 for carbene in the same space. Every structural representation gives both families comparable separations.
+
+This is the general lesson, and it is cheap to check:
+
+> **Normalisation aligns a query to a family. It cannot create a neighbourhood the representation does not encode.**
+
+A plausible reason is that RXNFP was trained to classify patent reactions, so its geometry follows patent reaction class. Carbene chemistry maps to coherent classes — cyclopropanation, X–H insertion. Conjugate addition to a dehydroamino acid spans thioether synthesis, N-alkylation and Heck coupling, which are unrelated patent classes, so its members scatter. That accounts for the numbers but has not been tested directly, and the measurement stands without it.
+
+`scripts/family_cohesion.py` runs this check on any encoded pool. It needs no seeds and no retrieval, only family labels, and it answers in advance whether a representation is worth using for a family.
+
+中文摘要：两个关于 RXNFP 的假说先后被证伪（受体保护基、产物保护基）。改为直接测量空间本身：对一条归一化 PLP 查询，RXNFP 到**卡宾**家族的平均相似度 0.629，到**本家族**仅 0.391。家族内聚度测量给出原因——在 RXNFP 空间中，脱氢氨基酸家族内部相似度 0.363、跨家族 0.347，**可分离度仅 +0.015**（同空间中卡宾为 +0.352）。三种结构表示对两个家族给出的可分离度相当。**归一化能把查询对齐到家族，但造不出该表示本来就不编码的邻域。** `scripts/family_cohesion.py` 可在任何编码池上做这项前置检查，无需种子与检索。

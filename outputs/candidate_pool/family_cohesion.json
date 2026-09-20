@@ -1,0 +1,70 @@
+{
+  "morgan": {
+    "metric": "cosine",
+    "families": {
+      "aminoacrylate_addition": {
+        "members": 255,
+        "mean_within": 0.1477,
+        "mean_across": 0.009,
+        "separation": 0.1387
+      },
+      "metal_carbene": {
+        "members": 999,
+        "mean_within": 0.1231,
+        "mean_across": 0.009,
+        "separation": 0.1141
+      }
+    }
+  },
+  "substrate": {
+    "metric": "cosine",
+    "families": {
+      "aminoacrylate_addition": {
+        "members": 265,
+        "mean_within": 0.5033,
+        "mean_across": 0.4339,
+        "separation": 0.0694
+      },
+      "metal_carbene": {
+        "members": 999,
+        "mean_within": 0.5539,
+        "mean_across": 0.4339,
+        "separation": 0.12
+      }
+    }
+  },
+  "drfp": {
+    "metric": "tanimoto",
+    "families": {
+      "aminoacrylate_addition": {
+        "members": 255,
+        "mean_within": 0.1019,
+        "mean_across": 0.0171,
+        "separation": 0.0848
+      },
+      "metal_carbene": {
+        "members": 999,
+        "mean_within": 0.0866,
+        "mean_across": 0.0171,
+        "separation": 0.0695
+      }
+    }
+  },
+  "rxnfp": {
+    "metric": "cosine",
+    "families": {
+      "aminoacrylate_addition": {
+        "members": 265,
+        "mean_within": 0.3626,
+        "mean_across": 0.3474,
+        "separation": 0.0152
+      },
+      "metal_carbene": {
+        "members": 999,
+        "mean_within": 0.6995,
+        "mean_across": 0.3474,
+        "separation": 0.3521
+      }
+    }
+  }
+}
