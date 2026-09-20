@@ -82,3 +82,42 @@ def test_the_count_is_never_presented_as_a_probability():
     result = obstacles(ctx(catalyst='Rh2(OAc)4', solvent='dichloromethane', temperature_c='-78'), 'heme')
     assert result['obstacle_count'] == 3
     assert 'not a feasibility estimate' in result['interpretation']
+
+
+def test_a_bare_element_names_a_metal_substituted_platform():
+    """Cu means an apo scaffold already loaded with copper."""
+    from bioreaction_atlas.transfer import platform_metals
+    assert platform_metals('Cu') == {'Cu'}
+    assert platform_metals('heme') == {'Fe'}
+    assert platform_metals('PLP') == set()
+
+
+def test_the_installed_metal_is_not_an_obstacle_to_its_own_platform():
+    loaded = obstacles(ctx(catalyst='copper(I) iodide', solvent='water', temperature_c='25'), 'Cu')
+    assert not loaded['obstacles']
+    assert any('already carries' in c for c in loaded['compatible'])
+    # The same reaction on a haem platform still needs the substitution stated.
+    haem = obstacles(ctx(catalyst='copper(I) iodide', solvent='water', temperature_c='25'), 'heme')
+    assert any('does not natively carry' in o for o in haem['obstacles'])
+
+
+def test_a_defined_ligand_is_the_premise_of_metal_substitution_not_an_obstacle():
+    """An apo scaffold is loaded precisely to supply that coordination environment.
+
+    On a haem platform the porphyrin is already the ligand, so the same requirement is
+    a genuine conflict.
+    """
+    catalyst = 'copper(I) trifluoromethanesulfonate|bisoxazoline'
+    on_cu = obstacles(ctx(catalyst=catalyst, solvent='water', temperature_c='25'), 'Cu')
+    assert on_cu['obstacle_count'] == 0
+    assert any('what an apo scaffold is being loaded to provide' in c for c in on_cu['compatible'])
+
+    on_haem = obstacles(ctx(catalyst=catalyst, solvent='water', temperature_c='25'), 'heme')
+    assert any('would have to replace it' in o for o in on_haem['obstacles'])
+
+
+def test_a_different_metal_is_still_an_obstacle_on_a_substituted_platform():
+    result = obstacles(ctx(catalyst='palladium diacetate', solvent='toluene',
+                           temperature_c='110'), 'Cu')
+    assert result['obstacle_count'] == 3
+    assert any('needs Pd' in o for o in result['obstacles'])

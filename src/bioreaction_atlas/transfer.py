@@ -25,6 +25,21 @@ IMMISCIBLE = ('dichloromethane', 'chloroform', 'toluene', 'benzene', 'hexane', '
 # which is a real and published step, not a disqualification.
 PLATFORM_METALS = {'heme': {'Fe'}, 'PLP': set(), 'Fe(II)': {'Fe'}}
 
+
+def platform_metals(cofactor):
+    """Metals a platform carries. A bare element symbol names a metal-substituted
+    scaffold already loaded with it, so Cu means an apo scaffold holding copper."""
+    if cofactor in PLATFORM_METALS:
+        return PLATFORM_METALS[cofactor]
+    from .activation import ELEMENT_NAMES
+    return {cofactor} if cofactor in ELEMENT_NAMES else set()
+
+# A platform whose protein *is* the ligand. For these, a reaction that depends on a
+# defined external ligand is not an obstacle: supplying that coordination environment is
+# the whole design premise of metal substitution. For a haem platform the porphyrin is
+# already the ligand, so the same requirement is a genuine conflict.
+LIGAND_SUPPLYING_PLATFORMS = {'Cu', 'Ni', 'Co', 'Ir', 'Ru', 'Rh', 'Mn', 'Pd', 'Fe(II)'}
+
 # A protein supplies its own ligand environment. A procedure that depends on a specific
 # external ligand is asking the scaffold to reproduce that function.
 LIGANDS = ('phosphine', 'binap', 'bisoxazoline', 'box', 'salen', 'pybox', 'phox',
@@ -119,7 +134,7 @@ def obstacles(context, cofactor, reported_results=None):
             compatible.append(f'temperature {temperature:g} °C is within protein range')
 
     catalyst = context.get('catalyst') or ''
-    platform = PLATFORM_METALS.get(cofactor, set())
+    platform = platform_metals(cofactor)
     found = _metals(catalyst)
     if found:
         shared = found & platform
@@ -136,8 +151,13 @@ def obstacles(context, cofactor, reported_results=None):
     flat_catalyst = _flat(catalyst)
     ligands = [name for name in LIGANDS if _flat(name) in flat_catalyst]
     if ligands:
-        blocking.append(f'depends on an external ligand ({", ".join(sorted(set(ligands)))}); '
-                        'the scaffold would have to supply that coordination environment')
+        named = ', '.join(sorted(set(ligands)))
+        if cofactor in LIGAND_SUPPLYING_PLATFORMS:
+            compatible.append(f'depends on a defined ligand ({named}), which is what an apo '
+                              'scaffold is being loaded to provide')
+        else:
+            blocking.append(f'depends on an external ligand ({named}); the scaffold already '
+                            'carries its own and would have to replace it')
 
     lower = catalyst.lower() + ' ' + (context.get('reagents') or '').lower()
     for label, needles in HARSH.items():
