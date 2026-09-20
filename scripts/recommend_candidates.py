@@ -15,6 +15,7 @@ Three deliberate refusals:
 """
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
 import sys
 
@@ -42,7 +43,9 @@ def prepare(smiles, family, normalize, canonical):
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--family', required=True)
+    parser.add_argument('--family',
+                        help='restrict to one activation family. Omit it to search the whole pool '
+                             'and let the families that come back be part of the answer.')
     parser.add_argument('--cofactor', required=True, help='enzyme cofactor that defines the platform')
     parser.add_argument('--pool', default='data/local/pools/combined_canonical')
     parser.add_argument('--seeds', default='data/local/reference_demo')
@@ -85,11 +88,28 @@ def main():
 
     index, _ = load_index(Path(args.pool) / primary)
     entries = index['entries']
-    eligible = [i for i, e in enumerate(entries)
-                if e['evidence'][0].get('activation_family') == args.family]
-    print(f'{len(eligible)} candidates in family {args.family}')
+    # Encoders exclude different records, so a candidate must exist in every backend
+    # before it can be ranked by all of them. Same common-pool discipline used elsewhere.
+    shared = set.intersection(*({e['record_id'] for e in load_index(Path(args.pool) / b)[0]['entries']}
+                                for b in BACKENDS))
+    dropped = len(entries) - len(shared)
+    if dropped:
+        print(f'{dropped} candidates are missing from at least one encoder and are excluded')
+    if args.family:
+        eligible = [i for i, e in enumerate(entries)
+                    if e['record_id'] in shared
+                    and e['evidence'][0].get('activation_family') == args.family]
+        print(f'{len(eligible)} candidates in family {args.family}')
+    else:
+        eligible = [i for i, e in enumerate(entries) if e['record_id'] in shared]
+        pool_families = Counter(entries[i]['evidence'][0].get('activation_family') for i in eligible)
+        print(f'{len(eligible)} candidates across {len(pool_families)} families: '
+              + ', '.join(f'{f} {n}' for f, n in pool_families.most_common()))
 
-    queries = [prepare(s['reaction_smiles'], args.family, normalize, normalize) for s in seeds]
+    if normalize and not args.family:
+        print('Seed normalisation needs a stated family and is skipped; the pool is used as encoded.')
+    queries = [prepare(s['reaction_smiles'], args.family, normalize and bool(args.family),
+                       normalize and bool(args.family)) for s in seeds]
     scores, ranks = {}, {}
     for backend in BACKENDS:
         idx, matrix = load_index(Path(args.pool) / backend)
@@ -167,13 +187,14 @@ def main():
             break
 
     suffix = '' if args.order == 'structure' else f'_{args.order}'
-    folder = Path(args.out) / f'{args.cofactor}_{args.family}{suffix}'
+    folder = Path(args.out) / f'{args.cofactor}_{args.family or "all"}{suffix}'
     (folder / 'structures').mkdir(parents=True, exist_ok=True)
     lines = [f'# Candidate non-enzymatic reactions for the {args.cofactor} platform', '',
              f'Ordered by **{args.order}**. Retrieved by **{args.rank_by}** ({"+".join(args.fuse)}) proximity to {len(seeds)} enzyme seeds, over '
              if args.rank_by == 'fused' else
              f'Ranked by **{args.rank_by}** proximity to {len(seeds)} enzyme seeds, over '
-             f'{len(eligible)} candidates in family `{args.family}`'
+             f'{len(eligible)} candidates'
+             + (f' in family `{args.family}`' if args.family else ' across every family in the pool')
              + (', with both sides expressed at the shared reactive core.' if normalize else '.'), '',
              'These are **retrieved precedents, not predictions**. Nothing here is a feasibility '
              'estimate, a success probability, or a verified transferable reaction. Each card ends '
@@ -186,6 +207,7 @@ def main():
         evidence = entry['evidence'][0]
         context = evidence.get('context') or {}
         transfer = obstacles(context, args.cofactor, evidence.get('reported_results_raw'))
+        candidate_family = evidence.get('activation_family')
         agreement = ', '.join(f'{b} #{ranks[b][position]}' for b in BACKENDS)
         share = worst[position] / len(eligible)
         firmness = (f'**firm** - every fused encoder ranks it in the top {share:.0%}'
@@ -199,6 +221,7 @@ def main():
             f'{scores[primary][position]:.3f}', '',
             f'![Enzyme seed]({seed_diagram})', '',
             '| | |', '|---|---|',
+            f'| Activation family | {markdown(candidate_family)} |',
             f'| Rank by each encoder | {agreement} |',
             f'| Agreement | {firmness} |',
             f'| Catalyst / reagent | {markdown(context.get("catalyst"))} |',
@@ -227,7 +250,8 @@ def main():
     (folder / 'candidates.md').write_text('\n'.join(lines) + '\n')
     (folder / 'candidates.json').write_text(json.dumps({
         'platform': {'cofactor': args.cofactor, 'seeds': len(seeds)},
-        'family': args.family, 'ranked_by': args.rank_by, 'order': args.order, 'normalized': normalize,
+        'family': args.family, 'ranked_by': args.rank_by, 'order': args.order,
+        'normalized': normalize and bool(args.family),
         'pool_candidates': len(eligible), 'already_done_threshold': args.already_done,
         'candidates': [{'record_id': e['record_id'], 'reaction_smiles': e['reaction_smiles'],
                         'closest_seed': s['record_id'],
@@ -236,6 +260,7 @@ def main():
                         'worst_rank_across_fused': int(worst[p]),
                         'firm': bool(worst[p] <= cutoff),
                         'ranks': {b: int(ranks[b][p]) for b in BACKENDS},
+                        'activation_family': e['evidence'][0].get('activation_family'),
                         'evidence': e['evidence'][0],
                         'transfer': obstacles(e['evidence'][0].get('context') or {}, args.cofactor,
                                               e['evidence'][0].get('reported_results_raw'))}

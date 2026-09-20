@@ -233,6 +233,49 @@ Every rejected row is reported with a reason; nothing is dropped silently. Repea
 
 Encoding every family into one space clusters by substrate scaffold, not activation mode — the failure the map opens with. Amide formation, Pd-catalysed C–N coupling and carbene N–H insertion all form a C–N bond and are not interchangeable. Use `activation_family` for colouring and filtering the map; never let it produce the coordinates.
 
+## One database, built once, queried by platform
+
+Do not build a pool per platform. Platforms are unlimited; **activation modes are a
+finite list** — the rows of the [family map](../research/activation_family_map.md).
+Build the database once by exhausting those modes, and let the platform enter at query
+time.
+
+```
+building   exhaust the activation modes         about ten exports, done once
+querying   point at a platform, name no family  any number of times
+reporting  which families came back             the family is an answer, not an input
+```
+
+`recommend_candidates.py --cofactor heme` with **no** `--family` searches the whole pool
+and reports the families it returns. Against a two-family pool the haem platform gets
+back six carbene reactions and no dehydroamino acid ones, all six firm: retrieval chose
+the family.
+
+A candidate must exist in every encoder's index before it can be ranked by all of them,
+so the whole-pool query intersects the four indices first and says how many records that
+excludes.
+
+### Why the targeting cannot be skipped
+
+A large generic corpus does not work: all 50,000 Schneider50k rows contain two records
+with a substituted diazo reactant and neither is a carbene transfer. Methodology
+chemistry has to be aimed at. What the finite family list buys is that the aiming
+happens **once, at build time**, instead of every time someone asks a question.
+
+### What is still per-family
+
+Two things stay family-specific and are therefore skipped in a whole-pool query:
+
+- **Intermediate normalisation.** Rewriting serine into the aminoacrylate only makes
+  sense once you have said which family's intermediate you mean. A platform whose
+  abiotic counterpart shares its precursor — carbene, nitrene from azides, any
+  metal-substituted scaffold — needs none of it, which is most of the map.
+- **Transfer obstacles** need the platform's cofactor, which the query supplies, but
+  not the family.
+
+So a whole-pool query is complete for shared-precursor platforms and degraded for the
+shared-intermediate ones, where naming the family still buys the normalisation.
+
 ## Two pools, two purposes
 
 Filtering a pool down to only the chemistry you were looking for is circular if that
