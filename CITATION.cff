@@ -9,11 +9,9 @@ abstract: >-
   evidence-linked protocol for a subsequent discovery-event precedent audit.
 type: software
 authors:
-  # TODO before the first Zenodo release: replace with the verified legal name.
-  # A DOI record cannot be edited after minting.
-  - given-names: REPLACE_ME
-    family-names: REPLACE_ME
-    alias: troicc
+  # TODO before the first Zenodo release: add given-names and family-names.
+  # A minted DOI record cannot be corrected afterwards.
+  - alias: troicc
 repository-code: "https://github.com/troicc/bioreaction-atlas"
 license: Apache-2.0
 version: 0.2.0
