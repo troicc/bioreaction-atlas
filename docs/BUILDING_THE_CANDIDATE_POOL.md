@@ -43,13 +43,14 @@ In Reaxys, search Reactions with the query builder:
 | Family | Field | Query | Note |
 |---|---|---|---|
 | `metal_carbene` | Catalyst | `Rh2(OAc)4` | The classic dirhodium carbene catalyst; covers cyclopropanation and X–H insertion, including the Si–H chemistry of PILOT_01 |
-| `nhc_umpolung` | Reaction name | `benzoin condensation`, then `Stetter reaction` | Named reactions give small, clean sets |
+| `nhc_umpolung` (ThDP) | Reaction name | `benzoin condensation`, then `Stetter reaction` | Named reactions give small, clean sets. Add Catalyst = `thiazolium` / `triazolium` for the rest |
 | `enamine_iminium` | Catalyst | `L-proline` | High precision, very large literature |
 | `metal_nitrene` | Catalyst | `Rh2(esp)2` | The standard C–H amination catalyst |
 | `baeyer_villiger` | Reaction name | `Baeyer-Villiger` | Named |
 | `transfer_hydrogenation` | Reagent | `Hantzsch ester` | Diagnostic reagent |
 | `photoredox_radical` | Catalyst | `Ir(ppy)3`, then `4CzIPN` | Mostly post-2016, so absent from any USPTO corpus |
-| `hat_oxidation` | Catalyst | `Fe(PDP)` | Small, well-defined literature |
+| `hat_oxidation` | Catalyst | `Fe(PDP)` | The counterpart of a non-haem enzyme's **native** function only — see below |
+| a metal-substituted scaffold | Catalyst | **the installed metal**, for the reaction being installed | Not a single handle; see below |
 | `cation_cyclization` | — | leave for later | No single diagnostic handle; needs structure queries |
 | `alkylation_sam`, `acyl_transfer`, `lewis_acid` | — | leave for later | Too broad to bound with one handle |
 
@@ -74,6 +75,29 @@ Two defaults cost precision, and one of them is catastrophic for an enamide-like
 If a query is still too broad, set the key bond's topology to **chain** rather than ring. That excludes cyclic dehydroamino acids, which is a real loss, but purity matters more than recall for a first pool.
 
 The import screen rejects aromatic matches regardless, since its SMARTS requires aliphatic alkene carbons. Fixing the query still matters: hundreds of thousands of hits cannot be exported, and the daily export budget is small.
+
+### A repurposed metal scaffold: query the reaction, not the enzyme
+
+A non-haem iron scaffold used for abiotic chemistry does not run its native
+α-ketoglutarate machinery — nobody adds αKG. The protein is a chiral ligand around an
+**installed** metal, and the reaction is that metal's redox cycle. The pool must
+therefore come from **the homogeneous catalysis of the installed metal for the reaction
+being installed**, which is a different literature from anything mimicking the enzyme's
+native function.
+
+| Platform being built | Query the abiotic chemistry of | Handles |
+|---|---|---|
+| Cu-substituted, C(sp3)–N coupling | Cu-catalysed C–N coupling, radical relay amination | Catalyst `Cu(OTf)2`, `copper(I) iodide`; names `Chan-Lam`, `Ullmann` |
+| Cu-substituted, ene reaction | Lewis-acid catalysed ene chemistry | Reaction name `Conia-ene`, `carbonyl-ene`; Catalyst `Cu(OTf)2`, `Zn(OTf)2` |
+| Ni-substituted, C(sp2)–S coupling | Ni/photoredox C–S cross-coupling | Catalyst `Ir(ppy)3` **and** `nickel`; `4CzIPN` and `nickel` |
+| Co-substituted, radical chemistry | Co MHAT catalysis | Catalyst `cobaloxime`, `Co(salen)` |
+
+Mining Fe–PDP C–H oxidation for a Cu-substituted C–N coupling platform searches the
+wrong literature entirely. Split such a platform by **installed metal and reaction type**
+in the `family` column, never by native cofactor.
+
+These are the most direct transfers in the map: the abiotic reaction consumes the same
+substrates as the enzymatic one, so no intermediate normalisation is needed.
 
 ### When to stop
 
