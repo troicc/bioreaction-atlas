@@ -26,24 +26,44 @@ Then extend down the map. 200–500 reactions per family is enough for a first p
 
 ## What to query on
 
-Query by the **catalyst or reagent handle** that defines the activation mode, optionally intersected with a structural transformation. Do not query by product class: that is the bond-class trap the family map opens with, and it returns the wrong chemistry.
+**Aim for precision, not recall.** You need 200-500 diverse reactions per family, not every reaction of that type. One high-precision catalyst name returns a coherent set immediately; a carefully constructed comprehensive query returns tens of thousands of rows you then have to triage. The second is slower and gives a worse pool, because repeated substrate series from a handful of papers crowd out source diversity.
 
-Most families have a reagent or catalyst that is close to diagnostic. Those are the handles.
+So: **one catalyst name, two filters, stop.**
 
-| Family | Reagent / catalyst handle | Structural query to intersect | Named reactions |
+### The recipe
+
+In Reaxys, search Reactions with the query builder:
+
+1. One field — **Catalyst**, **Reagent**, or **Reaction name** — set to the single handle below.
+2. Filter **Document type = Journal**. This drops patents, which are your background pool, not your candidate pool.
+3. Cap the set. If it returns more than about 1,000, narrow the publication-year range rather than adding query terms.
+
+### One handle per family
+
+| Family | Field | Query | Note |
 |---|---|---|---|
-| `metal_carbene` | diazo reactant `C=[N+]=[N-]`; also sulfoxonium ylides, N-sulfonyl triazoles. Catalysts: Rh₂(OAc)₄, Rh₂(esp)₂, Cu(MeCN)₄PF₆, Co/Ir porphyrin | alkene → cyclopropane; X–H → X–CHR (X = Si, N, S, O, B) | cyclopropanation, X–H insertion, Doyle–Kirmse, Buchner |
-| `metal_nitrene` | organic azides R–N₃, iminoiodinanes PhI=NR, dioxazolones. Catalysts: Rh₂, Cu, Co, Ag, Ir, Mn | C(sp³)–H → C–N; alkene → aziridine | C–H amination, aziridination, sulfimidation |
-| `hat_oxidation` | Fe(PDP), Mn(PDP), Mn–salen, Fe(BPBP) with H₂O₂ / PhI(OAc)₂ / Oxone | C(sp³)–H → C–OH, C=C, C–X | White–Chen C–H oxidation, radical halogenation |
-| `metal_substituted` | the metal itself as catalyst field: Cu, Ni, Co, Ir | the coupling you want to install in a protein | Ullmann/Chan–Lam, Ni cross-coupling, photoredox/Ni dual |
-| `enamine_iminium` | L-proline, Hayashi–Jørgensen diarylprolinol TMS ether, MacMillan imidazolidinone | carbonyl α-functionalization; 1,4-addition | proline aldol, Mannich, Michael, α-amination |
-| `nhc_umpolung` | thiazolium, triazolium and imidazolium salts with base | aldehyde → ketone or 1,2-/1,4-dicarbonyl | benzoin, cross-benzoin, Stetter, homoenolate |
-| `transfer_hydrogenation` | Hantzsch ester, with chiral phosphoric acid or imidazolidinone | activated alkene → alkane | organocatalytic conjugate reduction |
-| `baeyer_villiger` | mCPBA, H₂O₂, peracids; oxaziridinium | ketone → ester, alkene → epoxide | Baeyer–Villiger, Shi epoxidation |
-| `photoredox_radical` | Ru(bpy)₃, Ir(ppy)₃, 4CzIPN, acridinium salts | radical addition, HAT functionalization | EDA activation, Giese, decarboxylative coupling |
-| `cation_cyclization` | SnCl₄, TiCl₄, BF₃·OEt₂, TfOH, chiral Brønsted acids | polyene → polycycle | polyene / cation–olefin cyclization |
+| `metal_carbene` | Catalyst | `Rh2(OAc)4` | The classic dirhodium carbene catalyst; covers cyclopropanation and X–H insertion, including the Si–H chemistry of PILOT_01 |
+| `nhc_umpolung` | Reaction name | `benzoin condensation`, then `Stetter reaction` | Named reactions give small, clean sets |
+| `enamine_iminium` | Catalyst | `L-proline` | High precision, very large literature |
+| `metal_nitrene` | Catalyst | `Rh2(esp)2` | The standard C–H amination catalyst |
+| `baeyer_villiger` | Reaction name | `Baeyer-Villiger` | Named |
+| `transfer_hydrogenation` | Reagent | `Hantzsch ester` | Diagnostic reagent |
+| `photoredox_radical` | Catalyst | `Ir(ppy)3`, then `4CzIPN` | Mostly post-2016, so absent from any USPTO corpus |
+| `hat_oxidation` | Catalyst | `Fe(PDP)` | Small, well-defined literature |
+| `cation_cyclization` | — | leave for later | No single diagnostic handle; needs structure queries |
+| `alkylation_sam`, `acyl_transfer`, `lewis_acid` | — | leave for later | Too broad to bound with one handle |
 
-Two practical notes. `photoredox_radical` is mostly post-2016, so it is largely absent from any USPTO-derived corpus — it has to come from the literature. And `metal_carbene` is best reached through the **diazo reactant substructure** rather than a reaction-type label, because carbene chemistry is unevenly classified across sources.
+Each is one string. If a handle returns too little, add its obvious siblings one at a time — `Rh2(esp)2` and `Cu(MeCN)4PF6` for carbene, `Ru(bpy)3Cl2` for photoredox — rather than building a compound query up front.
+
+### When to stop
+
+Stop at roughly 300 reactions from **at least 30 different papers**. Source diversity is the binding constraint, not row count: fifty substrate analogues from one paper are one piece of independent chemistry, and they will distort retrieval exactly the way the same-publication control in the [encoder report](../outputs/encoder_consistency/REPORT.md) showed.
+
+**Do one family end to end before starting a second.** Import it, encode it, run retrieval against your enzyme seeds, look at what comes back. That tells you whether the handle picked up the right chemistry, and it costs one afternoon. Collecting all ten families first and discovering the loop does not work is the expensive mistake.
+
+### If you later need more coverage
+
+Only after the loop works is it worth the extra effort: draw the diazo group `C=[N+]=[N-]` as a reactant substructure to reach carbene chemistry beyond dirhodium; add sulfoxonium ylides and N-sulfonyl triazoles as diazo-free carbene precursors; intersect with product-side transformations (alkene to cyclopropane, X–H to X–CHR). Carbene chemistry is classified inconsistently across sources, so the reactant substructure reaches more of it than any reaction-type label. Do this to extend a working pool, never to build the first one.
 
 ## Export settings that matter
 
