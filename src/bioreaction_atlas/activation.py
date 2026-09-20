@@ -21,7 +21,8 @@ FAMILIES = {
     'metal_nitrene': 'Metal nitrene transfer (haem nitrene analogue)',
     'hat_oxidation': 'HAT / high-valent metal-oxo C-H oxidation (non-haem Fe analogue)',
     'metal_substituted': 'Homogeneous catalysis for an installed metal (Cu, Ni, Co, Ir)',
-    'enamine_iminium': 'Enamine / iminium organocatalysis (PLP analogue)',
+    'enamine_iminium': 'Enamine / iminium organocatalysis (PLP transaminase/aldolase analogue)',
+    'aminoacrylate_addition': 'Conjugate addition to a dehydroalanine acceptor (PLP beta-substitution analogue, TrpB)',
     'nhc_umpolung': 'NHC acyl-anion umpolung (ThDP / Breslow analogue)',
     'transfer_hydrogenation': 'Hydride transfer to activated alkenes (ene-reductase analogue)',
     'baeyer_villiger': 'Peracid / Criegee oxygen insertion (BVMO analogue)',
@@ -68,6 +69,15 @@ SCREENS = {
         'reactant_smarts': {},
         'catalyst_metals': {'Ir', 'Ru'},
         'catalyst_text': ('4czipn', 'acridinium', 'eosin', 'rose bengal', 'photocatalyst'),
+    },
+    'aminoacrylate_addition': {
+        # A dehydroalanine acceptor: an exocyclic methylene on a carbon bearing both
+        # nitrogen and a carbonyl. This is the abiotic counterpart of the aminoacrylate
+        # a PLP beta-substituting enzyme forms from serine.
+        'reactant_smarts': {'dehydroalanine acceptor': '[CH2]=[CX3]([NX3])[CX3]=[OX1]'},
+        'catalyst_metals': set(),
+        'catalyst_text': ('proline', 'cinchona', 'phase-transfer', 'thiourea', 'squaramide',
+                          'organocatalyst', 'photocatalyst', 'nickel', 'copper'),
     },
     'enamine_iminium': {
         'reactant_smarts': {},

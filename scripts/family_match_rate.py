@@ -42,6 +42,10 @@ def main():
     parser.add_argument('--seeds', default='data/local/reference_demo')
     parser.add_argument('--pools', nargs='+', required=True, metavar='NAME=DIR')
     parser.add_argument('--seed-domain', default='enzyme_reference')
+    parser.add_argument('--seed-cofactor',
+                        help='select seeds by recorded cofactor (e.g. PLP) instead of by the '
+                             'family structural screen. Needed when the enzyme and abiotic routes '
+                             'share an intermediate but not a precursor.')
     parser.add_argument('--pool-domain', help='restrict a pool to one domain, e.g. patent_reference')
     parser.add_argument('--model-dir', default='data/local/public/rxnfp')
     parser.add_argument('--top-k', type=int, default=10)
@@ -49,11 +53,18 @@ def main():
     args = parser.parse_args()
 
     info, _ = load_index(Path(args.seeds) / 'morgan')
-    seeds = [e for e in info['entries']
-             if e['domain'] == args.seed_domain and family_screen(e['reaction_smiles'], args.family)[0]]
+    pool = [e for e in info['entries'] if e['domain'] == args.seed_domain]
+    if args.seed_cofactor:
+        def chosen(entry):
+            return any((ev.get('context') or {}).get('metal_cofactor') == args.seed_cofactor
+                       for ev in entry['evidence'])
+        seeds, how = [e for e in pool if chosen(e)], f'cofactor {args.seed_cofactor}'
+    else:
+        seeds = [e for e in pool if family_screen(e['reaction_smiles'], args.family)[0]]
+        how = 'the family structural screen'
     if not seeds:
-        raise SystemExit(f'No {args.seed_domain} seeds match family {args.family}')
-    print(f'{len(seeds)} enzyme seeds in family {args.family}\n')
+        raise SystemExit(f'No {args.seed_domain} seeds selected by {how}')
+    print(f'{len(seeds)} enzyme seeds selected by {how}; family {args.family}\n')
 
     report = {'family': args.family, 'seeds': len(seeds), 'top_k': args.top_k, 'pools': {}}
     for spec in args.pools:

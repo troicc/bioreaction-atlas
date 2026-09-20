@@ -225,3 +225,32 @@ def test_substituted_diazo_reagents_are_still_admitted():
             'COC(=O)C(=[N+]=[N-])c1ccccc1.Nc1ccccc1>>COC(=O)C(Nc1ccccc1)c1ccccc1',
             'C[C@H]1Cc2ccccc2N1.[N-]=[N+]=C1CCOC1=O>>C[C@H]1Cc2ccccc2N1[C@H]1CCOC1=O'):
         assert family_screen(carbene, 'metal_carbene')[0] is True
+
+
+DEHYDROALANINE = ('C=C(NC(C)=O)C(=O)OC.CC1C(=O)Nc2ccccc21'
+                  '>>CC1(CC(NC(C)=O)C(=O)OC)C(=O)Nc2ccccc21')
+TRPB = ('CC1C(=O)Nc2ccccc21.N[C@@H](CO)C(=O)O'
+        '>>CC1(C[C@H](N)C(=O)O)C(=O)Nc2ccccc21')
+
+
+def test_dehydroalanine_acceptors_define_the_plp_analogue_family():
+    from bioreaction_atlas.activation import family_screen
+    verdict, reason = family_screen(DEHYDROALANINE, 'aminoacrylate_addition')
+    assert verdict is True and 'dehydroalanine' in reason
+
+
+def test_a_plain_michael_acceptor_is_not_a_dehydroalanine():
+    from bioreaction_atlas.activation import family_screen
+    plain = 'C=CC(=O)OC.CC(=O)CC(C)=O>>COC(=O)CCC(C(C)=O)C(C)=O'
+    assert family_screen(plain, 'aminoacrylate_addition')[0] is False
+
+
+def test_the_enzyme_route_does_not_match_its_own_abiotic_family():
+    """TrpB consumes serine; the aminoacrylate is a transient intermediate.
+
+    The enzyme and abiotic routes share an intermediate but not a precursor, so
+    enzyme seeds for this family must be selected by cofactor, not by the abiotic
+    structural screen. Carbene chemistry hides this because both sides carry a diazo.
+    """
+    from bioreaction_atlas.activation import family_screen
+    assert family_screen(TRPB, 'aminoacrylate_addition')[0] is False

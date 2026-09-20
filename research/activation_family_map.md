@@ -39,6 +39,16 @@ This half is where the correspondences are cleanest and least exploited.
 | **SAM methyltransferases** | SAM | methyl cation equivalent | electrophilic alkylation reagents; for radical SAM, silyl-radical HAT and radical chain alkylation | B |
 | **Carbonic-anhydrase-like / Lewis-acid Zn** | Zn²⁺ | Lewis-acid activated carbonyl | Zn, Sc, Yb Lewis-acid catalysis: Mukaiyama aldol, Friedel–Crafts | C |
 
+## Shared intermediate, different precursor
+
+Two rows of this map behave very differently under structural retrieval, and the difference matters more than the chemistry suggests.
+
+For **carbene transfer**, the enzyme and the abiotic route use the same precursor: both consume a diazo compound. A structural fingerprint sees the diazo group on both sides, and a diazo substructure screen selects enzyme seeds and abiotic candidates alike.
+
+For **PLP β-substitution**, they do not. TrpB consumes **serine** and forms the aminoacrylate in the active site; the abiotic counterpart starts from a **dehydroalanine** acceptor that is already formed. The shared object is the intermediate, which appears in neither reaction SMILES. A structural screen that selects abiotic candidates therefore rejects the enzyme reactions, and enzyme seeds must be selected by recorded cofactor instead.
+
+This is the harder and more representative case. Where an enzyme generates its reactive intermediate in situ from a different precursor, structural similarity between the two reactions is weak by construction, and retrieval has to bridge a gap that the fingerprint cannot see. Families should be labelled with which case they are, because a retrieval result from a shared-precursor family does not predict performance on a shared-intermediate one.
+
 ## How this drives the corpus build
 
 Mine **one family at a time**, and record the family label on every imported reaction. Two reasons:
