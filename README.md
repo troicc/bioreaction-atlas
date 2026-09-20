@@ -42,7 +42,9 @@ Agreement is not accuracy. This analysis does **not** identify the most accurate
 
 The main study separates three questions: does an earlier nonenzymatic literature precedent exist, is a corresponding record present in the frozen corpus, and does retrieval find it? The unit is an independently reviewed discovery event, rather than each mutant or substrate record.
 
-The [v0.2 protocol](research/coverage_protocol_v02.md) defines matching, event-specific date cutoffs, search budgets, unresolved cases and overlapping activation/platform strata. A [five-paper calibration intake](research/coverage_pilot_intake.json) records starting sources and remaining checks. It is not a reviewed benchmark. No discovery-event candidate coverage rate has yet been measured.
+The [v0.2 protocol](research/coverage_protocol_v02.md) defines matching, event-specific date cutoffs, search budgets, unresolved cases and overlapping activation/platform strata. The [operating guide](docs/COVERAGE_AUDIT.md) is the per-event loop, and `scripts/coverage_status.py` reports the accounting at any completeness.
+
+The five calibration events are seeded into [`coverage_registry.json`](research/coverage_registry.json) with every state unresolved: **C = 0, U = 5, N = 5**, completion bounds 0.00-1.00, all five structurally unqueryable pending primary-source extraction. It is not a reviewed benchmark, and **no discovery-event candidate coverage rate has yet been measured**. The validator enforces the protocol rather than trusting the annotator: a top-k miss cannot become a corpus absence, corpus presence cannot outrun the literature check, and any resolved decision must name its reviewer.
 
 The [English research proposal](research/research_proposal_EN.md) explains the contribution. Condition reranking and prospective reaction recommendations remain follow-up questions. Map and collection interfaces support the research workflow.
 
@@ -74,12 +76,13 @@ Outputs cover three retrieval settings, overlap at k = 5/10/20/50, full-pool ran
 - Representations: substrate Morgan, signed Morgan difference, official DRFP and official RXNFP bert_ft. Existing configurations and metrics are reused; no new encoder is claimed.
 - Boundaries: imported records have not passed original-experiment or earliest-date review. Unique structures are not independent discoveries. Agreement is not accuracy.
 
-The suite contains 50 tests. 49 run in CI on Python 3.11 and 3.12 from the checkout alone; the 50th verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
+The suite contains 69 tests. 68 run in CI on Python 3.11 and 3.12 from the checkout alone; the remaining one verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
 
 ## Collection and historical ranking tools
 
 - [Chinese walkthrough](docs/从零开始理解与使用BioReaction_Atlas.md)
 - [English collection guide](docs/Collection_Guide_EN.md)
+- [Coverage audit operating guide](docs/COVERAGE_AUDIT.md)
 - [Single-cutoff historical ranking evaluation](docs/EVALUATION.md)
 - [Earlier Chinese overview and local map instructions](README.zh-CN.md)
 

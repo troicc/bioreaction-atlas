@@ -1,0 +1,228 @@
+{
+  "protocol_version": "coverage-0.2",
+  "status": "calibration_in_progress_no_frozen_cohort",
+  "selection": "Five purposively selected papers from existing project leads, chosen to expose correspondence/date/overlapping-strata issues; not a representative sample",
+  "seeded_from": "research/coverage_pilot_intake.json",
+  "accounting_rule": "Unresolved events stay in the denominator. A top-k miss is not a corpus absence. Calibration outcomes are reported separately from any later frozen cohort.",
+  "events": [
+    {
+      "event_id": "PILOT_01",
+      "cohort": "calibration",
+      "paper_id": "10.1126/science.aah6219",
+      "provisional_transformation": "Carbene insertion into Si-H bonds",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/27885032/",
+      "related_source_url": "https://authors.library.caltech.edu/records/54f1h-zr030",
+      "reported_publication_date": "2016-11-25",
+      "event_earliest_public_date": null,
+      "event_date_evidence": null,
+      "reaction_smiles": null,
+      "event_experiment_locator": null,
+      "strata": {
+        "transformation": [
+          "carbene_transfer"
+        ],
+        "activation": [
+          "pending_source_review"
+        ],
+        "platform": [
+          "heme_protein"
+        ]
+      },
+      "literature_precedent": "unresolved",
+      "corpus_coverage": "unresolved",
+      "structure_eligibility": "unusable",
+      "search_outcome": "not_completed",
+      "precedents": [],
+      "corpus_check_procedure": null,
+      "corpus_absence_rationale": null,
+      "reviewers": [],
+      "search_minutes": null,
+      "review_state": "metadata_intake_only_not_chemically_adjudicated",
+      "notes": "Abstract and figure captions describe Si-H insertion. Journal issue date is not certified as earliest disclosure. Trace synthetic-catalyst comparisons to primary examples.",
+      "remaining_checks": [
+        "Verify the primary reaction and exact experimental locator",
+        "Check earliest public version including preprints",
+        "Confirm event independence and matching granularity",
+        "Trace earlier nonenzymatic experimental sources",
+        "Check frozen-corpus records and document retrieval",
+        "Obtain independent chemical review"
+      ]
+    },
+    {
+      "event_id": "PILOT_02",
+      "cohort": "calibration",
+      "paper_id": "10.1021/jacs.2c00251",
+      "provisional_transformation": "Aziridine-to-azetidine one-carbon ring expansion",
+      "source_url": "https://authors.library.caltech.edu/records/4n9cr-qyw64",
+      "related_source_url": "https://doi.org/10.26434/chemrxiv-2021-8fq9b-v3",
+      "reported_publication_date": "2022-03-08",
+      "event_earliest_public_date": null,
+      "event_date_evidence": null,
+      "reaction_smiles": null,
+      "event_experiment_locator": null,
+      "strata": {
+        "transformation": [
+          "carbene_transfer",
+          "Stevens_rearrangement"
+        ],
+        "activation": [
+          "pending_source_review"
+        ],
+        "platform": [
+          "heme_protein"
+        ]
+      },
+      "literature_precedent": "unresolved",
+      "corpus_coverage": "unresolved",
+      "structure_eligibility": "unusable",
+      "search_outcome": "not_completed",
+      "precedents": [],
+      "corpus_check_procedure": null,
+      "corpus_absence_rationale": null,
+      "reviewers": [],
+      "search_minutes": null,
+      "review_state": "metadata_intake_only_not_chemically_adjudicated",
+      "notes": "Author repository links an earlier 2021 preprint. Resolve v1 date and distinguish authors' catalyst-class novelty claim from independently established absence.",
+      "remaining_checks": [
+        "Verify the primary reaction and exact experimental locator",
+        "Check earliest public version including preprints",
+        "Confirm event independence and matching granularity",
+        "Trace earlier nonenzymatic experimental sources",
+        "Check frozen-corpus records and document retrieval",
+        "Obtain independent chemical review"
+      ]
+    },
+    {
+      "event_id": "PILOT_03",
+      "cohort": "calibration",
+      "paper_id": "10.1038/nature17968",
+      "provisional_transformation": "Iridium-substituted haem proteins for carbene C-H insertion",
+      "source_url": "https://www.nature.com/articles/nature17968",
+      "related_source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11723505/",
+      "reported_publication_date": null,
+      "event_earliest_public_date": null,
+      "event_date_evidence": null,
+      "reaction_smiles": null,
+      "event_experiment_locator": null,
+      "strata": {
+        "transformation": [
+          "carbene_transfer"
+        ],
+        "activation": [
+          "pending_source_review"
+        ],
+        "platform": [
+          "metal_substitution",
+          "artificial_metalloenzyme"
+        ]
+      },
+      "literature_precedent": "unresolved",
+      "corpus_coverage": "unresolved",
+      "structure_eligibility": "unusable",
+      "search_outcome": "not_completed",
+      "precedents": [],
+      "corpus_check_procedure": null,
+      "corpus_absence_rationale": null,
+      "reviewers": [],
+      "search_minutes": null,
+      "review_state": "metadata_intake_only_not_chemically_adjudicated",
+      "notes": "Select one transformation from the paper, not each protein/substrate. Carbene transfer and metal substitution overlap; verify reaction-specific metal-complex precedents.",
+      "remaining_checks": [
+        "Verify the primary reaction and exact experimental locator",
+        "Check earliest public version including preprints",
+        "Confirm event independence and matching granularity",
+        "Trace earlier nonenzymatic experimental sources",
+        "Check frozen-corpus records and document retrieval",
+        "Obtain independent chemical review"
+      ]
+    },
+    {
+      "event_id": "PILOT_04",
+      "cohort": "calibration",
+      "paper_id": "10.1038/s41929-025-01350-5",
+      "provisional_transformation": "Non-haem enzyme Conia-ene cyclization after copper substitution",
+      "source_url": "https://www.nature.com/articles/s41929-025-01350-5",
+      "related_source_url": null,
+      "reported_publication_date": "2025-07-04",
+      "event_earliest_public_date": null,
+      "event_date_evidence": null,
+      "reaction_smiles": null,
+      "event_experiment_locator": null,
+      "strata": {
+        "transformation": [
+          "Conia_ene"
+        ],
+        "activation": [
+          "pending_source_review"
+        ],
+        "platform": [
+          "metal_substitution",
+          "nonheme_protein"
+        ]
+      },
+      "literature_precedent": "unresolved",
+      "corpus_coverage": "unresolved",
+      "structure_eligibility": "unusable",
+      "search_outcome": "not_completed",
+      "precedents": [],
+      "corpus_check_procedure": null,
+      "corpus_absence_rationale": null,
+      "reviewers": [],
+      "search_minutes": null,
+      "review_state": "metadata_intake_only_not_chemically_adjudicated",
+      "notes": "Publisher metadata confirms version-of-record date; earliest public date and cited nonenzymatic procedures still require checking.",
+      "remaining_checks": [
+        "Verify the primary reaction and exact experimental locator",
+        "Check earliest public version including preprints",
+        "Confirm event independence and matching granularity",
+        "Trace earlier nonenzymatic experimental sources",
+        "Check frozen-corpus records and document retrieval",
+        "Obtain independent chemical review"
+      ]
+    },
+    {
+      "event_id": "PILOT_05",
+      "cohort": "calibration",
+      "paper_id": "10.1038/s44160-026-01003-w",
+      "provisional_transformation": "Nickel-mediated C(sp2)-S coupling via LMCT photocatalysis",
+      "source_url": "https://crossmark.crossref.org/dialog/?doi=10.1038%2Fs44160-026-01003-w",
+      "related_source_url": "https://www.nature.com/articles/s44160-026-01003-w",
+      "reported_publication_date": "2026-02-27",
+      "event_earliest_public_date": null,
+      "event_date_evidence": null,
+      "reaction_smiles": null,
+      "event_experiment_locator": null,
+      "strata": {
+        "transformation": [
+          "C_S_coupling"
+        ],
+        "activation": [
+          "photochemical"
+        ],
+        "platform": [
+          "metal_substitution",
+          "nonheme_protein"
+        ]
+      },
+      "literature_precedent": "unresolved",
+      "corpus_coverage": "unresolved",
+      "structure_eligibility": "unusable",
+      "search_outcome": "not_completed",
+      "precedents": [],
+      "corpus_check_procedure": null,
+      "corpus_absence_rationale": null,
+      "reviewers": [],
+      "search_minutes": null,
+      "review_state": "metadata_intake_only_not_chemically_adjudicated",
+      "notes": "Crossmark confirms title and publication date. Primary full text/SI and earlier disclosure remain to be checked; do not infer a radical label from the title alone.",
+      "remaining_checks": [
+        "Verify the primary reaction and exact experimental locator",
+        "Check earliest public version including preprints",
+        "Confirm event independence and matching granularity",
+        "Trace earlier nonenzymatic experimental sources",
+        "Check frozen-corpus records and document retrieval",
+        "Obtain independent chemical review"
+      ]
+    }
+  ]
+}
