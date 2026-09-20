@@ -1,24 +1,42 @@
 # BioReaction Atlas
 
+[![CI](https://github.com/troicc/bioreaction-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/troicc/bioreaction-atlas/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
+
 **How reliably can public reaction corpora provide verifiable abiotic precedents for new-to-nature biocatalysis?**
 
 BioReaction Atlas studies corpus coverage and the dependence of reaction retrieval on representation choice. The current result is a completed encoder-agreement analysis; discovery-event precedent coverage is the next measurement.
 
 [English technical report](outputs/encoder_consistency/REPORT.md) · [Coverage protocol](research/coverage_protocol_v02.md) · [Reproduce](docs/REPRODUCIBILITY.md) · [中文使用说明](README.zh-CN.md)
 
-## Measured result
+![Encoder agreement](outputs/encoder_consistency/enzyme_to_patent_heatmaps.png)
 
-On **639 common enzyme-reference reactions** queried against **1,988 common patent-reference reactions**, the six pairs of four representations have mean expected **top-10 overlap of 0.70%-11.07%** and mean full-pool **Spearman correlation of 0.042-0.217**.
+*Pairwise top-10 agreement and full-pool rank correlation for four reaction representations, over an identical 1,988-candidate patent pool averaged across 639 enzyme queries.*
+
+## Three findings
+
+**1. Which records a researcher sees is largely set by the representation, not the chemistry.** Across six pairs of four representations, mean expected top-10 overlap in enzyme-to-patent retrieval is **0.70%–11.07%** (independent uniform-list reference: 0.503%), with mean full-pool Spearman correlation of 0.042–0.217.
+
+**2. Same-publication candidates inflate apparent agreement.** Within the enzyme corpus, top-10 overlap is 42.82%–62.45%; excluding every candidate that shares a normalized source DOI with the query drops it to **16.64%–37.71%**. Neighbourhoods are substantially composed of the query's own paper, so this exclusion is a necessary control when reporting retrieval quality on enzyme reaction corpora.
 
 | Retrieval setting | Mean expected top-10 overlap across six encoder pairs |
 |---|---:|
-| Enzyme queries to patent references | 0.70%-11.07% |
-| Within the enzyme corpus, self excluded | 42.82%-62.45% |
-| Within the enzyme corpus, self and shared publication sources excluded | 16.64%-37.71% |
+| Enzyme queries to patent references | 0.70%–11.07% |
+| Within the enzyme corpus, self excluded | 42.82%–62.45% |
+| Within the enzyme corpus, self and shared publication sources excluded | 16.64%–37.71% |
 
-![Encoder agreement](outputs/encoder_consistency/enzyme_to_patent_heatmaps.png)
+**3. Structural review of maximum-disagreement cases surfaced provenance defects in the imported public records.** One record's encoded transformation (N–H functionalization) disagrees with its associated publication's subject (intramolecular C(sp3)–H amination); another omits its sulfur-containing substrate from the stored product. Both are flagged, not silently corrected, and require original-SI adjudication before use as discovery labels.
 
-Neighborhood selection depends strongly on representation and candidate-pool composition in this fixed collection. This does **not** identify the most accurate encoder or establish the absence of small-molecule precedents. Three selected disagreement cases include a structure/source discrepancy requiring original-SI review. Methods, source-macro sensitivity, boundary ties and limitations are in the [report](outputs/encoder_consistency/REPORT.md); exact values are in [summary.json](outputs/encoder_consistency/summary.json).
+### What these results do not show
+
+Agreement is not accuracy. This analysis does **not** identify the most accurate encoder, establish the absence of small-molecule precedents, or measure discovery-event precedent coverage. Methods, source-macro sensitivity, boundary-tie handling and the full limitations are in the [report](outputs/encoder_consistency/REPORT.md); exact values are in [summary.json](outputs/encoder_consistency/summary.json).
+
+### Measurement choices that the numbers depend on
+
+- **Tie-aware metric.** At top-10 in the patent pool, 43.35% of Morgan-difference and 16.43% of DRFP query lists cross a boundary tie. The primary metric averages over uniform permutations within each tie instead of breaking ties by record ID, so reported agreement does not depend on an arbitrary ordering.
+- **Enforced common pool.** Indices are rejected unless they share a corpus hash, a structural view and byte-identical provenance for every common entry; entries align by stable ID, never row position.
+- **Sensitivity.** Source-macro reweighting (per-DOI means, then averaged) and 5/6/7-decimal rounding are both reported; rounding moves any pair's mean by at most 0.0042 percentage points.
 
 ## Research scope
 
@@ -56,7 +74,7 @@ Outputs cover three retrieval settings, overlap at k = 5/10/20/50, full-pool ran
 - Representations: substrate Morgan, signed Morgan difference, official DRFP and official RXNFP bert_ft. Existing configurations and metrics are reused; no new encoder is claimed.
 - Boundaries: imported records have not passed original-experiment or earliest-date review. Unique structures are not independent discoveries. Agreement is not accuracy.
 
-The verified suite currently contains 50 passing tests, including the local RXNFP numerical integration check. See the report for the evidence chain and limitations.
+The suite contains 50 tests. 49 run in CI on Python 3.11 and 3.12 from the checkout alone; the 50th verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
 
 ## Collection and historical ranking tools
 
@@ -65,7 +83,7 @@ The verified suite currently contains 50 passing tests, including the local RXNF
 - [Single-cutoff historical ranking evaluation](docs/EVALUATION.md)
 - [Earlier Chinese overview and local map instructions](README.zh-CN.md)
 
-Older generated workbooks, maps and detailed source-derived outputs are local products excluded from initial Git tracking. Their instructions remain useful after local regeneration. Aggregate agreement results above are included.
+The two blank collection workbooks are tracked, because `scripts/build_template.mjs` depends on a package that is not public; see the [reproduction gap](docs/REPRODUCIBILITY.md#known-reproduction-gap-collection-workbooks). Generated maps and detailed source-derived outputs remain local products excluded from Git tracking, and their instructions apply after local regeneration. Aggregate agreement results above are included.
 
 ## License and project status
 

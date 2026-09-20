@@ -57,6 +57,24 @@ The reference runner also regenerates a local map and illustrative cards. Its pa
 
 Score matrices contain the full domain pool. Apply self/shared-source exclusions with `allowed_candidates` and original common entries before reproducing within-enzyme statistics. All formal comparisons use identical eligibility across encoders.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push and pull request. It installs the project from the checkout alone and executes two independent checks:
+
+1. **Tests** on Python 3.11 and 3.12. The suite contains 50 tests; the RXNFP integration test is deselected because it requires locally downloaded official weights, so 49 run in CI. A green run therefore demonstrates that the tests pass on a clean machine, not only in the original workspace.
+2. **Report integrity.** `scripts/write_consistency_report.py` regenerates `outputs/encoder_consistency/REPORT.md` from the committed `summary.json`, and CI fails if the result differs from the committed note. No metric in the technical note can be hand-edited after the analysis ran.
+
+CI does not reproduce the analysis itself: that needs the pinned source file and four encoded indices, which are not redistributable.
+
+## Known reproduction gap: collection workbooks
+
+`scripts/build_template.mjs` renders the Excel collection workbooks through `@oai/artifact-tool`, which is not published on npm. **Third parties cannot run this script.** The two generated workbooks contain no third-party records and are therefore committed directly as the canonical artifacts:
+
+- `outputs/bioreaction_atlas_v01/非天然酶反应收集模板.xlsx`
+- `outputs/bioreaction_atlas_v02/Nonnatural_Enzyme_Reaction_Collection_EN.xlsx`
+
+`scripts/check_map.mjs` similarly requires Playwright and locally generated map artifacts. Neither script is on the path of the encoder-agreement result, and neither runs in CI. The field definitions behind both workbooks are public in `templates/` and reachable through `bioatlas template`, which has no Node dependency.
+
 ## Checks and practical limits
 
 Synthetic tests verify tie expectations, undefined correlations, common-pool alignment, source normalization and exclusions. Existing tests cover imports, fingerprints, matrix corruption, bilingual intake and historical-date gates. The RXNFP integration test is skipped until local official assets exist; a skipped integration test is not a verified model reproduction.

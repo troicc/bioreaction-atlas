@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software or its reported measurements, please cite it as below."
+title: "BioReaction Atlas: representation dependence in reaction retrieval for new-to-nature biocatalysis"
+abstract: >-
+  A reproducible descriptive study comparing four reaction representations
+  (substrate Morgan, signed Morgan difference, DRFP and RXNFP) on a hash-pinned
+  pool of 639 enzyme-reference and 1,988 patent-reference reactions, with
+  tie-aware agreement metrics, a shared-publication exclusion control, and an
+  evidence-linked protocol for a subsequent discovery-event precedent audit.
+type: software
+authors:
+  # TODO before the first Zenodo release: replace with the verified legal name.
+  # A DOI record cannot be edited after minting.
+  - given-names: REPLACE_ME
+    family-names: REPLACE_ME
+    alias: troicc
+repository-code: "https://github.com/troicc/bioreaction-atlas"
+license: Apache-2.0
+version: 0.2.0
+date-released: "2026-09-12"
+keywords:
+  - biocatalysis
+  - reaction fingerprints
+  - chemical reaction retrieval
+  - reproducibility
+  - data leakage
