@@ -61,7 +61,7 @@ Score matrices contain the full domain pool. Apply self/shared-source exclusions
 
 `.github/workflows/ci.yml` runs on every push and pull request. It installs the project from the checkout alone and executes two independent checks:
 
-1. **Tests** on Python 3.11 and 3.12. The suite contains 156 tests; the RXNFP integration test is deselected because it requires locally downloaded official weights, so 155 run in CI. A green run therefore demonstrates that the tests pass on a clean machine, not only in the original workspace.
+1. **Tests** on Python 3.11 and 3.12. The suite contains 168 tests; the RXNFP integration test is deselected because it requires locally downloaded official weights, so 167 run in CI. A green run therefore demonstrates that the tests pass on a clean machine, not only in the original workspace.
 2. **Report integrity.** `scripts/write_consistency_report.py` regenerates `outputs/encoder_consistency/REPORT.md` from the committed `summary.json`, and CI fails if the result differs from the committed note. No metric in the technical note can be hand-edited after the analysis ran.
 
 CI does not reproduce the analysis itself: that needs the pinned source file and four encoded indices, which are not redistributable.

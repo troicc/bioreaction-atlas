@@ -26,6 +26,7 @@ from bioreaction_atlas.cards import draw_reaction, markdown  # noqa: E402
 from bioreaction_atlas.corpus import load_index  # noqa: E402
 from bioreaction_atlas.encoders import Encoder, pairwise_similarity  # noqa: E402
 from bioreaction_atlas.intermediates import canonicalize, normalize_reactants  # noqa: E402
+from bioreaction_atlas.transfer import obstacles  # noqa: E402
 
 BACKENDS = ('morgan', 'substrate', 'drfp', 'rxnfp')
 
@@ -62,6 +63,11 @@ def main():
     parser.add_argument('--already-done', type=float, default=0.95,
                         help='drop a candidate this similar to one of the platform\'s own reactions')
     parser.add_argument('--no-normalize', action='store_true')
+    parser.add_argument('--order', default='structure',
+                        choices=['structure', 'obstacles', 'popularity', 'recency', 'random'],
+                        help='"obstacles" re-sorts the structural shortlist by how much a transfer '
+                             'would have to change; the rest are baselines for comparison')
+    parser.add_argument('--seed-random', type=int, default=17)
     parser.add_argument('--out', default='data/local/candidates')
     args = parser.parse_args()
 
@@ -117,6 +123,30 @@ def main():
     worst = stacked.max(axis=0)
     cutoff = max(1, int(len(eligible) * args.firm_percentile / 100))
 
+    # Alternative orders. Each keeps the family filter, so they are baselines for the
+    # ordering question only, not for the filtering question.
+    if args.order != 'structure':
+        structural = order_key.copy()
+        if args.order == 'obstacles':
+            counts = np.asarray([
+                obstacles(entries[i]['evidence'][0].get('context') or {}, args.cofactor,
+                          entries[i]['evidence'][0].get('reported_results_raw'))
+                for i in eligible])
+            # An unrecorded condition is not a cleared one, so it sorts with obstacles.
+            counts = np.asarray([o['obstacle_count'] + o['unknown_count'] for o in counts], dtype=float)
+            # Fewest obstacles first; structural proximity breaks ties.
+            ranked = (-counts).argsort(kind='stable')
+            order_key = np.empty(len(eligible))
+            order_key[ranked] = np.arange(len(eligible))
+            order_key = order_key + structural / (structural.max() + 1e-9) * 0.5
+        elif args.order == 'popularity':
+            order_key = np.asarray([len(entries[i]['evidence']) for i in eligible], dtype=float)
+        elif args.order == 'recency':
+            order_key = np.asarray([float(entries[i]['evidence'][0].get('source_year') or 0)
+                                    for i in eligible])
+        else:
+            order_key = np.random.default_rng(args.seed_random).permutation(len(eligible)).astype(float)
+
     chosen, per_paper, skipped = [], {}, []
     for position in np.argsort(-np.round(order_key, 6), kind='stable'):
         entry = entries[eligible[position]]
@@ -136,10 +166,11 @@ def main():
         if len(chosen) >= args.top_k:
             break
 
-    folder = Path(args.out) / f'{args.cofactor}_{args.family}'
+    suffix = '' if args.order == 'structure' else f'_{args.order}'
+    folder = Path(args.out) / f'{args.cofactor}_{args.family}{suffix}'
     (folder / 'structures').mkdir(parents=True, exist_ok=True)
     lines = [f'# Candidate non-enzymatic reactions for the {args.cofactor} platform', '',
-             f'Ranked by **{args.rank_by}** ({"+".join(args.fuse)}) proximity to {len(seeds)} enzyme seeds, over '
+             f'Ordered by **{args.order}**. Retrieved by **{args.rank_by}** ({"+".join(args.fuse)}) proximity to {len(seeds)} enzyme seeds, over '
              if args.rank_by == 'fused' else
              f'Ranked by **{args.rank_by}** proximity to {len(seeds)} enzyme seeds, over '
              f'{len(eligible)} candidates in family `{args.family}`'
@@ -154,6 +185,7 @@ def main():
         draw_reaction(best_seed['reaction_smiles'], folder / seed_diagram)
         evidence = entry['evidence'][0]
         context = evidence.get('context') or {}
+        transfer = obstacles(context, args.cofactor, evidence.get('reported_results_raw'))
         agreement = ', '.join(f'{b} #{ranks[b][position]}' for b in BACKENDS)
         share = worst[position] / len(eligible)
         firmness = (f'**firm** - every fused encoder ranks it in the top {share:.0%}'
@@ -177,7 +209,16 @@ def main():
             f'| Document type | {markdown(evidence.get("document_type"))} |',
             f'| Locator | {markdown(evidence["source_locator"])} |',
             f'| Acceptor consumed | {context.get("acceptor_consumed")} |',
-            f'| Family evidence | {markdown(context.get("family_screen"))} |', '',
+            f'| Family evidence | {markdown(context.get("family_screen"))} |',
+            f'| Transfer obstacles | {transfer["obstacle_count"]}'
+            + (f' (plus {transfer["unknown_count"]} unrecorded)' if transfer['unknown'] else '') + ' |', '']
+        if transfer['unknown']:
+            lines += ['**Not recorded**', ''] + [f'- {u}' for u in transfer['unknown']] + ['']
+        if transfer['obstacles']:
+            lines += ['**Would have to change**', ''] + [f'- {o}' for o in transfer['obstacles']] + ['']
+        if transfer['compatible']:
+            lines += ['**Already fits**', ''] + [f'- {c}' for c in transfer['compatible']] + ['']
+        lines += [
             '**Still to decide:** does the enzyme platform supply the same activation, what does the '
             'recorded catalyst or medium provide that a protein cannot, and what would a first '
             'experiment need to distinguish? Mechanism is not recorded here and must be read from '
@@ -186,7 +227,7 @@ def main():
     (folder / 'candidates.md').write_text('\n'.join(lines) + '\n')
     (folder / 'candidates.json').write_text(json.dumps({
         'platform': {'cofactor': args.cofactor, 'seeds': len(seeds)},
-        'family': args.family, 'ranked_by': args.rank_by, 'normalized': normalize,
+        'family': args.family, 'ranked_by': args.rank_by, 'order': args.order, 'normalized': normalize,
         'pool_candidates': len(eligible), 'already_done_threshold': args.already_done,
         'candidates': [{'record_id': e['record_id'], 'reaction_smiles': e['reaction_smiles'],
                         'closest_seed': s['record_id'],
@@ -195,7 +236,10 @@ def main():
                         'worst_rank_across_fused': int(worst[p]),
                         'firm': bool(worst[p] <= cutoff),
                         'ranks': {b: int(ranks[b][p]) for b in BACKENDS},
-                        'evidence': e['evidence'][0]} for p, e, s in chosen],
+                        'evidence': e['evidence'][0],
+                        'transfer': obstacles(e['evidence'][0].get('context') or {}, args.cofactor,
+                                              e['evidence'][0].get('reported_results_raw'))}
+                       for p, e, s in chosen],
         'skipped': skipped[:50],
     }, ensure_ascii=False, indent=2) + '\n')
     print(f'\n{len(chosen)} candidates written to {folder / "candidates.md"}')
