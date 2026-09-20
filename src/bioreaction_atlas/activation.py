@@ -81,6 +81,11 @@ SCREENS = {
         'catalyst_metals': set(),
         'catalyst_text': ('proline', 'cinchona', 'phase-transfer', 'thiourea', 'squaramide',
                           'organocatalyst', 'photocatalyst', 'nickel', 'copper'),
+        # Asymmetric hydrogenation of dehydroamino acids is the most studied reaction of
+        # this substrate class and would swamp the pool. It adds only hydrogen across the
+        # alkene and forms no bond to a nucleophile, so it is not the beta-substitution
+        # the enzyme performs. An addition gains heavy atoms; a hydrogenation does not.
+        'require_heavy_atom_gain': True,
     },
     'enamine_iminium': {
         'reactant_smarts': {},
@@ -220,6 +225,24 @@ def _mentions_metal(text, symbol):
     return bool(name and name in text.lower())
 
 
+def _heavy(smiles):
+    mol = Chem.MolFromSmiles(smiles, sanitize=False)
+    return mol.GetNumHeavyAtoms() if mol is not None else 0
+
+
+def _gains_heavy_atoms(reaction_smiles):
+    """True when the product is larger than any single reactant fragment.
+
+    Hydrogenation, isomerisation and tautomerisation leave the heavy-atom count
+    unchanged; a conjugate addition of a nucleophile increases it.
+    """
+    parts = reaction_smiles.split('>')
+    reactants, products = parts[0], parts[-1]
+    largest = max((_heavy(f) for f in reactants.split('.') if f), default=0)
+    total = sum(_heavy(f) for f in products.split('.') if f)
+    return total > largest
+
+
 def family_screen(reaction_smiles, family, catalyst_text=None):
     """Does this reaction plausibly belong to `family`?
 
@@ -230,6 +253,11 @@ def family_screen(reaction_smiles, family, catalyst_text=None):
     screen = SCREENS.get(family)
     if screen is None:
         return None, 'no screen defined for this family'
+    # A veto, checked before any admitting rule: some families are defined by what is
+    # added, not only by the acceptor present.
+    if screen.get('require_heavy_atom_gain') and not _gains_heavy_atoms(reaction_smiles):
+        return False, 'no heavy atoms added: a reduction or isomerisation, not an addition'
+
     reactants = reaction_smiles.split('>')[0]
     mol = Chem.MolFromSmiles(reactants, sanitize=False)
     if mol is not None:

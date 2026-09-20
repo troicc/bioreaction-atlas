@@ -287,3 +287,37 @@ def test_aromatic_heterocycles_are_not_dehydroamino_acids():
             'COC(=O)c1cc[nH]c1>>COC(=O)c1cc[nH]c1C',
             'COC(=O)c1ccc2ccccc2[nH]1>>COC(=O)c1ccc2ccccc2n1C'):
         assert family_screen(aromatic, 'aminoacrylate_addition')[0] is False
+
+
+def test_asymmetric_hydrogenation_is_not_beta_substitution():
+    """The most studied reaction of dehydroamino acids adds only hydrogen.
+
+    It forms no bond to a nucleophile, so it is not what a PLP beta-substituting
+    enzyme does, and it would otherwise dominate the pool.
+    """
+    from bioreaction_atlas.activation import family_screen
+    for reduction in (
+            'C(=C/c1ccccc1)(\\NC(=O)c1ccccc1)C(=O)OC.[HH]'
+            '>>COC(=O)C(Cc1ccccc1)NC(=O)c1ccccc1',
+            # Transfer hydrogenation records often omit the hydrogen source entirely.
+            'C(=C/c1ccccc1)(\\NC(=O)c1ccccc1)C(=O)OC'
+            '>>COC(=O)C(Cc1ccccc1)NC(=O)c1ccccc1'):
+        verdict, reason = family_screen(reduction, 'aminoacrylate_addition')
+        assert verdict is False and 'no heavy atoms added' in reason
+
+
+def test_additions_that_gain_heavy_atoms_are_kept():
+    from bioreaction_atlas.activation import family_screen
+    for addition in (
+            'C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1',
+            'C=C(NC(C)=O)C(=O)OC.CC1C(=O)Nc2ccccc21>>CC1(CC(NC(C)=O)C(=O)OC)C(=O)Nc2ccccc21',
+            'C=C(NC(C)=O)C(=O)OC.O>>COC(=O)C(NC(C)=O)CO'):
+        assert family_screen(addition, 'aminoacrylate_addition')[0] is True
+
+
+def test_the_heavy_atom_veto_applies_only_where_configured():
+    """Carbene transfer has no such rule; its families must be unaffected."""
+    from bioreaction_atlas.activation import SCREENS, family_screen
+    assert 'require_heavy_atom_gain' not in SCREENS['metal_carbene']
+    carbene = 'CCOC(=O)C=[N+]=[N-].c1ccc2[nH]ccc2c1>>CCOC(=O)Cc1c[nH]c2ccccc12'
+    assert family_screen(carbene, 'metal_carbene')[0] is True

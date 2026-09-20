@@ -49,6 +49,19 @@ For **PLP β-substitution**, they do not. TrpB consumes **serine** and forms the
 
 This is the harder and more representative case. Where an enzyme generates its reactive intermediate in situ from a different precursor, structural similarity between the two reactions is weak by construction, and retrieval has to bridge a gap that the fingerprint cannot see. Families should be labelled with which case they are, because a retrieval result from a shared-precursor family does not predict performance on a shared-intermediate one.
 
+## A family is defined by what is added, not only by the acceptor
+
+The acceptor alone does not identify the transformation. Dehydroamino acids are the
+substrate of the most studied reaction in asymmetric catalysis — Rh- and Ru-catalysed
+**hydrogenation** — which adds hydrogen across the alkene and forms no bond to a
+nucleophile. It is not what a PLP β-substituting enzyme does, and on volume alone it
+would take over the pool.
+
+The separating rule is simple and structural: a conjugate addition **gains heavy
+atoms**, while a hydrogenation, isomerisation or tautomerisation does not. Families
+whose defining feature is what gets added carry that requirement; carbene transfer,
+where the diazo precursor already identifies the chemistry, does not.
+
 ## How this drives the corpus build
 
 Mine **one family at a time**, and record the family label on every imported reaction. Two reasons:
