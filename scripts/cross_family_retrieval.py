@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'src'))
 from bioreaction_atlas.activation import family_screen  # noqa: E402
 from bioreaction_atlas.corpus import load_index  # noqa: E402
 from bioreaction_atlas.encoders import Encoder, pairwise_similarity  # noqa: E402
-from bioreaction_atlas.intermediates import normalize_reactants  # noqa: E402
+from bioreaction_atlas.intermediates import canonicalize, normalize_reactants  # noqa: E402
 
 BACKENDS = ('morgan', 'substrate', 'drfp', 'rxnfp')
 
@@ -63,6 +63,9 @@ def main():
     parser.add_argument('--normalize', action='store_true',
                         help='rewrite seed reactants into the intermediate their platform forms, '
                              'so both sides are expressed at the same level')
+    parser.add_argument('--canonical', action='store_true',
+                        help='also reduce the acceptor to its unprotected core on the seed side; '
+                             'pair with a pool encoded the same way')
     parser.add_argument('--seed-screen', nargs='*', default=['metal_carbene'],
                         help='families whose seeds are additionally filtered by the structural screen')
     args = parser.parse_args()
@@ -82,6 +85,8 @@ def main():
             if args.normalize:
                 smiles, rule = normalize_reactants(smiles, family)
                 hits += bool(rule)
+            if args.canonical:
+                smiles, _ = canonicalize(smiles, family)
             texts.append(smiles)
         queries[family] = texts
         normalized[family] = hits

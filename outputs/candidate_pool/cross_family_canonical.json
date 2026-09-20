@@ -1,0 +1,78 @@
+{
+  "top_k": 10,
+  "seed_counts": {
+    "metal_carbene": 278,
+    "aminoacrylate_addition": 31
+  },
+  "seed_selection": {
+    "metal_carbene": "cofactor heme and the metal_carbene structural screen",
+    "aminoacrylate_addition": "cofactor PLP"
+  },
+  "normalized": true,
+  "seeds_normalized": {
+    "metal_carbene": 0,
+    "aminoacrylate_addition": 31
+  },
+  "backends": {
+    "morgan": {
+      "metal_carbene": {
+        "pool_share": 0.7673,
+        "mean_own_family_share_at_k": 0.9399,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 1.23
+      },
+      "aminoacrylate_addition": {
+        "pool_share": 0.2327,
+        "mean_own_family_share_at_k": 0.9,
+        "seeds_with_no_own_family_hit": 1,
+        "lift_over_pool_share": 3.87
+      }
+    },
+    "substrate": {
+      "metal_carbene": {
+        "pool_share": 0.7614,
+        "mean_own_family_share_at_k": 0.9698,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 1.27
+      },
+      "aminoacrylate_addition": {
+        "pool_share": 0.2386,
+        "mean_own_family_share_at_k": 0.8548,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 3.58
+      }
+    },
+    "drfp": {
+      "metal_carbene": {
+        "pool_share": 0.7673,
+        "mean_own_family_share_at_k": 1.0,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 1.3
+      },
+      "aminoacrylate_addition": {
+        "pool_share": 0.2327,
+        "mean_own_family_share_at_k": 1.0,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 4.3
+      }
+    },
+    "rxnfp": {
+      "metal_carbene": {
+        "pool_share": 0.7614,
+        "mean_own_family_share_at_k": 0.9978,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 1.31
+      },
+      "aminoacrylate_addition": {
+        "pool_share": 0.2386,
+        "mean_own_family_share_at_k": 0.1258,
+        "seeds_with_no_own_family_hit": 21,
+        "lift_over_pool_share": 0.53
+      }
+    }
+  },
+  "pool_share": {
+    "metal_carbene": 0.7614329268292683,
+    "aminoacrylate_addition": 0.2385670731707317
+  }
+}
