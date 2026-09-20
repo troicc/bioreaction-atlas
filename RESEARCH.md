@@ -1,6 +1,6 @@
 # Research state
 
-Last updated 2026-09-20. This file is the handover: what has been measured, what it means, where the code is, and what is not done. Read it before continuing the project in a new session.
+Last updated 2026-09-20 (F8 added). This file is the handover: what has been measured, what it means, where the code is, and what is not done. Read it before continuing the project in a new session.
 
 ---
 
@@ -99,6 +99,27 @@ Retrospective check: the carbene shortlist includes carbene Si–H insertion, th
 
 Of **639** enzyme reactions, **1** has a ≥0.95 structural match in the abiotic pool (cyclopropenation of 1-phenylpropyne). Transferability lives at the transformation-type level, not the substrate level, so labels cannot be harvested automatically. Ground truth requires human adjudication of discovery events.
 
+### F8. Catalytic context reorders the shortlist, by a family-dependent amount
+
+The labelled test failed first and is worth recording: defining "known transferable" candidates by similarity to enzyme reactions gives 23 positives for carbene and **3** for PLP at a 0.3 threshold, moving several-fold with the threshold. No labelled evaluation is possible.
+
+So context is reported as **obstacles** — what a recorded procedure would have to change to run in a protein. Each axis states what proteins tolerate, so it needs no transferability labels. Unrecorded conditions count separately as unknown, never as cleared.
+
+Mean obstacles in the top-10, against the pool's own mean:
+
+| Ordering | PLP | haem |
+|---|---:|---:|
+| *pool average* | *0.9* | *2.0* |
+| Structure (fused) | **0.1** | **1.9** |
+| Fewest obstacles | 0.0 | 0.0 |
+| Popularity / recency / random | 1.4 / 0.8 / 1.0 | 2.2 / 1.9 / 1.6 |
+
+**PLP: context adds almost nothing** — structure already returns obstacle-free candidates, and 49.0% of that pool is obstacle-free because PLP chemistry is metal-free, aqueous and mild.
+
+**Carbene: context adds a great deal** — structure returns 1.9, indistinguishable from the pool, and only 5.4% of the pool is obstacle-free. The two top-10 lists share **0 of 10**. Obstacle ordering leads with **hemin catalysing carbene transfer in water at 20 °C** — the platform's own cofactor under protein conditions — plus three **metal-free** carbene reactions. Structure-only surfaced none.
+
+Report: `outputs/candidate_pool/TRANSFER_OBSTACLES.md`. Code: `src/bioreaction_atlas/transfer.py`, `scripts/recommend_candidates.py --order`.
+
 ### F7. Data-quality findings, made while building
 
 - Same-publication leakage inflates apparent retrieval quality: within-enzyme top-10 agreement falls from 42.8–62.5% to 16.6–37.7% once candidates sharing a source DOI are excluded.
@@ -120,6 +141,7 @@ Of **639** enzyme reactions, **1** has a ≥0.95 structural match in the abiotic
 | `rdf.py` | RD File reader; per-variation explosion; Reaxys field mapping |
 | `reaxys_pdf.py` | Citation and condition layer from a Reaxys PDF export |
 | `coverage.py` | Protocol v0.2 four-state machine and C/N accounting (**built, never run on real events**) |
+| `transfer.py` | Transfer obstacles: medium, temperature, platform metal, external ligand, harsh reagents |
 | `corpus.py`, `encoders.py`, `consistency.py` | Pre-existing: corpora, four representations, agreement metrics |
 | `cards.py`, `maps.py`, `map_view.py` | Evidence cards and offline maps |
 | `evaluation.py` | Pre-existing v1 single-cutoff ranking design. **Separate from `coverage.py`; do not conflate.** |
@@ -135,6 +157,7 @@ Of **639** enzyme reactions, **1** has a ≥0.95 structural match in the abiotic
 | `cross_family_retrieval.py` | F2/F3 measurement |
 | `family_cohesion.py` | F4 pre-flight check |
 | `family_match_rate.py` | F1 measurement |
+| `recommend_candidates.py --order` | F8: structure / obstacles / popularity / recency / random |
 | `coverage_status.py`, `event_worksheet.py`, `seed_coverage_registry.py` | Coverage audit (unused) |
 
 ### Documents
@@ -147,6 +170,7 @@ Of **639** enzyme reactions, **1** has a ≥0.95 structural match in the abiotic
 | `docs/COVERAGE_AUDIT.md` | Per-event loop for the unexecuted audit |
 | `outputs/candidate_pool/REPORT.md` | F1 |
 | `outputs/candidate_pool/CROSS_FAMILY.md` | F2, F3, F4 |
+| `outputs/candidate_pool/TRANSFER_OBSTACLES.md` | F8 |
 | `outputs/encoder_consistency/REPORT.md` | The earlier encoder-agreement study; CI regenerates it from `summary.json` |
 
 ### Local data — `data/local/` (gitignored, licensed)
@@ -208,9 +232,9 @@ Ordered by how much it blocks the goal.
 
 **① There is no definition of "worth trying" beyond "same family."** F6 shows labels cannot be harvested automatically. The only path is human adjudication of ~20 discovery events — `research/coverage_protocol_v02.md` and `docs/COVERAGE_AUDIT.md` define it completely, `src/bioreaction_atlas/coverage.py` implements the accounting, and **zero events have been annotated**. Current state: C=0, U=5, N=5.
 
-**② Within-family ranking has no signal.** F5. The unused signal is already in the pool — catalyst, solvent, temperature, time, yield, `acceptor_consumed`, year — and reranking by catalytic context was the original proposal's central idea, never implemented. **This is the next task (A).**
+**② Within-family ranking still has no *structural* signal.** F5 stands. F8 partly answers it: catalytic context reorders the carbene shortlist decisively and the PLP shortlist not at all. What remains unbuilt is any ordering **within** an obstacle tier — for carbene the top five are all zero-obstacle and nothing distinguishes them.
 
-**③ No baselines.** A top-10 means nothing without comparison to random-in-family, most-cited and most-recent. Part of task A.
+**③ Baselines exist now** (`--order popularity|recency|random`), but they compare orderings, not correctness. No ordering has been shown to predict transfer, because ① is undone.
 
 **④ Two families of about fourteen.** `research/activation_family_map.md` lists the rest. ThDP↔NHC is blocked: the pinned V6 file has no ThDP seeds, so seeds must be curated from the literature first (Huang Xiaoqiang's group at NJU is the most active on repurposed ThDP chemistry).
 
@@ -224,6 +248,6 @@ Ordered by how much it blocks the goal.
 
 ## 8. Reproducibility
 
-156 tests, 155 in CI on Python 3.11 and 3.12 from the checkout alone. CI separately regenerates `outputs/encoder_consistency/REPORT.md` from its `summary.json` and fails if the committed note differs, so no reported metric in that report can be hand-edited. Raw Reaxys exports, model weights and source-rich derived records stay in `data/local/`; only aggregates are committed.
+168 tests, 167 in CI on Python 3.11 and 3.12 from the checkout alone. CI separately regenerates `outputs/encoder_consistency/REPORT.md` from its `summary.json` and fails if the committed note differs, so no reported metric in that report can be hand-edited. Raw Reaxys exports, model weights and source-rich derived records stay in `data/local/`; only aggregates are committed.
 
 中文要点：本文件是交接说明。**目标**是给定酶平台输出值得尝试的非酶反应清单。**已完成**：专利语料中无卡宾先例（F1）；检索失效发生在酶与化学家前体不同时（F2）；归一化到共享中间体可修复结构指纹但修不好 RXNFP（F3）；原因是该家族在 RXNFP 空间中不成区域（F4）；当前产物是**筛子而非排序器**（F5）；精确匹配标签不存在（F6）。**未完成**按阻塞程度排序见 §7，其中①需人工裁定 20 个发现事件，②③是下一步任务 A。
