@@ -4,7 +4,7 @@ Records are `imported`: they carry a literature identifier but have not passed
 primary-source review. Two things are deliberately never inferred here — a
 mechanism, and a verified earliest public date from a publication year.
 """
-from .activation import FAMILIES, catalytic_context, family_screen
+from .activation import FAMILIES, acceptor_consumed, catalytic_context, family_screen
 from .chemistry import canonical_reaction
 from .corpus import CORPUS_VERSION, sha
 
@@ -63,6 +63,10 @@ def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECT
         verdict, reason = family_screen(raw, family, context.get('catalyst'))
         context['family_screen'] = reason if verdict else ('unscreened: ' + reason if verdict is None else reason)
         context['in_family'] = verdict
+        # A property, not a membership rule: a Heck substitution leaves the acceptor
+        # intact, a conjugate addition consumes it, and which counts is for the
+        # reviewer to decide.
+        context['acceptor_consumed'] = acceptor_consumed(raw, family)
         if screen and verdict is False:
             skipped.append({'row': n, 'reason': f'off-family: {reason}'})
             continue

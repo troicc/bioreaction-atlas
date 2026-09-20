@@ -62,6 +62,32 @@ atoms**, while a hydrogenation, isomerisation or tautomerisation does not. Famil
 whose defining feature is what gets added carry that requirement; carbene transfer,
 where the diazo precursor already identifies the chemistry, does not.
 
+## Record judgements, do not encode them as membership
+
+Some distinctions are real chemistry but contested as family boundaries. A Heck
+coupling forms a C–C bond at the β-carbon of a dehydroamino acid and leaves the
+alkene intact; a conjugate addition consumes it and gives the saturated amino acid
+the enzyme makes. Whether the Heck product counts as a precedent for TrpB depends on
+whether the question is "what is the precedent for this transformation" or "what
+could an enzyme do with an aminoacrylate". Both readings are defensible.
+
+Such a distinction is recorded as a **property** — `acceptor_consumed` — and reported
+both ways, rather than written into the membership screen. Baking one reading into
+the ground truth would make it unfalsifiable by anyone reading the result later.
+
+The property is family-general and validates cleanly: 2,425 of 2,426 carbene records
+consume their diazo, and the single exception is a reaction that occurred elsewhere in
+the molecule while the diazo went untouched. The dehydroamino acid pool splits 187
+conjugate additions to 172 alkene substitutions.
+
+**None of this is learning.** The encoders are frozen: Morgan and DRFP are
+deterministic and parameterless, and RXNFP's weights are never updated. Adding a rule
+changes which reactions are in the pool, never how any reaction is represented — the
+vector for a given reaction SMILES is identical either way. Labels are an answer key
+for measuring retrieval, and they are informative precisely because the encoders have
+never seen the rule. They would be useless as *training* targets: a label that is a
+deterministic function of structure teaches a model the rule, not the chemistry.
+
 ## How this drives the corpus build
 
 Mine **one family at a time**, and record the family label on every imported reaction. Two reasons:

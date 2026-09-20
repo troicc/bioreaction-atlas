@@ -369,3 +369,39 @@ def test_amide_and_carbamate_protected_nitrogens_still_qualify():
             'C=C(NC(=O)OCc1ccccc1)C(=O)OC.CC1C(=O)Nc2ccccc21'
             '>>CC1(CC(NC(=O)OCc1ccccc1)C(=O)OC)C(=O)Nc2ccccc21'):
         assert family_screen(protected, 'aminoacrylate_addition')[0] is True
+
+
+def test_acceptor_consumption_is_a_property_not_a_membership_rule():
+    """Which of these counts as the family is a chemistry judgement, so it is
+    recorded and reported rather than decided by the screen."""
+    from bioreaction_atlas.activation import acceptor_consumed, family_screen
+    heck = ('C=C(NC(C)=O)C(=O)OC.Ic1ccccc1'
+            '>>COC(=O)/C(=C/c1ccccc1)NC(C)=O')
+    addition = 'C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1'
+    # Both are in the family; they differ in whether the acceptor survives.
+    assert family_screen(heck, 'aminoacrylate_addition')[0] is True
+    assert family_screen(addition, 'aminoacrylate_addition')[0] is True
+    assert acceptor_consumed(heck, 'aminoacrylate_addition') is False
+    assert acceptor_consumed(addition, 'aminoacrylate_addition') is True
+
+
+def test_carbene_transfer_consumes_its_diazo():
+    from bioreaction_atlas.activation import acceptor_consumed
+    transfer = 'CCOC(=O)C=[N+]=[N-].c1ccc2[nH]ccc2c1>>CCOC(=O)Cc1c[nH]c2ccccc12'
+    # A surviving diazo means the reaction happened elsewhere in the molecule.
+    elsewhere = 'CCOC(=O)C=[N+]=[N-].CO>>CCOC(=O)C=[N+]=[N-].CI'
+    assert acceptor_consumed(transfer, 'metal_carbene') is True
+    assert acceptor_consumed(elsewhere, 'metal_carbene') is False
+
+
+def test_families_without_a_diagnostic_group_report_unknown():
+    from bioreaction_atlas.activation import acceptor_consumed
+    assert acceptor_consumed('CC>>CC', 'enamine_iminium') is None
+    assert acceptor_consumed('CC>>CC', 'background_patent') is None
+
+
+def test_the_property_is_recorded_on_every_imported_record():
+    rows = [row(reaction_smiles='C=C(NC(C)=O)C(=O)OC.SCc1ccccc1>>COC(=O)C(NC(C)=O)CSCc1ccccc1',
+                family='aminoacrylate_addition')]
+    records, _ = build_records(rows)
+    assert records[0]['context']['acceptor_consumed'] is True

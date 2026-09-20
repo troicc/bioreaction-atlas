@@ -288,3 +288,33 @@ def family_screen(reaction_smiles, family, catalyst_text=None):
         if needle in text:
             return True, f'catalyst text matches "{needle}"'
     return False, 'no diagnostic reactant group and no diagnostic catalyst'
+
+
+def acceptor_consumed(reaction_smiles, family):
+    """Is the family's diagnostic group gone from the product?
+
+    Recorded as a property, never as membership. A conjugate addition consumes the
+    dehydroamino acid alkene; a Heck coupling substitutes on it and the acceptor
+    survives. Carbene transfer consumes the diazo; a diazo that survives signals the
+    reaction happened elsewhere. Which of these counts as the family is a chemistry
+    judgement, so it is reported rather than decided here.
+
+    Returns None when the family defines no diagnostic reactant group.
+    """
+    screen = SCREENS.get(family) or {}
+    patterns = screen.get('reactant_smarts') or {}
+    if not patterns:
+        return None
+    product = reaction_smiles.split('>')[-1]
+    mol = Chem.MolFromSmiles(product, sanitize=False)
+    if mol is None:
+        return None
+    try:
+        Chem.SanitizeMol(mol)
+    except Exception:  # noqa: BLE001 - an unsanitizable product answers nothing
+        return None
+    for smarts in patterns.values():
+        pattern = Chem.MolFromSmarts(smarts)
+        if pattern is not None and mol.HasSubstructMatch(pattern):
+            return False
+    return True
