@@ -12,14 +12,34 @@ The organizing axis is instead **what generates the reactivity**: the reactive i
 
 Confidence column: **A** = the synthetic and enzymatic systems are generally accepted to pass through the same intermediate class; **B** = plausible correspondence, needs case-by-case review; **C** = speculative, listed to avoid silently excluding it.
 
+### A repurposed scaffold is a platform, not a family
+
+A non-haem iron scaffold used for new-to-nature chemistry does **not** run its native
+α-ketoglutarate machinery. Nobody adds αKG. The scaffold is emptied of its native
+chemistry and used as a **chiral ligand** around an installed metal — Cu, Ni, Co — or
+around its own iron acting as a Lewis acid, and the reaction is the metal's redox cycle.
+
+This matters for how a family is defined. Such a platform must be split by **installed
+metal and reaction type**, never by native cofactor, and its abiotic counterpart is
+**the homogeneous catalysis of that metal for that reaction**, not the chemistry that
+mimics the enzyme's native function. Mining Fe–PDP C–H oxidation for a Cu-substituted
+C–N coupling platform searches the wrong literature entirely.
+
+It also makes these platforms the **easiest** transfers in this map. A Cu-substituted
+enzyme performing C(sp3)–N coupling consumes the same amine and alkyl halide as the
+homogeneous Cu reaction; a Ni-substituted scaffold doing C(sp2)–S coupling consumes the
+same aryl halide and thiol as Ni/photoredox catalysis. Precursors are shared, so no
+normalisation is needed and structural retrieval works directly. Metal substitution is
+the hard part of the protein engineering, not of the retrieval.
+
 ### Metal-dependent platforms
 
 | Enzyme platform | Active species | Intermediate | Abiotic chemistry to mine | Conf. |
 |---|---|---|---|---|
 | Engineered haem (P450, cyt c, Mb, protoglobin) | Fe–porphyrin | metal carbene | Rh₂(OAc)₄ / Cu(I)–box / Co(II)– and Ir–porphyrin carbene transfer: cyclopropanation, X–H insertion (Si–H, N–H, S–H, O–H, B–H), ylide formation and Doyle–Kirmse, Stevens and Buchner rearrangements | A |
 | Engineered haem (nitrene transfer) | Fe–porphyrin | metal nitrene | Rh, Cu, Co, Ag nitrene transfer from azides/iminoiodinanes: C–H amination, aziridination, sulfimidation | A |
-| Non-haem Fe/αKG (hydroxylase, halogenase, desaturase) | Fe(IV)=O | HAT then rebound | Fe–PDP / Mn–salen / Mn–pdp C–H oxidation, Cu/Fe radical halogenation, HAT desaturation | A |
-| Metal-substituted non-haem (Cu, Ni, Co, Ir in a protein scaffold) | installed metal | organometallic, varies by metal | the corresponding homogeneous catalysis for that metal and oxidation state: Cu C–N / C–S coupling, Ni cross-coupling and photoredox/Ni dual catalysis, Ir photocatalysis | B |
+| Non-haem Fe/αKG, **native function only** | Fe(IV)=O from O₂ + α-ketoglutarate | HAT then rebound | Fe–PDP / Mn–salen C–H oxidation with a peroxide oxidant | A |
+| **Metal-substituted non-haem scaffold** (Cu, Ni, Co, Ir installed) | the installed metal's own redox cycle | organometallic, set by the metal | **the homogeneous catalysis of that metal for that reaction** — the substrates are identical | **A** |
 | Artificial metalloenzyme with an exogenous cofactor | anchored complex | as the free complex | the free complex's own reaction scope, read as an upper bound rather than a prediction | B |
 
 ### Non-metal platforms
@@ -38,6 +58,28 @@ This half is where the correspondences are cleanest and least exploited.
 | **Hydrolase promiscuity** (lipase, esterase, protease) | Ser–His–Asp, oxyanion hole | acyl-enzyme; general base activation | organocatalytic acyl transfer (DMAP, NHC); amine- or base-catalysed aldol, Michael, Knoevenagel, Henry | B |
 | **SAM methyltransferases** | SAM | methyl cation equivalent | electrophilic alkylation reagents; for radical SAM, silyl-radical HAT and radical chain alkylation | B |
 | **Carbonic-anhydrase-like / Lewis-acid Zn** | Zn²⁺ | Lewis-acid activated carbonyl | Zn, Sc, Yb Lewis-acid catalysis: Mukaiyama aldol, Friedel–Crafts | C |
+
+## What decides how directly a family transfers
+
+Not whether the enzyme carries a metal. **Whether the reactive species arrives on a
+carrier molecule that both worlds write into the reaction.**
+
+| Platform | Carrier: enzyme / abiotic | Shared |
+|---|---|:--:|
+| Haem carbene | diazo / diazo | ✓ |
+| Haem nitrene, azide route | organic azide / organic azide | ✓ |
+| Metal-substituted scaffold | none — the substrate is the substrate | ✓ |
+| **ThDP** | aldehyde / aldehyde | **✓** |
+| Haem nitrene, hydroxylamine route | NH₂–OPiv / PhI=NTs, dioxazolone | ✗ |
+| PLP | serine / dehydroalanine | ✗ |
+| Non-haem Fe in its **native** αKG chemistry | O₂ + αKG / a peroxide | ✗ |
+
+Metal-dependent platforms dominate the shared column, which is why metalloenzyme
+chemistry transfers more directly — but the cause is the carrier, not the metal. **ThDP
+is a cofactor-dependent, metal-free family that transfers as directly as carbene**,
+because NHC catalysis enters through the same aldehyde. And a non-haem iron enzyme run
+in its *native* mode would be one of the hardest, since no chemist generates Fe(IV)=O
+from α-ketoglutarate — which is exactly why new-to-nature work does not use that mode.
 
 ## Shared intermediate, different precursor
 
