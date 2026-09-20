@@ -1,6 +1,6 @@
 # Research state
 
-Last updated 2026-09-20 (F8 added). This file is the handover: what has been measured, what it means, where the code is, and what is not done. Read it before continuing the project in a new session.
+Last updated 2026-09-20 (F8 added). Chinese version: [RESEARCH_ZH.md](RESEARCH_ZH.md). This file is the handover: what has been measured, what it means, where the code is, and what is not done. Read it before continuing the project in a new session.
 
 ---
 

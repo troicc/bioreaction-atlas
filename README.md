@@ -88,6 +88,7 @@ The suite contains 168 tests. 167 run in CI on Python 3.11 and 3.12 from the che
 
 - [Chinese walkthrough](docs/从零开始理解与使用BioReaction_Atlas.md)
 - [English collection guide](docs/Collection_Guide_EN.md)
+- **[Research state / 研究现状](RESEARCH.md)** — findings, code map and what is not done ([中文](RESEARCH_ZH.md))
 - [Ranking candidates for an enzyme platform](docs/RECOMMENDING_CANDIDATES.md)
 - [Building the non-enzymatic candidate pool](docs/BUILDING_THE_CANDIDATE_POOL.md) · [activation-family map](research/activation_family_map.md)
 - [Coverage audit operating guide](docs/COVERAGE_AUDIT.md)
