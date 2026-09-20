@@ -92,8 +92,70 @@ def test_same_reaction_from_a_different_paper_stays_separate():
 
 
 def test_corpus_counts_families_and_pins_the_source():
-    records, _ = build_records([row(), row(source_doi='10.0000/b', family='nhc_umpolung')])
+    records, _ = build_records([row(), row(source_doi='10.0000/b', family='nhc_umpolung',
+                                     catalyst='triazolium salt')])
     corpus = build_corpus(records, 'export.csv', 'deadbeef', 2)
     assert corpus['family_counts'] == {'metal_carbene': 1, 'nhc_umpolung': 1}
     assert corpus['sources'][0] == {'name': 'export.csv', 'sha256': 'deadbeef', 'rows': 2}
     assert 'not_a_reviewed_benchmark' in corpus['purpose']
+
+
+AMIDE = 'CC(=O)O.NCc1ccccc1>>CC(=O)NCc1ccccc1'
+SI_H_INSERTION = 'CCOC(=O)C=[N+]=[N-].[SiH](CC)(CC)CC>>CCOC(=O)C[Si](CC)(CC)CC'
+
+
+def test_diagnostic_reactant_group_admits_a_reaction():
+    from bioreaction_atlas.activation import family_screen
+    assert family_screen(SI_H_INSERTION, 'metal_carbene') == (True, 'reactant carries a diazo group')
+
+
+def test_substrate_prep_steps_are_rejected():
+    from bioreaction_atlas.activation import family_screen
+    verdict, reason = family_screen(AMIDE, 'metal_carbene', 'EDC, HOBt')
+    assert verdict is False and 'no diagnostic' in reason
+
+
+def test_palladium_does_not_admit_a_reaction_to_the_carbene_family():
+    # Suzuki/Sonogashira steps are the commonest contaminant in a methodology paper.
+    from bioreaction_atlas.activation import family_screen
+    assert family_screen(AMIDE, 'metal_carbene', 'Pd(PPh3)4')[0] is False
+
+
+def test_catalyst_metals_are_recognized_as_symbol_and_as_name():
+    from bioreaction_atlas.activation import family_screen
+    assert family_screen(AMIDE, 'metal_carbene', 'Rh2(OAc)4') == (True, 'catalyst metal Rh')
+    assert family_screen(AMIDE, 'metal_carbene', 'rhodium(II) acetate') == (True, 'catalyst metal Rh')
+
+
+def test_element_symbol_does_not_fire_inside_an_unrelated_word():
+    from bioreaction_atlas.activation import _mentions_metal
+    assert _mentions_metal('CoCl2', 'Co') and _mentions_metal('Co2(CO)8', 'Co')
+    assert not _mentions_metal('Corey-Bakshi-Shibata reagent', 'Co')
+
+
+def test_organocatalyst_families_screen_on_catalyst_text():
+    from bioreaction_atlas.activation import family_screen
+    assert family_screen(AMIDE, 'nhc_umpolung', 'thiazolium salt')[0] is True
+    assert family_screen(AMIDE, 'enamine_iminium', 'L-proline')[0] is True
+    assert family_screen(AMIDE, 'enamine_iminium', 'EDC, HOBt')[0] is False
+
+
+def test_families_without_a_screen_are_reported_as_unscreened():
+    from bioreaction_atlas.activation import family_screen
+    verdict, reason = family_screen(AMIDE, 'background_patent')
+    assert verdict is None and 'no screen defined' in reason
+
+
+def test_importer_drops_off_family_rows_with_a_stated_reason():
+    rows = [row(reaction_smiles=SI_H_INSERTION, catalyst='Rh2(OAc)4'),
+            row(reaction_smiles=AMIDE, source_doi='10.0000/b', catalyst='EDC, HOBt')]
+    records, skipped = build_records(rows)
+    assert len(records) == 1 and len(skipped) == 1
+    assert skipped[0]['reason'].startswith('off-family')
+    assert records[0]['context']['family_screen'] == 'reactant carries a diazo group'
+
+
+def test_screening_can_be_disabled():
+    rows = [row(reaction_smiles=AMIDE, catalyst='EDC, HOBt')]
+    assert len(build_records(rows, screen=False)[0]) == 1
+    assert len(build_records(rows, screen=True)[0]) == 0

@@ -4,7 +4,7 @@ Records are `imported`: they carry a literature identifier but have not passed
 primary-source review. Two things are deliberately never inferred here — a
 mechanism, and a verified earliest public date from a publication year.
 """
-from .activation import FAMILIES, catalytic_context
+from .activation import FAMILIES, catalytic_context, family_screen
 from .chemistry import canonical_reaction
 from .corpus import CORPUS_VERSION, sha
 
@@ -15,8 +15,13 @@ OPTIONAL = ('catalyst', 'reagents', 'solvent', 'temperature_c', 'time_h', 'loadi
 CONDITION_COLUMNS = ('catalyst', 'reagents', 'solvent', 'temperature_c', 'time_h', 'loading')
 
 
-def build_records(rows, prefix='METH'):
-    """Return (records, skipped). Every rejected row is reported, never dropped silently."""
+def build_records(rows, prefix='METH', screen=True):
+    """Return (records, skipped). Every rejected row is reported, never dropped silently.
+
+    With `screen`, rows that carry neither the family's diagnostic reactant group nor a
+    diagnostic catalyst are rejected. A methodology paper's substrate-preparation steps
+    are exactly the routine chemistry the pool is meant to exclude.
+    """
     records, skipped, seen = [], [], {}
     for n, row in enumerate(rows, 2):
         missing = [c for c in REQUIRED if not (row.get(c) or '').strip()]
@@ -41,6 +46,13 @@ def build_records(rows, prefix='METH'):
             context[field] = row[field].strip()
         if explicit:
             context['context_source'] = 'explicit_export_columns_plus_agents_segment'
+
+        if screen:
+            verdict, reason = family_screen(raw, family, context.get('catalyst'))
+            if verdict is False:
+                skipped.append({'row': n, 'reason': f'off-family: {reason}'})
+                continue
+            context['family_screen'] = reason if verdict else 'unscreened: ' + reason
 
         record_id = f"{prefix}_{sha((family + '|' + canonical + '|' + row['source_doi'].strip()).encode())[:16]}"
         if record_id in seen:

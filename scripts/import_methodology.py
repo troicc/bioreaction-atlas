@@ -30,6 +30,8 @@ def main():
     parser.add_argument('--out', required=True)
     parser.add_argument('--prefix', default='METH', help='record ID prefix, e.g. CARB for carbene')
     parser.add_argument('--report', help='write the skipped-row report here')
+    parser.add_argument('--no-screen', action='store_true',
+                        help='keep rows that fail the family membership screen')
     args = parser.parse_args()
 
     raw = Path(args.csv_path).read_bytes()
@@ -40,7 +42,7 @@ def main():
     if unknown:
         print(f'Note: ignoring unrecognized columns: {", ".join(sorted(unknown))}')
 
-    records, skipped = build_records(rows, args.prefix)
+    records, skipped = build_records(rows, args.prefix, screen=not args.no_screen)
     if not records:
         raise SystemExit('No importable rows; see the skipped report')
 
@@ -50,6 +52,10 @@ def main():
     print(f'Imported {len(records)} reactions, skipped {len(skipped)}.')
     for family, count in sorted(families.items(), key=lambda x: -x[1]):
         print(f'  {count:5d}  {family}')
+    off_family = [s for s in skipped if s['reason'].startswith('off-family')]
+    if off_family:
+        print(f'\n{len(off_family)} rows rejected as off-family. These are typically the '
+              'substrate-preparation steps inside a methodology paper.')
     if skipped:
         print('\nFirst skipped rows:')
         for item in skipped[:5]:

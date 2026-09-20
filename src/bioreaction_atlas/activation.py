@@ -10,6 +10,7 @@ Assignments here are lexical, not mechanistic. A detected metal is a species pre
 in the recorded agents, never evidence of how the reaction actually works.
 """
 from functools import lru_cache
+import re
 
 from rdkit import Chem
 
@@ -31,6 +32,54 @@ FAMILIES = {
     'alkylation_sam': 'Electrophilic or radical alkylation (SAM / radical-SAM analogue)',
     'lewis_acid': 'Lewis-acid carbonyl activation (Zn enzyme analogue)',
     'background_patent': 'Routine patent chemistry retained as a negative control',
+}
+
+# Family membership screens. A reaction belongs to a family if its reactant side
+# carries the diagnostic substructure OR its recorded catalyst carries a diagnostic
+# metal. Either alone is sufficient: some sources annotate the catalyst but not the
+# precursor, and some the reverse. Families with no clean screen are left unscreened
+# rather than given a loose one that would silently drop real chemistry.
+SCREENS = {
+    'metal_carbene': {
+        'reactant_smarts': {'diazo': '[#6X3]=[N+]=[N-]'},
+        # Pd is deliberately absent: Suzuki/Sonogashira/Buchwald steps are the most
+        # common substrate-preparation contaminant in a methodology paper, and Pd is
+        # not the haem-carbene analogue this family is mining for.
+        'catalyst_metals': {'Rh', 'Cu', 'Co', 'Ir', 'Ru', 'Fe'},
+    },
+    'metal_nitrene': {
+        'reactant_smarts': {'organic azide': '[NX2]=[N+]=[N-]',
+                            'iminoiodinane': '[IX2]=[NX2]'},
+        'catalyst_metals': {'Rh', 'Cu', 'Co', 'Ag', 'Ir', 'Mn', 'Fe'},
+    },
+    'hat_oxidation': {
+        'reactant_smarts': {},
+        'catalyst_metals': {'Fe', 'Mn', 'Cu', 'Ru'},
+    },
+    'metal_substituted': {
+        'reactant_smarts': {},
+        'catalyst_metals': {'Cu', 'Ni', 'Co', 'Ir', 'Pd', 'Ru', 'Rh'},
+    },
+    'photoredox_radical': {
+        'reactant_smarts': {},
+        'catalyst_metals': {'Ir', 'Ru'},
+        'catalyst_text': ('4czipn', 'acridinium', 'eosin', 'rose bengal', 'photocatalyst'),
+    },
+    'enamine_iminium': {
+        'reactant_smarts': {},
+        'catalyst_metals': set(),
+        'catalyst_text': ('proline', 'imidazolidinone', 'prolinol', 'cinchona', 'organocatalyst'),
+    },
+    'nhc_umpolung': {
+        'reactant_smarts': {},
+        'catalyst_metals': set(),
+        'catalyst_text': ('thiazolium', 'triazolium', 'imidazolium', 'carbene', 'nhc'),
+    },
+    'transfer_hydrogenation': {
+        'reactant_smarts': {},
+        'catalyst_metals': set(),
+        'catalyst_text': ('hantzsch', 'phosphoric acid', 'imidazolidinone'),
+    },
 }
 
 TRANSITION_METALS = frozenset(
@@ -133,3 +182,60 @@ def catalytic_context(reaction_smiles, family=None):
         'unparsed_agents': parsed['unparsed'] or None,
         'has_agents': parsed['has_agents'],
     }
+
+
+ELEMENT_NAMES = {
+    'Rh': 'rhodium', 'Cu': 'copper', 'Co': 'cobalt', 'Ir': 'iridium', 'Ru': 'ruthenium',
+    'Fe': 'iron', 'Pd': 'palladium', 'Ag': 'silver', 'Mn': 'manganese', 'Ni': 'nickel',
+    'Zn': 'zinc', 'Ti': 'titanium', 'Cr': 'chromium', 'Mo': 'molybdenum', 'V': 'vanadium',
+    'W': 'tungsten', 'Os': 'osmium', 'Re': 'rhenium', 'Pt': 'platinum', 'Au': 'gold',
+}
+
+
+def _mentions_metal(text, symbol):
+    """Catalyst fields say both "Rh2(OAc)4" and "rhodium(II) acetate"."""
+    # The symbol as a token: a capitalised start, not followed by a lowercase letter,
+    # so "Co" matches "Co2(CO)8" and "CoCl2" but not "Copper" or "Cobalt" - those are
+    # caught by the element name instead.
+    if re.search(rf'(?<![A-Za-z]){symbol}(?![a-z])', text):
+        return True
+    name = ELEMENT_NAMES.get(symbol)
+    return bool(name and name in text.lower())
+
+
+def family_screen(reaction_smiles, family, catalyst_text=None):
+    """Does this reaction plausibly belong to `family`?
+
+    Returns (verdict, reason). A verdict of None means no screen is defined for the
+    family, which is not the same as passing. The screen is a purity filter for bulk
+    imports, never a mechanistic judgement about an individual reaction.
+    """
+    screen = SCREENS.get(family)
+    if screen is None:
+        return None, 'no screen defined for this family'
+    reactants = reaction_smiles.split('>')[0]
+    mol = Chem.MolFromSmiles(reactants, sanitize=False)
+    if mol is not None:
+        try:
+            Chem.SanitizeMol(mol)
+        except Exception:  # noqa: BLE001 - fall back to the catalyst evidence
+            mol = None
+    if mol is not None:
+        for name, smarts in screen['reactant_smarts'].items():
+            pattern = Chem.MolFromSmarts(smarts)
+            if pattern is not None and mol.HasSubstructMatch(pattern):
+                return True, f'reactant carries a {name} group'
+
+    catalyst_metals = set(parse_agents(reaction_smiles)['metals'])
+    text = (catalyst_text or '').lower()
+    if catalyst_text:
+        for symbol in screen['catalyst_metals']:
+            if _mentions_metal(catalyst_text, symbol):
+                catalyst_metals.add(symbol)
+    hit = catalyst_metals & screen['catalyst_metals']
+    if hit:
+        return True, f"catalyst metal {'/'.join(sorted(hit))}"
+    for needle in screen.get('catalyst_text', ()):
+        if needle in text:
+            return True, f'catalyst text matches "{needle}"'
+    return False, 'no diagnostic reactant group and no diagnostic catalyst'

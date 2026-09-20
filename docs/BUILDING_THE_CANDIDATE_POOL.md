@@ -65,6 +65,14 @@ Stop at roughly 300 reactions from **at least 30 different papers**. Source dive
 
 Only after the loop works is it worth the extra effort: draw the diazo group `C=[N+]=[N-]` as a reactant substructure to reach carbene chemistry beyond dirhodium; add sulfoxonium ylides and N-sulfonyl triazoles as diazo-free carbene precursors; intersect with product-side transformations (alkene to cyclopropane, X–H to X–CHR). Carbene chemistry is classified inconsistently across sources, so the reactant substructure reaches more of it than any reaction-type label. Do this to extend a working pool, never to build the first one.
 
+## Search at the reaction level, not the document level
+
+A text or abstract search returns **documents**. Switching that result set to its Reactions tab gives you every reaction in those papers — including all the substrate-preparation steps. A carbene methodology paper contains its carbene reactions plus the amide couplings, Boc protections, Suzuki couplings and ester hydrolyses used to make the substrates, which is exactly the routine chemistry the pool is meant to exclude.
+
+Query the reaction record instead: in the query builder, search **Reactions** with the **Catalyst** field set to the handle. That returns only reactions whose catalyst is annotated as such, so preparation steps never enter the set. Typing the handle into quick search does a full-text lookup and gives you documents; selecting the Catalyst field gives you reactions.
+
+The import screen below is a safety net for whatever still gets through. It is not a substitute for querying at the right level.
+
 ## Exporting from Reaxys
 
 **Export from the Reactions tab, not Documents.** A result set has separate Documents, Substances and Reactions views. The Documents view's dialog is titled *Export citations* and produces a bibliography; ticking "Include reactions" there attaches reaction information to citation records rather than giving you a reaction table. Switch to Reactions first.
@@ -133,6 +141,8 @@ Every rejected row is reported with a reason; nothing is dropped silently. Repea
 **A publication year is not a date.** Reaxys gives you a year; the historical test needs a verified earliest public disclosure, preprints included. `first_public_date` stays null unless you supply evidence, so a year can never silently become a cutoff.
 
 **No mechanism is inferred.** The family label records why a reaction was imported, not how it works. `mechanism` stays empty and `mechanism_evidence` stays `未说明` until someone reads the paper. A detected metal is a species present in the recorded agents, nothing more.
+
+**Off-family rows are rejected.** A reaction is kept when its reactant side carries the family's diagnostic group — a diazo for `metal_carbene`, an azide or iminoiodinane for `metal_nitrene` — or when its recorded catalyst carries a diagnostic metal or catalyst name. Either alone suffices, since some sources annotate the catalyst and not the precursor. Palladium is deliberately not diagnostic for carbene chemistry: Suzuki and Sonogashira steps are the commonest contaminant and Pd is not the haem analogue. Rejected rows are reported with a reason, and `--no-screen` disables the filter. Families with no clean screen are left unscreened rather than given a loose one.
 
 **Imported is not reviewed.** Records carry a literature identifier and have not passed primary-source review, exactly like the pinned patent references. Structural similarity to a seed is a reason to read the paper, never a feasibility claim.
 
