@@ -128,6 +128,25 @@ Then re-export the same query as RD File for the structures, and join the two on
 
 Note that one reaction carries several literature conditions. A 1,000-reaction export is therefore closer to 1,800 condition rows from several hundred papers — count papers, not rows, against the stop rule.
 
+### What a Reaxys RD File actually contains
+
+ChemDraw renders only the structures, so an RD File looks empty of conditions when opened there. The conditions are in `$DTYPE`/`$DATUM` fields alongside each reaction — a real 1,000-reaction export carried 37,755 of them.
+
+Reaxys stores **one indexed block per literature variation**: `ROOT:RXD(1):RGT`, `ROOT:RXD(2):RGT` and so on, with `RX_NVAR` giving the count. Each variation is a different paper, catalyst, yield and year for the same transformation, so the converter explodes them into separate rows by default. A 1,000-reaction export became 2,508 variations from 1,075 distinct papers.
+
+| Reaxys field | Meaning |
+|---|---|
+| `RIREG`, `RX_ID` | Reaction registry number; the join key to a PDF export's `Rx-ID` |
+| `RXD(n):RGT`, `RXD(n):CAT` | Reagent and catalyst — split across two fields, so both are combined for screening |
+| `RXD(n):SOL`, `:T`, `:TIM` | Solvent, temperature, time |
+| `RXD(n):NYD` | **Numeric yield.** `YPRO` is the product *name* and must never be mapped to a yield |
+| `RXD(n):citation` | `<docid>; <document type>; <authors>; <journal>; vol; (year); pages` |
+| `RXD(n):TXT`, `:LCN` | Full experimental procedure, and its locator |
+
+There is no DOI field, so the citation string serves as the publication identifier.
+
+**Document type is filtered.** The citation's second field gives it. Retracted articles, reviews and conference abstracts are rejected by default: a retraction is not evidence, and the protocol treats a review as a search lead rather than a primary experimental source. The real export contained one retracted article, ten reviews and ten conference papers. Articles, patents, letters and notes are kept with their type recorded, so journal methodology can later be separated from patent background.
+
 ## Export columns
 
 Export to CSV with these headers. `templates/methodology_export.csv` is the template, with one clearly-marked example row to delete.

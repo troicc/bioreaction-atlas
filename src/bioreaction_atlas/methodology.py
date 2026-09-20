@@ -11,11 +11,16 @@ from .corpus import CORPUS_VERSION, sha
 REQUIRED = ('reaction_smiles', 'family', 'source_doi')
 OPTIONAL = ('catalyst', 'reagents', 'solvent', 'temperature_c', 'time_h', 'loading',
             'yield_percent', 'source_year', 'source_locator', 'external_id',
-            'reaction_name', 'first_public_date', 'date_evidence', 'notes')
+            'reaction_name', 'document_type', 'first_public_date', 'date_evidence', 'notes')
+
+# A retracted paper is not evidence. Reviews and conference abstracts are search
+# leads: the protocol requires a primary experimental source, so they are kept out
+# of the pool by default and can be re-admitted deliberately.
+REJECTED_DOCUMENT_TYPES = {'retracted article', 'review', 'conference paper'}
 CONDITION_COLUMNS = ('catalyst', 'reagents', 'solvent', 'temperature_c', 'time_h', 'loading')
 
 
-def build_records(rows, prefix='METH', screen=True):
+def build_records(rows, prefix='METH', screen=True, reject_document_types=REJECTED_DOCUMENT_TYPES):
     """Return (records, skipped). Every rejected row is reported, never dropped silently.
 
     With `screen`, rows that carry neither the family's diagnostic reactant group nor a
@@ -47,6 +52,11 @@ def build_records(rows, prefix='METH', screen=True):
         if explicit:
             context['context_source'] = 'explicit_export_columns_plus_agents_segment'
 
+        document_type = (row.get('document_type') or '').strip()
+        if reject_document_types and document_type.lower() in reject_document_types:
+            skipped.append({'row': n, 'reason': f'document type not primary evidence: {document_type}'})
+            continue
+
         if screen:
             verdict, reason = family_screen(raw, family, context.get('catalyst'))
             if verdict is False:
@@ -73,6 +83,7 @@ def build_records(rows, prefix='METH', screen=True):
             'source_year': (row.get('source_year') or '').strip() or None,
             'external_id': (row.get('external_id') or '').strip() or None,
             'label': (row.get('reaction_name') or '').strip() or FAMILIES[family],
+            'document_type': document_type or None,
             'activation_family': family,
             'context': context,
             'reported_results_raw': {'yield_percent': (row.get('yield_percent') or '').strip() or None},

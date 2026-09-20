@@ -52,6 +52,15 @@ def main():
     print(f'Imported {len(records)} reactions, skipped {len(skipped)}.')
     for family, count in sorted(families.items(), key=lambda x: -x[1]):
         print(f'  {count:5d}  {family}')
+    types = {}
+    for record in records:
+        types[record.get('document_type') or 'unstated'] = types.get(record.get('document_type') or 'unstated', 0) + 1
+    if len(types) > 1 or 'unstated' not in types:
+        print('\nDocument types kept: ' + ', '.join(f'{k} {v}' for k, v in sorted(types.items(), key=lambda kv: -kv[1])))
+    rejected_type = [s for s in skipped if s['reason'].startswith('document type')]
+    if rejected_type:
+        print(f'{len(rejected_type)} rows rejected as non-primary evidence '
+              '(retracted, review or conference abstract).')
     off_family = [s for s in skipped if s['reason'].startswith('off-family')]
     if off_family:
         print(f'\n{len(off_family)} rows rejected as off-family. These are typically the '

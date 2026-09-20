@@ -186,3 +186,24 @@ def test_a_sulfonyl_azide_is_not_mistaken_for_a_diazo_group():
     from bioreaction_atlas.activation import family_screen
     azide_only = 'Cc1ccc(S(=O)(=O)N=[N+]=[N-])cc1.CCO>>CCOC(C)=O'
     assert family_screen(azide_only, 'metal_carbene', 'triethylamine')[0] is False
+
+
+def test_retracted_and_review_citations_are_not_primary_evidence():
+    rows = [row(document_type='Retracted Article'),
+            row(source_doi='10.0000/b', document_type='Review'),
+            row(source_doi='10.0000/c', document_type='Conference Paper')]
+    records, skipped = build_records(rows)
+    assert not records and len(skipped) == 3
+    assert all(s['reason'].startswith('document type not primary evidence') for s in skipped)
+
+
+def test_articles_and_patents_are_kept_with_their_type_recorded():
+    rows = [row(document_type='Article'), row(source_doi='10.0000/b', document_type='Patent')]
+    records, skipped = build_records(rows)
+    assert not skipped
+    assert [r['document_type'] for r in records] == ['Article', 'Patent']
+
+
+def test_document_type_rejection_can_be_turned_off():
+    rows = [row(document_type='Review')]
+    assert len(build_records(rows, reject_document_types=set())[0]) == 1

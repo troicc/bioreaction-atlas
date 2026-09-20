@@ -12,6 +12,7 @@ from rdkit import Chem
 from rdkit.Chem import rdChemReactions
 
 RECORD = re.compile(r'^\$RFMT', re.MULTILINE)
+REGISTRY = re.compile(r'\$RIREG\s+(\S+)')
 
 
 def _reaction_smiles(block):
@@ -68,15 +69,20 @@ def read_rdf(text):
             continue
         body = chunk[chunk.index('$RXN'):]
         cut = body.find('$DTYPE')
+        # Keep the $RXN header: RDKit requires it to recognise the block.
         block, tail = (body[:cut], body[cut:]) if cut != -1 else (body, '')
-        # Strip the $RXN directive line itself; RDKit expects the block beneath it.
-        block = block.split('\n', 1)[1] if '\n' in block else ''
         try:
             smiles = _reaction_smiles(block)
         except ValueError as exc:
             failures.append({'record': n, 'reason': str(exc)})
             continue
-        rows.append({'reaction_smiles': smiles, **_fields(tail)})
+        row = {'reaction_smiles': smiles, **_fields(tail)}
+        # The internal registry number on the $RFMT line is the join key back to a
+        # PDF export of the same query.
+        registry = REGISTRY.search(chunk[:chunk.index('$RXN')])
+        if registry:
+            row.setdefault('RIREG', registry.group(1))
+        rows.append(row)
     return rows, failures
 
 
@@ -85,9 +91,9 @@ def field_summary(rows):
     summary = {}
     for row in rows:
         for key, value in row.items():
-            if key == 'reaction_smiles' or not value:
+            if key == 'reaction_smiles' or value in (None, ''):
                 continue
-            count, example = summary.get(key, (0, value))
+            count, example = summary.get(key, (0, str(value)))
             summary[key] = (count + 1, example)
     return dict(sorted(summary.items(), key=lambda kv: -kv[1][0]))
 
@@ -104,7 +110,7 @@ HEURISTIC = {
     'temperature_c': ('temperature', '=rxd.t', '=rxd_t'),
     'source_doi': ('doi',),
     'source_year': ('publication year', '=pub.year', '=cit.py', 'year'),
-    'external_id': ('reaxys id', '=rx.id', '=rx_id', 'reaction id'),
+    'external_id': ('reaxys id', '=rireg', '=rx.id', '=rx_id', 'reaction id'),
     'source_locator': ('page', 'locator', 'citation'),
     'reaction_name': ('reaction type', 'classification', 'title'),
 }
@@ -126,3 +132,69 @@ def guess_mapping(rows):
                 mapping[column] = match
                 break
     return mapping
+
+
+# Reaxys stores one indexed block per literature variation: ROOT:RXD(1):RGT,
+# ROOT:RXD(2):RGT and so on. Each variation is a different paper, catalyst and
+# yield for the same transformation, so each is its own candidate record.
+VARIATION = re.compile(r'^ROOT:RXD\((\d+)\):(.+)$')
+# "<docid>; <document type>; <authors>; <journal>; vol. X; ...; (YEAR); p. A - B"
+CITATION_TYPE = re.compile(r'^\s*(\d+);\s*([^;]+);')
+CITATION_YEAR = re.compile(r'\((\d{4})\)')
+
+
+def explode_variations(rows):
+    """One row per literature variation, carrying the reaction's shared fields.
+
+    A reaction with six recorded preparations becomes six rows. Collapsing them
+    would discard five independent literature sources and their dates.
+    """
+    exploded = []
+    for row in rows:
+        shared, variations = {}, {}
+        for key, value in row.items():
+            match = VARIATION.match(key)
+            if match:
+                variations.setdefault(int(match.group(1)), {})[match.group(2)] = value
+            else:
+                shared[key.removeprefix('ROOT:')] = value
+        if not variations:
+            exploded.append({**shared, 'variation': 1})
+            continue
+        for index in sorted(variations):
+            fields = variations[index]
+            citation = fields.get('citation', '')
+            type_match = CITATION_TYPE.match(citation)
+            year_match = CITATION_YEAR.search(citation)
+            # Reaxys splits catalytic information between RGT and CAT, and populates
+            # RGT far more often. Screening needs both.
+            catalyst_all = '|'.join(v for v in (fields.get('CAT'), fields.get('RGT')) if v)
+            exploded.append({
+                **shared, **fields, 'variation': index,
+                'citation_id': type_match.group(1) if type_match else None,
+                'document_type': type_match.group(2).strip() if type_match else None,
+                'citation_year': year_match.group(1) if year_match else None,
+                'catalyst_all': catalyst_all or None,
+            })
+    return exploded
+
+
+# Once variations are exploded the Reaxys field names are unambiguous, so they are
+# mapped directly rather than guessed.
+REAXYS_COLUMNS = {
+    # Reaxys exports no DOI, so the citation string is the publication identifier.
+    'source_doi': 'citation',
+    'catalyst': 'catalyst_all',
+    'reagents': 'RGT',
+    'solvent': 'SOL',
+    'temperature_c': 'T',
+    'time_h': 'TIM',
+    # NYD is the numeric yield; YPRO is the product name and must not be used here.
+    'yield_percent': 'NYD',
+    'source_year': 'citation_year',
+    'source_locator': 'LCN',
+    'external_id': 'RX_ID',
+    'reaction_name': 'TYP',
+    'document_type': 'document_type',
+    'notes': 'TXT',
+}
