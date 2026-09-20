@@ -1,0 +1,2 @@
+reaction_smiles,family,source_doi,source_year,reaction_name,catalyst,reagents,solvent,temperature_c,time_h,yield_percent,source_locator,external_id,first_public_date,date_evidence,notes
+CCOC(=O)C=[N+]=[N-].C=Cc1ccccc1>>CCOC(=O)C1CC1c1ccccc1,metal_carbene,10.0000/EXAMPLE-DELETE-ME,2015,EXAMPLE ROW - delete before importing,Rh2(OAc)4,,dichloromethane,25,2,84,Table 1 entry 3,RX-00000000,,,Example only. Not real data.

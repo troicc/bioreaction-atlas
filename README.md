@@ -76,12 +76,13 @@ Outputs cover three retrieval settings, overlap at k = 5/10/20/50, full-pool ran
 - Representations: substrate Morgan, signed Morgan difference, official DRFP and official RXNFP bert_ft. Existing configurations and metrics are reused; no new encoder is claimed.
 - Boundaries: imported records have not passed original-experiment or earliest-date review. Unique structures are not independent discoveries. Agreement is not accuracy.
 
-The suite contains 69 tests. 68 run in CI on Python 3.11 and 3.12 from the checkout alone; the remaining one verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
+The suite contains 82 tests. 81 run in CI on Python 3.11 and 3.12 from the checkout alone; the remaining one verifies RXNFP's 256-dimensional CLS output against the official README example within 1e-5 and needs locally downloaded weights. CI separately regenerates the technical note from `summary.json` and fails if the committed note differs, so no reported metric can be hand-edited. See the report for the evidence chain and limitations.
 
 ## Collection and historical ranking tools
 
 - [Chinese walkthrough](docs/从零开始理解与使用BioReaction_Atlas.md)
 - [English collection guide](docs/Collection_Guide_EN.md)
+- [Building the non-enzymatic candidate pool](docs/BUILDING_THE_CANDIDATE_POOL.md) · [activation-family map](research/activation_family_map.md)
 - [Coverage audit operating guide](docs/COVERAGE_AUDIT.md)
 - [Single-cutoff historical ranking evaluation](docs/EVALUATION.md)
 - [Earlier Chinese overview and local map instructions](README.zh-CN.md)
