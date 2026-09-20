@@ -271,3 +271,19 @@ def test_the_enzyme_route_does_not_match_its_own_abiotic_family():
     """
     from bioreaction_atlas.activation import family_screen
     assert family_screen(TRPB, 'aminoacrylate_addition')[0] is False
+
+
+def test_aromatic_heterocycles_are_not_dehydroamino_acids():
+    """Indole-2-carboxylate embeds C=C(N)C(=O) inside an aromatic ring.
+
+    A Reaxys substructure query with "additional ring closures" enabled returns
+    hundreds of thousands of such reactions - nitro reductions and the like on
+    indole and pyrrole esters. The screen must reject them: the SMARTS requires
+    aliphatic alkene carbons, so an aromatic ring never matches.
+    """
+    from bioreaction_atlas.activation import family_screen
+    for aromatic in (
+            'CCOC(=O)c1cc2cc([N+](=O)[O-])ccc2[nH]1>>CCOC(=O)c1cc2cc(N)ccc2[nH]1',
+            'COC(=O)c1cc[nH]c1>>COC(=O)c1cc[nH]c1C',
+            'COC(=O)c1ccc2ccccc2[nH]1>>COC(=O)c1ccc2ccccc2n1C'):
+        assert family_screen(aromatic, 'aminoacrylate_addition')[0] is False

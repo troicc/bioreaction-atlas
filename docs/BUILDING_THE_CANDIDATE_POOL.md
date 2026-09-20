@@ -63,6 +63,18 @@ Several fragments on the same side are ANDed: all must be present. Resist that f
 
 Check that the search runs as a **substructure** query, not exact match, or N-acyl, ester and β-substituted variants are all missed. Page 1 of any export prints the query log — it states what was actually run, for example `Search as: Substructure: on all atoms`.
 
+### Settings that silently widen a structure query
+
+Two defaults cost precision, and one of them is catastrophic for an enamide-like query.
+
+**Additional ring closures** lets the drawn atoms sit inside extra rings. For a dehydroamino acid skeleton `C=C(N)C(=O)` that admits every **indole-2-** and **pyrrole-2-carboxylate**, because their ring carbon carries the ring nitrogen, the ring double bond and the ester at once. A dehydroalanine query with it enabled returned 619,779 reactions whose top hit was a nitro reduction on an indole ester. Uncheck it.
+
+**Tautomers** expands an enamine to its imine. Dehydroalanine becomes 2-iminopropanoate, so α-imino esters enter the set — electrophilic at the imine carbon, a different activation mode from conjugate addition at the β-carbon. Uncheck it.
+
+If a query is still too broad, set the key bond's topology to **chain** rather than ring. That excludes cyclic dehydroamino acids, which is a real loss, but purity matters more than recall for a first pool.
+
+The import screen rejects aromatic matches regardless, since its SMARTS requires aliphatic alkene carbons. Fixing the query still matters: hundreds of thousands of hits cannot be exported, and the daily export budget is small.
+
 ### When to stop
 
 Stop at roughly 300 reactions from **at least 30 different papers**. Source diversity is the binding constraint, not row count: fifty substrate analogues from one paper are one piece of independent chemistry, and they will distort retrieval exactly the way the same-publication control in the [encoder report](../outputs/encoder_consistency/REPORT.md) showed.
