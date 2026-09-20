@@ -159,3 +159,30 @@ def test_screening_can_be_disabled():
     rows = [row(reaction_smiles=AMIDE, catalyst='EDC, HOBt')]
     assert len(build_records(rows, screen=False)[0]) == 1
     assert len(build_records(rows, screen=True)[0]) == 0
+
+
+# A real Reaxys hit for a diazo substructure query: the diazo is the PRODUCT.
+# This is diazo-transfer, i.e. making the carbene precursor, not using it.
+DIAZO_TRANSFER = ('COC(=O)Cc1ccc(Cl)cc1.Cc1ccc(S(=O)(=O)N=[N+]=[N-])cc1'
+                  '>>COC(=O)C(=[N+]=[N-])c1ccc(Cl)cc1')
+CARBENE_USE = ('COC(=O)C(=[N+]=[N-])c1ccc(Cl)cc1.C=Cc1ccccc1'
+               '>>COC(=O)C1(c2ccc(Cl)cc2)CC1c1ccccc1')
+
+
+def test_diazo_transfer_is_rejected_because_the_diazo_is_a_product():
+    from bioreaction_atlas.activation import family_screen
+    for base in ('1,8-diazabicyclo[5.4.0]undec-7-ene', 'triethylamine', 'potassium carbonate'):
+        assert family_screen(DIAZO_TRANSFER, 'metal_carbene', base)[0] is False
+
+
+def test_carbene_use_is_admitted_when_the_diazo_is_a_reactant():
+    from bioreaction_atlas.activation import family_screen
+    verdict, reason = family_screen(CARBENE_USE, 'metal_carbene', 'dirhodium tetraacetate')
+    assert verdict is True and reason == 'reactant carries a diazo group'
+
+
+def test_a_sulfonyl_azide_is_not_mistaken_for_a_diazo_group():
+    # TsN3 is N=[N+]=[N-]; the diazo screen requires carbon at the terminus.
+    from bioreaction_atlas.activation import family_screen
+    azide_only = 'Cc1ccc(S(=O)(=O)N=[N+]=[N-])cc1.CCO>>CCOC(C)=O'
+    assert family_screen(azide_only, 'metal_carbene', 'triethylamine')[0] is False

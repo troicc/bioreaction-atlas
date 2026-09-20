@@ -73,6 +73,14 @@ Query the reaction record instead: in the query builder, search **Reactions** wi
 
 The import screen below is a safety net for whatever still gets through. It is not a substitute for querying at the right level.
 
+## Give the structure a reaction role
+
+A bare diazo substructure query returns around 357,000 reactions, and its top facets are triethylamine, DBU, potassium carbonate and sulfonyl azides. Those are **diazo-transfer** conditions: the diazo group is the *product*, and the reaction is making the carbene precursor rather than using it.
+
+Mark the structure as a **reactant**, by drawing it on the left of a reaction arrow in the structure editor rather than as a standalone structure. Then narrow with the result facets: `Reagent/Catalyst` lists `dirhodium tetraacetate` directly, and **Limit To** applies it without spending another query. Use `Filter by value` inside the facet to add the other carbene metals if you want breadth.
+
+The import screen catches this class of contamination anyway — it looks for the diagnostic group on the reactant side only, so a diazo-transfer reaction fails it — but filtering in the interface saves an export.
+
 ## Exporting from Reaxys
 
 **Export from the Reactions tab, not Documents.** A result set has separate Documents, Substances and Reactions views. The Documents view's dialog is titled *Export citations* and produces a bibliography; ticking "Include reactions" there attaches reaction information to citation records rather than giving you a reaction table. Switch to Reactions first.
