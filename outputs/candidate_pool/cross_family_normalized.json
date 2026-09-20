@@ -8,10 +8,10 @@
     "metal_carbene": "cofactor heme and the metal_carbene structural screen",
     "aminoacrylate_addition": "cofactor PLP"
   },
-  "normalized": false,
+  "normalized": true,
   "seeds_normalized": {
     "metal_carbene": 0,
-    "aminoacrylate_addition": 0
+    "aminoacrylate_addition": 31
   },
   "backends": {
     "morgan": {
@@ -23,9 +23,9 @@
       },
       "aminoacrylate_addition": {
         "pool_share": 0.255,
-        "mean_own_family_share_at_k": 0.0935,
-        "seeds_with_no_own_family_hit": 20,
-        "lift_over_pool_share": 0.37
+        "mean_own_family_share_at_k": 0.8355,
+        "seeds_with_no_own_family_hit": 1,
+        "lift_over_pool_share": 3.28
       }
     },
     "substrate": {
@@ -37,9 +37,9 @@
       },
       "aminoacrylate_addition": {
         "pool_share": 0.255,
-        "mean_own_family_share_at_k": 0.1452,
-        "seeds_with_no_own_family_hit": 12,
-        "lift_over_pool_share": 0.57
+        "mean_own_family_share_at_k": 0.429,
+        "seeds_with_no_own_family_hit": 1,
+        "lift_over_pool_share": 1.68
       }
     },
     "drfp": {
@@ -51,9 +51,9 @@
       },
       "aminoacrylate_addition": {
         "pool_share": 0.255,
-        "mean_own_family_share_at_k": 0.4323,
-        "seeds_with_no_own_family_hit": 2,
-        "lift_over_pool_share": 1.69
+        "mean_own_family_share_at_k": 0.9774,
+        "seeds_with_no_own_family_hit": 0,
+        "lift_over_pool_share": 3.83
       }
     },
     "rxnfp": {
@@ -65,9 +65,9 @@
       },
       "aminoacrylate_addition": {
         "pool_share": 0.2545,
-        "mean_own_family_share_at_k": 0.0839,
-        "seeds_with_no_own_family_hit": 19,
-        "lift_over_pool_share": 0.33
+        "mean_own_family_share_at_k": 0.1968,
+        "seeds_with_no_own_family_hit": 8,
+        "lift_over_pool_share": 0.77
       }
     }
   },

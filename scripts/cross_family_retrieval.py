@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'src'))
 from bioreaction_atlas.activation import family_screen  # noqa: E402
 from bioreaction_atlas.corpus import load_index  # noqa: E402
 from bioreaction_atlas.encoders import Encoder, pairwise_similarity  # noqa: E402
+from bioreaction_atlas.intermediates import normalize_reactants  # noqa: E402
 
 BACKENDS = ('morgan', 'substrate', 'drfp', 'rxnfp')
 
@@ -59,6 +60,9 @@ def main():
     parser.add_argument('--out', default='outputs/candidate_pool/cross_family.json')
     # Which enzyme cofactor maps to which candidate family.
     parser.add_argument('--map', nargs='+', default=['heme=metal_carbene', 'PLP=aminoacrylate_addition'])
+    parser.add_argument('--normalize', action='store_true',
+                        help='rewrite seed reactants into the intermediate their platform forms, '
+                             'so both sides are expressed at the same level')
     parser.add_argument('--seed-screen', nargs='*', default=['metal_carbene'],
                         help='families whose seeds are additionally filtered by the structural screen')
     args = parser.parse_args()
@@ -70,8 +74,24 @@ def main():
         print(f'{len(entries):5d} enzyme seeds for {family}  (selected by {how[family]})')
     report_how = how
 
+    queries, normalized = {}, {}
+    for family, entries in seeds.items():
+        texts, hits = [], 0
+        for entry in entries:
+            smiles = entry['reaction_smiles']
+            if args.normalize:
+                smiles, rule = normalize_reactants(smiles, family)
+                hits += bool(rule)
+            texts.append(smiles)
+        queries[family] = texts
+        normalized[family] = hits
+    if args.normalize:
+        for family, hits in normalized.items():
+            print(f'  normalized {hits}/{len(seeds[family])} {family} seeds to their intermediate')
+
     report = {'top_k': args.top_k, 'seed_counts': {f: len(e) for f, e in seeds.items()},
-              'seed_selection': report_how, 'backends': {}}
+              'seed_selection': report_how, 'normalized': args.normalize,
+              'seeds_normalized': normalized, 'backends': {}}
     for backend in BACKENDS:
         index, matrix = load_index(Path(args.pool) / backend)
         families = np.asarray([e['evidence'][0].get('activation_family') for e in index['entries']])
@@ -82,7 +102,7 @@ def main():
         for family, entries in seeds.items():
             if not entries:
                 continue
-            vectors = encoder.encode([e['reaction_smiles'] for e in entries], batch_size=32)
+            vectors = encoder.encode(queries[family], batch_size=32)
             scores = pairwise_similarity(vectors, matrix, index['parameters']['metric'])
             top = np.argsort(-np.round(scores, 6), axis=1, kind='stable')[:, :args.top_k]
             own = (families[top] == family)
